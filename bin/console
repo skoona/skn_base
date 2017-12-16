@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'bundler/setup'
-require 'skn_base'
+require_relative '../skn_base'
 
 require 'pry'
 Pry.start
