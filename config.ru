@@ -1,8 +1,12 @@
 #!/usr/bin/env ruby
 # ./config.ru
 
-# require File.expand_path('skn_base.rb', __dir__)
-
+require 'bundler/setup'
 require_relative "skn_base"
 
-run SknBase.app
+begin
+  require "pry-byebug"
+rescue LoadError
+end
+
+run SknBase.freeze.app
