@@ -2,6 +2,7 @@
 # ./config.ru
 
 require 'bundler/setup'
+
 require_relative "skn_base"
 
 begin

@@ -2,16 +2,54 @@ GEM
   remote: https://rubygems.org/
   specs:
     ast (2.3.0)
+    bcrypt (3.1.11)
     builder (3.2.3)
     byebug (9.1.0)
     coderay (1.1.2)
+    concurrent-ruby (1.0.5)
     deep_merge (1.2.1)
     diff-lcs (1.3)
+    docile (1.1.5)
+    dry-configurable (0.7.0)
+      concurrent-ruby (~> 1.0)
+    dry-container (0.6.0)
+      concurrent-ruby (~> 1.0)
+      dry-configurable (~> 0.1, >= 0.1.3)
+    dry-core (0.4.1)
+      concurrent-ruby (~> 1.0)
+    dry-equalizer (0.2.0)
+    dry-inflector (0.1.1)
+    dry-initializer (2.3.0)
+    dry-logic (0.4.2)
+      dry-container (~> 0.2, >= 0.2.6)
+      dry-core (~> 0.2)
+      dry-equalizer (~> 0.2)
+    dry-struct (0.4.0)
+      dry-core (~> 0.4, >= 0.4.1)
+      dry-equalizer (~> 0.2)
+      dry-types (~> 0.12, >= 0.12.2)
+      ice_nine (~> 0.11)
+    dry-types (0.12.2)
+      concurrent-ruby (~> 1.0)
+      dry-configurable (~> 0.1)
+      dry-container (~> 0.3)
+      dry-core (~> 0.2, >= 0.2.1)
+      dry-equalizer (~> 0.2)
+      dry-logic (~> 0.4, >= 0.4.2)
+      inflecto (~> 0.0.0, >= 0.0.2)
     erubis (2.7.0)
+    faker (1.8.5)
+      i18n (~> 0.9.1)
+    i18n (0.9.1)
+      concurrent-ruby (~> 1.0)
+    ice_nine (0.11.2)
+    inflecto (0.0.2)
+    json (2.1.0)
     method_source (0.9.0)
     parallel (1.12.1)
     parser (2.4.0.2)
       ast (~> 2.3)
+    pg (0.21.0)
     powerpack (0.1.1)
     pry (0.11.3)
       coderay (~> 1.1.0)
@@ -21,10 +59,52 @@ GEM
       pry (~> 0.10)
     puma (3.11.0)
     rack (2.0.3)
+    rack-protection (2.0.0)
+      rack
+    rack_csrf (2.6.0)
+      rack (>= 1.1.0)
     rainbow (3.0.0)
     rake (12.3.0)
     roda (3.3.0)
       rack
+    rom (4.1.1)
+      rom-changeset (~> 1.0, >= 1.0.1)
+      rom-core (~> 4.1)
+      rom-repository (~> 2.0, >= 2.0.2)
+    rom-changeset (1.0.1)
+      dry-core (~> 0.3, >= 0.3.1)
+      rom-core (~> 4.0)
+      transproc (~> 1.0)
+    rom-core (4.1.0)
+      concurrent-ruby (~> 1.0)
+      dry-container (~> 0.6)
+      dry-core (~> 0.3)
+      dry-equalizer (~> 0.2)
+      dry-inflector (~> 0.1)
+      dry-initializer (~> 2.0)
+      dry-types (~> 0.12, >= 0.12.1)
+      rom-mapper (~> 1.1)
+    rom-factory (0.5.0)
+      dry-configurable (~> 0.7)
+      dry-core (~> 0.3, >= 0.3.1)
+      dry-struct (~> 0.3)
+      faker (~> 1.7)
+      rom-core (~> 4.0)
+    rom-mapper (1.1.0)
+      dry-core (~> 0.3, >= 0.3.1)
+      dry-equalizer (~> 0.2)
+      dry-struct (~> 0.3)
+      transproc (~> 1.0)
+    rom-repository (2.0.2)
+      dry-core (~> 0.3)
+      dry-initializer (~> 2.0)
+      rom-core (~> 4.0)
+    rom-sql (2.3.0)
+      dry-core (~> 0.3)
+      dry-equalizer (~> 0.2)
+      dry-types (~> 0.12, >= 0.12.1)
+      rom-core (~> 4.1)
+      sequel (>= 4.49)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)
@@ -46,24 +126,39 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.9.0)
+    sequel (5.3.0)
+    simplecov (0.15.1)
+      docile (~> 1.1.0)
+      json (>= 1.8, < 3)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.2)
     skn_utils (3.4.0)
       deep_merge (~> 1.1)
     tilt (2.0.8)
+    transproc (1.0.2)
     unicode-display_width (1.3.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt
   builder
   erubis
+  pg
   pry
   pry-byebug
   puma
+  rack-protection
+  rack_csrf
   rake
   roda
+  rom
+  rom-factory
+  rom-sql
   rspec
   rubocop
+  simplecov
   skn_utils
   tilt
 
