@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
+#
+# File: ./bin/console
 
-require 'bundler/setup'
-require_relative '../skn_base'
+require File.expand_path('../skn_base', __dir__)
 
 require 'pry'
 require "pry-byebug"

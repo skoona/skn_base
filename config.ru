@@ -1,13 +1,19 @@
 #!/usr/bin/env ruby
-# ./config.ru
+#
+# File: ./config.ru
 
-require 'bundler/setup'
+# begin
+#   require "pry-byebug"
+# rescue LoadError
+# end
 
 require_relative "skn_base"
 
-begin
-  require "pry-byebug"
-rescue LoadError
-end
+app = case ENV['RACK_ENV']
+        when 'development', 'test'
+          SknBase.app
+        else
+          SknBase.freeze.app
+      end
 
-run SknBase.freeze.app
+run app
