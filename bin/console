@@ -4,7 +4,4 @@
 
 require File.expand_path('../skn_base', __dir__)
 
-require 'pry'
-require "pry-byebug"
-
 Pry.start

@@ -3,17 +3,38 @@ An exploration into Dry-Rb and Roda tooling for Ruby Applications
 
 
 ### Notes
-1. Start Server with Puma: `$ bundle exec puma config.ru -v`
-2. Start Console with Pry: `$ bin/console`
-3. Setup Application: `$ bin/setup`
+<dl>
+    <dt>Start Server with Puma, Port 3000:</dt>
+        <dd><code>$ bundle exec puma config.ru -v</code></dd>
+    <dt>Start Server with RackUp, Port 9292:</dt>
+        <dd><code>$ rackup</code></dd>
+    <dt>Start Console with Pry:</dt>
+        <dd><code>$ bin/console</code></dd>
+    <dt>Start Console with RackSh:</dt>
+        <dd><code>$ bundle exec racksh</code></dd>
+    <dt>Setup Application:</dt>
+        <dd><code>$ bin/setup</code></dd>
+</dl>
 
-`puma` or `rackup` commands will start server, but wont read puma's config which means the default port will be 9292 vs 3000.
+
+`puma` or `rackup` commands alone will start the server. But wont read puma's config which means the default port maybe 9292 vs 3000.
 `Roda's` RodaApp.freeze.app uses RackBuilder to create an Rack App, which confuses the more deliberate `Rack::Handler::Puma.reun(app)` method.
 
 `racksh` is a console for Rack based applications, see docs at [Gem RackSh](https://github.com/sickill/racksh)
-    In racksh console: `$ $rack.get "/", {}, { 'REMOTE_ADDR' => '127.0.0.1' }`
+In racksh console: `$ $rack.get "/", {}, { 'REMOTE_ADDR' => '127.0.0.1' }`
+
+### Under Consideration
+1. What directory structure is required, and what options are there to override those requirements?
+    * Seems Roda and Dry-Rb both impose a filesystem structure.
+    * Would a Ruby Gem filesystem model be suitable?
+2. How does activities per-request factor into things like singletons, or Object lifecycles?
+3. What survives each request, must there be singletons to hold AccessRegistry, Persistence, etc?
+4. Ruby $LoadPath vs Bundler vs Application Source AutoLoad seem to be at odds, in some ways.
+5. While the notion of Sub-Apps is valid for large applications, it also serves to segment application source into domains.
+    * A sub-app filesystem structure is relevant for the web interface, it becomes clumsy for Domains.
 
 
+### Persistence Template
 ```ruby
 rom = ROM.container(:sql, 'postgres://localhost/SknServices_development', user: 'postgres', password: 'postgres') do |config|
 

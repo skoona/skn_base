@@ -1,13 +1,12 @@
 # .pryrc
 
-# Enable rasksh command shell enhancements
-require 'racksh/irb'
-
 # Pry short cuts after binding.pry is hit in code
-Pry.commands.alias_command 'c', 'continue'
-Pry.commands.alias_command 's', 'step'
-Pry.commands.alias_command 'n', 'next'
-Pry.commands.alias_command 'f', 'finish'
+if defined?(PryByebug)
+  Pry.commands.alias_command 'c', 'continue'
+  Pry.commands.alias_command 's', 'step'
+  Pry.commands.alias_command 'n', 'next'
+  Pry.commands.alias_command 'f', 'finish'
+end
 
 # Hit Enter to repeat last command
 Pry::Commands.command /^$/, "repeat last command" do

@@ -27,6 +27,8 @@ gem "rack_csrf"
 gem "bcrypt"
 
 group :development do
+  gem 'better_errors'
+  gem "binding_of_caller"
   gem 'pry-byebug'
   gem "racksh"
   gem 'rubocop'
