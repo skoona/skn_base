@@ -2,6 +2,20 @@
 
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __FILE__)
 
-require 'bundler/setup' # Setup LoadPath for gems listed in the Gemfile.
+codes = File.expand_path('../strategy', __FILE__)
+$LOAD_PATH.unshift(codes) unless $LOAD_PATH.include?(codes)
 
-Bundler.require(:default, ENV['RACK_ENV'].to_sym) # Require all the gems for this environment
+begin
+  require 'bundler/setup' # Setup LoadPath for gems listed in the Gemfile.
+
+  require "utils/string_inquirer"
+
+  Bundler.require(:default, ENV['RACK_ENV'].to_sym) # Require all the gems for this environment
+
+rescue Bundler::BundlerError => ex
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
+end
+
+SknSettings.load_config_basename! ENV['RACK_ENV'] || 'development'

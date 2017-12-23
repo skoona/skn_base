@@ -23,6 +23,19 @@ An exploration into Dry-Rb and Roda tooling for Ruby Applications
 `racksh` is a console for Rack based applications, see docs at [Gem RackSh](https://github.com/sickill/racksh)
 In racksh console: `$ $rack.get "/", {}, { 'REMOTE_ADDR' => '127.0.0.1' }`
 
+`plugin: multi_route` has a very strange structure for associated route files.
+```Ruby
+# File: ./routes/prefix.rb
+
+class SknBase
+    route('prefix') do
+      ...
+    end
+end
+```
+It re-uses (and I think redefines the app name class).  `SknBase` is also the name of this apps main.
+
+
 ### Under Consideration
 1. What directory structure is required, and what options are there to override those requirements?
     * Seems Roda and Dry-Rb both impose a filesystem structure.

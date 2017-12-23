@@ -20,21 +20,50 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body class="language-ruby preload" data-request-path="<%= request.path %>" data-request-matched="<%= request.matched_path %>" >
     <nav class="navbar navbar-default navbar-inverse">
-      <h4 class="text-muted pull-left">SknBase</h4>
-      <div class="container">
-        <ul class="nav navbar-nav">
-          <li><a href="/">Home</a></li>
-          <li><a href="/about">About</a></li>
-          <li><a href="/contact">Contact</a></li>
-        </ul>
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">SknBase</a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a class="<%= menu_active?('/') %>" href="/">Home</a></li>
+            <li><a class="<%= menu_active?('/about') %>" href="/about">About</a></li>
+            <li><a class="<%= menu_active?('/contact') %>" href="/contact">Contact</a></li>
+          </ul>
+        </div>
       </div>
     </nav>
+
     <div class="container">
-      <div class="page-header"><h4>Skoona Explorations: <small><strong><em>Domain Driven Design</em></strong> from scratch using Roda</small></h4></div>
+      <div class="page-header"><h4>Skoona Explorations: <small><strong><em>Basic Application</em></strong> from scratch using Roda</small></h4></div>
       <%= yield %>
+      <p>Production: <%= SknSettings.env.production? %></p>
+      <p>Development: <%= SknSettings.env.development? %></p>
+      <p>Test: <%= SknSettings.env %></p>
+      <p>Path: <%= request.path %></p>
     </div>
+
+    <footer class="footer" style="position: absolute;bottom: 0;width: 100%;height: 64px;background-color: #eee;">
+      <div class="container" style="padding-top: 15px;">
+        <div class="row">
+          <div class="col-md-12">
+            <p class="text-center">
+              <span>SknBase</span><br/>
+              <span>&copy;&nbsp;<em>2015-2017 Skoona Consulting</em></span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </footer>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>

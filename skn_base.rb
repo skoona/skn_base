@@ -5,7 +5,8 @@ require_relative "boot"
 
 class SknBase < Roda
 
-  use Rack::Session::Cookie, secret: "37ae095d4e6ad226c79a03393f743d6c4f4f34f6123b9bef537beade8f364c36f9f7b10192ccd29c9ca4e75bff4207929304132849d0defc803a926406bb8876", key: "_skn_base_session"
+
+  use Rack::Session::Cookie, secret: SknSettings.skn_base.secret, key: "_skn_base_session", domain: '.skoona.net'
   use Rack::Protection
   use Rack::MethodOverride
 
@@ -24,24 +25,33 @@ class SknBase < Roda
   plugin :symbol_views
   plugin :view_options
   plugin :render, engine: 'html.erb', layout: 'layout'
-  plugin :static, ["/images", "/css", "/js"]
+  plugin :static, %w[/images /css /js /fonts]
   plugin :content_for
   plugin :head
   plugin :csrf
+  plugin :multi_route
   # plugin :error_handler
+
+  plugin :default_headers,
+         'Content-Type'=>'text/html',
+         'X-Frame-Options'=>'deny',
+         'X-Content-Type-Options'=>'nosniff',
+         'X-XSS-Protection'=>'1; mode=block'
+         # 'Content-Security-Policy'=>"default-src 'self' https://oss.maxcdn.com https://maxcdn.bootstrapcdn.com https://ajax.googleapis.com",
+         #'Strict-Transport-Security'=>'max-age=16070400;', # Uncomment if only allowing https:// access
 
   route do |r|
     
-    r.root do
-      view("homepage")
+    r.root do |x|
+      view(:homepage, locals: {rq: r})
     end
 
-    r.get "about" do
-      view(:about)
+    r.get "about" do |x|
+      view(:about, locals: {rq: r})
     end
 
-    r.get "contact" do
-      view(:contact)
+    r.get "contact" do |x|
+      view(:contact, locals: {rq: r})
     end
 
     r.get "sitemap.xml" do
@@ -50,11 +60,19 @@ class SknBase < Roda
       render("sitemap", ext: 'builder')
     end
 
+    r.multi_route
+
+    # r.assets
+
     # error do |e|
     #   self.class[:rack_monitor].instrument(:error, exception: e)
     #   raise e
     # end
+  end
 
+  # view helpers
+  def menu_active?(item_path)
+    request.path.eql?(item_path) ? 'active' : ''
   end
 
 end

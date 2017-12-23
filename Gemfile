@@ -13,8 +13,15 @@ gem "tilt"
 gem "erubis"
 gem "builder"
 
+# Javascript Runtime Support
+# gem 'execjs'
+# gem "therubyracer", platform: [:mri, :ruby]
+# gem 'therubyrhino', platform: :jruby
+
+
 # General Utilities
 gem 'skn_utils'
+gem 'rake'
 
 # Persistence
 gem 'pg'
@@ -22,6 +29,7 @@ gem 'rom'
 gem 'rom-sql'
 
 # Web Security
+gem 'rack-contrib'
 gem "rack-protection"
 gem "rack_csrf"
 gem "bcrypt"
@@ -32,7 +40,6 @@ group :development do
   gem 'pry-byebug'
   gem "racksh"
   gem 'rubocop'
-  gem 'rake'
 end
 
 group :test do

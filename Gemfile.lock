@@ -70,6 +70,8 @@ GEM
       pry (~> 0.10)
     puma (3.11.0)
     rack (2.0.3)
+    rack-contrib (2.0.1)
+      rack (~> 2.0)
     rack-protection (2.0.0)
       rack
     rack-test (0.8.2)
@@ -167,6 +169,7 @@ DEPENDENCIES
   pg
   pry-byebug
   puma
+  rack-contrib
   rack-protection
   rack_csrf
   racksh
