@@ -44,17 +44,18 @@ class SknBase < Roda
 
   # TODO: Experiment with direct file and/or minimized sources
   # plugin :assets, {
-  #     group_subdirs: false,
   #     css: "bootstrap.css",
   #     js: ["jquery-3.2.1.min.js", "bootstrap.js"]
   # }
 
   # TODO: Experiment with Gem-Based files
-  # plugin :assets, css: 'skn_base.scss' ,
-  #        js: ['bootstrap.js.indirectraw', 'skn_base.js'],
+  # plugin :assets, {
+  #       css: 'bootstrap.scss.indirect' ,
+  #        js: 'bootstrap.js.indirectraw',
   #        dependencies: {
-  #            Bootstrap.stylesheets_path + '_bootstrap.scss' => 'bootstrap.scss.indirect' Dir[Bootstrap.stylesheets_path + '/**/*.scss'],
+  #            Bootstrap.stylesheets_path + '_bootstrap.scss' => Dir[Bootstrap.stylesheets_path + '/**/*.scss'],
   #        }
+  # }
 
   plugin :not_found do
      view :http_404
@@ -62,6 +63,12 @@ class SknBase < Roda
   plugin :error_handler do
     view :unknown
   end
+
+  # Named Routes
+  Dir['./routes/*.rb'].each{|f| require f}
+
+  # view helpers
+  Dir['./views/helpers/*.rb'].each{|f| require f}
 
   route do |r|
 
@@ -79,15 +86,8 @@ class SknBase < Roda
 
     r.multi_route
 
-    r.assets # unless SknSettings.env.production?
+    r.assets unless SknSettings.env.production?
 
-  end
-
-  # view helpers
-  def menu_active?(item_path)
-    request.path.eql?(item_path) ? 'active' : ''
   end
 
 end
-
-require 'profiles'

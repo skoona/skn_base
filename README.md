@@ -1,5 +1,5 @@
 # SknBase
-An exploration into Dry-Rb and Roda tooling for Ruby Applications
+An exploration into Dry-Rb, ROM, and Roda tooling for Ruby Applications.  In concept, I plan to create a `runtime` for [SknServices](https://github.com/skoona/SknServices) content security application.  Where SknServices provides Admin features, this application would become the runtime consumer of those features.
 
 
 ### Notes
@@ -33,9 +33,9 @@ class SknBase
     end
 end
 ```
-It re-uses (and I think redefines the app name class).  `SknBase` is also the name of this apps main.
+It re-uses (and I think redefines the app name class).  `SknBase` is also the name of this apps main.  Helper files have the same behavior.
 
-The assets plugin initially failed to send bootstrap.css at Roda V3.3.0.  Switched to 2.29.0 and it worked, tried 3.3.0 again and everything seems to work now!  Making this note in case the trouble shows again.
+The assets plugin initially failed (HTTP-404) to send bootstrap.css at Roda V3.3.0.  Switched to 2.29.0 and it worked, tried 3.3.0 again and everything seems to work now!  Making this note in case the trouble shows again.
 Asset Plugin Failure: Sending bottstrap.css with a 'Content-Type' eq 'text/html' 'Content-Length' eq '3045'; verus 'text/css' and 146K.
 
 
@@ -48,6 +48,7 @@ Asset Plugin Failure: Sending bottstrap.css with a 'Content-Type' eq 'text/html'
 4. Ruby $LoadPath vs Bundler vs Application Source AutoLoad seem to be at odds, in some ways.
 5. While the notion of Sub-Apps is valid for large applications, it also serves to segment application source into domains.
     * A sub-app filesystem structure is relevant for the web interface, it becomes clumsy for Domains.
+6. Several plugin automatically require and instantiate other plugins on their own.  Each plugin has to be reviewed to understand its side effects or dependancies.
 
 
 ### Persistence Template
