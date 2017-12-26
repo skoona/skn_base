@@ -1,6 +1,13 @@
 # SknBase
-An exploration into Dry-Rb, ROM, and Roda tooling for Ruby Applications.  In concept, I plan to create a `runtime` for [SknServices](https://github.com/skoona/SknServices) content security application.  Where SknServices provides Admin features, this application would become the runtime consumer of those features.
+An exploration into [Dry-Rb](http://dry-rb.org), [ROM-Rb](http://rom-rb.org), [Roda](https://github.com/jeremyevans/roda), and [Ruby-Event-Store](https://github.com/RailsEventStore/rails_event_store) tooling for Ruby Web Applications.
 
+In concept, I plan to create a `runtime` for [SknServices](https://github.com/skoona/SknServices) content security application.  Where SknServices provides Admin features, this application would become the runtime consumer of those features.
+
+I'm looking for an alternative way to build enterprise ruby web applications.  I've tried Rails and salute it for it's Web Interface and Web framework.  However, I've never been comfortable with it's MVC development model for enterprise applications.
+
+I'm finding that most ruby web tools are as opinionated as Rails.  The difference being tools like Roda, as web interface, allow you to override its conventions through configuration; the reversal is not lost on me!
+
+For now I will keep notes and comments here, until I get to a workable baseline.
 
 ### Notes
 <dl>
@@ -49,6 +56,8 @@ Asset Plugin Failure: Sending bottstrap.css with a 'Content-Type' eq 'text/html'
 5. While the notion of Sub-Apps is valid for large applications, it also serves to segment application source into domains.
     * A sub-app filesystem structure is relevant for the web interface, it becomes clumsy for Domains.
 6. Several plugin automatically require and instantiate other plugins on their own.  Each plugin has to be reviewed to understand its side effects or dependancies.
+7. Require vs AutoLoad? `Autoload` would prevent loading the whole app when it's not needed during test or CLI operations.  However, `Require` does allow me to control what's loaded and any dependancies with greater clarity.
+8. Not sure about the lifecycle of critical objects in Roda yet.  How to create something that will survive the request/response cycle; like the database component.
 
 
 ### Persistence Template
