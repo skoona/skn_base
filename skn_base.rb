@@ -22,11 +22,11 @@ module Skn
     plugin :csrf
     plugin :render, {
         engine: 'html.erb',
-        allowed_paths: %w[views views/layouts views/profiles ],
+        allowed_paths: %w[views views/layouts views/profiles],
         layout: '/application',
         layout_opts: {views: 'views/layouts'}
     }
-    plugin :static, %w[/images /fonts /assets/fonts /assets/images ]
+    plugin :static, %w[/images /fonts]
     plugin :multi_route
 
     plugin :assets,
