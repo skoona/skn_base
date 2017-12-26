@@ -4,8 +4,11 @@ source "https://rubygems.org"
 
 ruby "2.4.2"
 
+gem 'logging'
+
 # Web framework: Core
 gem "puma"
+gem 'rack_csrf'
 gem "roda", "~> 3.3.0"
 
 # Web framework: Html
@@ -44,8 +47,6 @@ gem "rack_csrf"
 gem "bcrypt"
 
 group :development do
-  gem 'better_errors'
-  gem "binding_of_caller"
   gem 'pry-byebug'
   gem "racksh"
   gem 'rubocop'

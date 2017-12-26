@@ -55,7 +55,12 @@ GEM
     inflecto (0.0.2)
     json (2.1.0)
     libv8 (3.16.14.19)
+    little-plugger (1.1.4)
+    logging (2.2.2)
+      little-plugger (~> 1.1)
+      multi_json (~> 1.10)
     method_source (0.9.0)
+    multi_json (1.12.2)
     parallel (1.12.1)
     parser (2.4.0.2)
       ast (~> 2.3)
@@ -178,6 +183,7 @@ DEPENDENCIES
   binding_of_caller
   erubis
   execjs
+  logging
   pg
   pry-byebug
   puma

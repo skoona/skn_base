@@ -7,7 +7,7 @@
 # you can call this:
 #
 #   Rails.env.production?
-module Utils
+module Utility
   class StringInquirer < String
     private
 

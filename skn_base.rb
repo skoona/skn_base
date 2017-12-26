@@ -5,20 +5,14 @@ require_relative "boot"
 
 class SknBase < Roda
 
+  use Rack::CommonLogger, SknSettings.logger
   use Rack::Session::Cookie, secret: SknSettings.skn_base.secret, key: "_skn_base_session", domain: '.skoona.net'
   use Rack::Protection
   use Rack::MethodOverride
 
-  if SknSettings.env.development?
-    use Rack::Reloader
-    use BetterErrors::Middleware
 
-    BetterErrors.application_root = __dir__
-    BetterErrors.use_pry!
-    BetterErrors::Middleware.allow_ip! ENV['TRUSTED_IP'] if ENV['TRUSTED_IP']
-    # REf: https://github.com/charliesome/better_errors/wiki/Link-to-your-editor
-    BetterErrors.editor = 'idea://open?file=%{file}&line=%{line}'
-  end
+  use Rack::Reloader  if SknSettings.env.development?
+  use Rack::ShowExceptions
 
   plugin :all_verbs
   plugin :symbol_views
@@ -63,6 +57,15 @@ class SknBase < Roda
   plugin :error_handler do
     view :unknown
   end
+
+  # plugin :default_headers, {
+  #        'Content-Type'=>'text/html',
+  #        'Content-Security-Policy'=>"default-src 'self' https://oss.maxcdn.com/ https://maxcdn.bootstrapcdn.com https://ajax.googleapis.com",
+  #        #'Strict-Transport-Security'=>'max-age=16070400;', # Uncomment if only allowing https:// access
+  #        'X-Frame-Options'=>'deny',
+  #        'X-Content-Type-Options'=>'nosniff',
+  #        'X-XSS-Protection'=>'1; mode=block'
+  # }
 
   # Named Routes
   Dir['./routes/*.rb'].each{|f| require f}
