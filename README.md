@@ -126,6 +126,29 @@ p cps.where(id: 1).combine([:profile_type, :content_profile_entries]).to_a
 end
 ```
 
+
+### Code Cache
+
+```html
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+```
+
+```ruby
+  # TODO: Experiment with direct file and/or minimized sources
+  # plugin :assets, {
+  #     css: "bootstrap.css",
+  #     js: ["jquery-3.2.1.min.js", "bootstrap.js"]
+  # }
+
+  # TODO: Experiment with Gem-Based files
+  # plugin :assets, {
+  #       css: 'bootstrap.scss.indirect' ,
+  #        js: 'bootstrap.js.indirectraw',
+  #        dependencies: {
+  #            Bootstrap.stylesheets_path + '_bootstrap.scss' => Dir[Bootstrap.stylesheets_path + '/**/*.scss'],
+  #        }
+  # }
+
+```

@@ -10,7 +10,6 @@ class SknBase < Roda
   use Rack::Protection
   use Rack::MethodOverride
 
-
   use Rack::Reloader  if SknSettings.env.development?
   use Rack::ShowExceptions
 
@@ -35,21 +34,6 @@ class SknBase < Roda
          css: ['skn_base.css.scss' ] ,
          js: ['jquery-2.1.3.js', 'bootstrap-3.3.7.js', 'skn_base.js'],
          dependencies: {'_bootstrap.scss' => Dir['assets/stylesheets/**/*.scss'] }
-
-  # TODO: Experiment with direct file and/or minimized sources
-  # plugin :assets, {
-  #     css: "bootstrap.css",
-  #     js: ["jquery-3.2.1.min.js", "bootstrap.js"]
-  # }
-
-  # TODO: Experiment with Gem-Based files
-  # plugin :assets, {
-  #       css: 'bootstrap.scss.indirect' ,
-  #        js: 'bootstrap.js.indirectraw',
-  #        dependencies: {
-  #            Bootstrap.stylesheets_path + '_bootstrap.scss' => Dir[Bootstrap.stylesheets_path + '/**/*.scss'],
-  #        }
-  # }
 
   plugin :not_found do
      view :http_404
