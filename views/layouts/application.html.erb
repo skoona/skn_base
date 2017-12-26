@@ -34,8 +34,8 @@
 
       <p>Production: <%= SknSettings.env.production? %></p>
       <p>Development: <%= SknSettings.env.development? %></p>
-      <p>Env: <%= SknSettings.env %></p>
-      <p>Path: <%= request.path %></p>
+      <p><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Env: <%= SknSettings.env %></p>
+      <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span> Path: <%= request.path %></p>
     </div>
 
     <%= render( 'layouts/_footer') %>
