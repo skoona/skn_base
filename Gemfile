@@ -2,22 +2,31 @@
 
 source "https://rubygems.org"
 
-ruby "2.4.1"
+ruby "2.3.1"
 
 # Web framework: Core
 gem "puma"
-gem "roda"
+gem "roda", "~> 3.3.0"
 
 # Web framework: Html
 gem "tilt"
 gem "erubis"
-gem "builder"
 
 # Javascript Runtime Support
-# gem 'execjs'
-# gem "therubyracer", platform: [:mri, :ruby]
+gem 'execjs'
+gem "therubyracer", platform: [:mri, :ruby]
 # gem 'therubyrhino', platform: :jruby
+gem 'uglifier'
 
+
+gem 'sass'
+# gem 'bootstrap-sass'
+# gem 'sprockets-sass'
+# gem 'roda-sprocket_assets'
+
+# Todo: Can't figure out how to use these yet!
+# gem 'tilt-pipeline'
+# gem 'tilt-indirect'
 
 # General Utilities
 gem 'skn_utils'

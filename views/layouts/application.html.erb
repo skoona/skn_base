@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= content_for(:title) ? yield(:title) : "SknBase" %></title>
+    <meta name="description" content="<%= content_for(:description) ? yield(:description) : 'SknBase explores Roda and the Dry-Rb Ruby Gems' %>" />
+    <meta name="author" content="systems@skoona.net"/>
+
+    <%= csrf_metatag %>
+
+    <%= assets(:css, media: :all) %>
+    <%= assets(:js) %>
+
+    <link rel="icon" type="image/x-icon"  href="/public/images/favicon.ico">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body class="language-ruby preload" data-request-path="<%= request.path %>" data-request-matched="<%= request.matched_path %>" >
+
+    <%= render( 'layouts/_header') %>
+
+    <div class="container" role="main">
+      <div class="page-header"><h4>Skoona Explorations: <small><strong><em>Basic Application</em></strong> from scratch using Roda</small></h4></div>
+
+      <%= yield %>
+
+      <p>Production: <%= SknSettings.env.production? %></p>
+      <p>Development: <%= SknSettings.env.development? %></p>
+      <p>Test: <%= SknSettings.env %></p>
+      <p>Path: <%= request.path %></p>
+    </div>
+
+    <%= render( 'layouts/_footer') %>
+
+  </body>
+</html>

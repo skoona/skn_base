@@ -5,12 +5,11 @@ require_relative "boot"
 
 class SknBase < Roda
 
-
   use Rack::Session::Cookie, secret: SknSettings.skn_base.secret, key: "_skn_base_session", domain: '.skoona.net'
   use Rack::Protection
   use Rack::MethodOverride
 
-  if ENV['RACK_ENV'].to_sym == :development
+  if SknSettings.env.development?
     use Rack::Reloader
     use BetterErrors::Middleware
 
@@ -24,50 +23,64 @@ class SknBase < Roda
   plugin :all_verbs
   plugin :symbol_views
   plugin :view_options
-  plugin :render, engine: 'html.erb', layout: 'layout'
-  plugin :static, %w[/images /css /js /fonts]
   plugin :content_for
   plugin :head
   plugin :csrf
+  plugin :render, {
+      engine: 'html.erb',
+      allowed_paths: %w[views views/layouts views/profiles assets/css assets/js ],
+      layout: '/application',
+      layout_opts: {views: 'views/layouts'}
+  }
+  plugin :static, %w[/images /fonts]
   plugin :multi_route
-  # plugin :error_handler
 
-  plugin :default_headers,
-         'Content-Type'=>'text/html',
-         'X-Frame-Options'=>'deny',
-         'X-Content-Type-Options'=>'nosniff',
-         'X-XSS-Protection'=>'1; mode=block'
-         # 'Content-Security-Policy'=>"default-src 'self' https://oss.maxcdn.com https://maxcdn.bootstrapcdn.com https://ajax.googleapis.com",
-         #'Strict-Transport-Security'=>'max-age=16070400;', # Uncomment if only allowing https:// access
+  plugin :assets,
+         css_dir: 'stylesheets',
+         js_dir: 'javascript',
+         css: ['skn_base.css.scss' ] ,
+         js: ['jquery-2.1.3.js', 'bootstrap-3.3.7.js', 'skn_base.js'],
+         dependencies: {'_bootstrap.scss' => Dir['assets/stylesheets/**/*.scss'] }
+
+  # TODO: Experiment with direct file and/or minimized sources
+  # plugin :assets, {
+  #     group_subdirs: false,
+  #     css: "bootstrap.css",
+  #     js: ["jquery-3.2.1.min.js", "bootstrap.js"]
+  # }
+
+  # TODO: Experiment with Gem-Based files
+  # plugin :assets, css: 'skn_base.scss' ,
+  #        js: ['bootstrap.js.indirectraw', 'skn_base.js'],
+  #        dependencies: {
+  #            Bootstrap.stylesheets_path + '_bootstrap.scss' => 'bootstrap.scss.indirect' Dir[Bootstrap.stylesheets_path + '/**/*.scss'],
+  #        }
+
+  plugin :not_found do
+     view :http_404
+  end
+  plugin :error_handler do
+    view :unknown
+  end
 
   route do |r|
-    
-    r.root do |x|
-      view(:homepage, locals: {rq: r})
+
+    r.root do
+      view(:homepage)
     end
 
-    r.get "about" do |x|
-      view(:about, locals: {rq: r})
+    r.get "about" do
+      view(:about)
     end
 
-    r.get "contact" do |x|
-      view(:contact, locals: {rq: r})
-    end
-
-    r.get "sitemap.xml" do
-      # @posts = Post.reverse_order
-      response["Content-Type"] = "text/xml"
-      render("sitemap", ext: 'builder')
+    r.get "contact" do
+      view(:contact)
     end
 
     r.multi_route
 
-    # r.assets
+    r.assets # unless SknSettings.env.production?
 
-    # error do |e|
-    #   self.class[:rack_monitor].instrument(:error, exception: e)
-    #   raise e
-    # end
   end
 
   # view helpers
@@ -76,3 +89,5 @@ class SknBase < Roda
   end
 
 end
+
+require 'profiles'

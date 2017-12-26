@@ -35,6 +35,9 @@ end
 ```
 It re-uses (and I think redefines the app name class).  `SknBase` is also the name of this apps main.
 
+The assets plugin initially failed to send bootstrap.css at Roda V3.3.0.  Switched to 2.29.0 and it worked, tried 3.3.0 again and everything seems to work now!  Making this note in case the trouble shows again.
+Asset Plugin Failure: Sending bottstrap.css with a 'Content-Type' eq 'text/html' 'Content-Length' eq '3045'; verus 'text/css' and 146K.
+
 
 ### Under Consideration
 1. What directory structure is required, and what options are there to override those requirements?
@@ -112,3 +115,7 @@ p cps.where(id: 1).combine([:profile_type, :content_profile_entries]).to_a
 
 end
 ```
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
