@@ -8,7 +8,6 @@ gem 'logging'
 
 # Web framework: Core
 gem "puma"
-gem 'rack_csrf'
 gem "roda", "~> 3.3.0"
 
 # Web framework: Html
