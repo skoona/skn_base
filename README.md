@@ -60,45 +60,9 @@ Asset Plugin Failure: Sending bottstrap.css with a 'Content-Type' eq 'text/html'
 8. Not sure about the lifecycle of critical objects in Roda yet.  How to create something that will survive the request/response cycle; like the database component.
 
 
-### Persistence Template
+### Code Cache
+
 ```ruby
-rom = ROM.container(:sql, 'postgres://localhost/SknServices_development', user: 'postgres', password: 'postgres') do |config|
-
-  class ContentProfilesEntries < ROM::Relation[:sql]
-    schema(:content_profiles_entries, infer: true) do
-      associations do
-        belongs_to :content_profiles
-        belongs_to :content_profile_entries
-      end
-    end
-  end
-
-  class ProfileType < ROM::Relation[:sql]
-    schema(:profile_types, infer: true)
-    auto_struct true
-  end
-
-  class ContentProfile < ROM::Relation[:sql]
-    schema(:content_profiles, infer: true) do
-      associations do
-        belongs_to :profile_type
-        has_many :content_profile_entries, through: :content_profiles_entries
-      end
-    end
-    auto_struct true
-  end
-
-  class ContentProfileEntries < ROM::Relation[:sql]
-    schema(:content_profile_entries, infer: true) do
-      associations do
-        has_many :content_profiles, through: :content_profiles_entries
-      end
-    end
-    auto_struct true
-  end
-
-  config.register_relation(ContentProfile, ContentProfileEntries, ProfileType, ContentProfilesEntries)
-end
 
 cps   = rom.relations[:content_profiles]
 cpes  = rom.relations[:content_profile_entries]
@@ -125,9 +89,6 @@ p cps.where(id: 1).combine([:profile_type, :content_profile_entries]).to_a
 
 end
 ```
-
-
-### Code Cache
 
 ```html
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
