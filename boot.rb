@@ -2,7 +2,7 @@
 
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __FILE__)
 
-%w[strategy routes models].each do |path_name|
+%w[strategy routes models ].each do |path_name|
   codes = File.expand_path(path_name, __dir__)
   $LOAD_PATH.unshift(codes) unless $LOAD_PATH.include?(codes)
 end
@@ -46,3 +46,4 @@ if SknSettings.env.development?
 
 end
 
+require './config/rom'
