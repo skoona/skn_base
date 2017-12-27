@@ -33,7 +33,7 @@ module Skn
            css_dir: 'stylesheets',
            js_dir: 'javascript',
            css: ['skn_base.css.scss' ] ,
-           js: ['jquery-2.1.3.js', 'bootstrap-3.3.7.js', 'skn_base.js'],
+           js: ['jquery-3.2.1.js', 'bootstrap-3.3.7.js', 'skn_base.js'],
            dependencies: {'_bootstrap.scss' => Dir['assets/stylesheets/**/*.scss', 'assets/stylesheets/*.scss'] }
 
     plugin :not_found do

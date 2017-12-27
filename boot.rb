@@ -2,7 +2,7 @@
 
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __FILE__)
 
-%w[strategy routes models ].each do |path_name|
+%w[strategy routes].each do |path_name|
   codes = File.expand_path(path_name, __dir__)
   $LOAD_PATH.unshift(codes) unless $LOAD_PATH.include?(codes)
 end
@@ -11,6 +11,8 @@ begin
   require 'bundler/setup' # Setup LoadPath for gems listed in the Gemfile.
 
   require "utility/string_inquirer"
+
+  require "securerandom"
 
   Bundler.require(:default, ENV['RACK_ENV'].to_sym) # Require all the gems for this environment
 
