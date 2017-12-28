@@ -7,7 +7,7 @@ module Skn
                        user: SknSettings.postgresql.user,
                        password: SknSettings.postgresql.password) do |config|
 
-    config.gateways[:default].use_logger(SknSettings.logger)
+    config.gateways[:default].use_logger(Logging.logger['ROM'])
 
     config.relation(:content_profiles) do
       schema(infer: false) do
@@ -36,10 +36,10 @@ module Skn
     config.relation(:content_profile_entries) do
       schema(infer: false) do
         attribute :id, Types::Strict::Int.meta(primary_key: true)
-        attribute :topic_value, Types::ARSerializedWrite.meta(desc: :yaml_array)
+        attribute :topic_value, Types::ARSerializedWrite.meta(desc: :yaml_array), read: Types::ARSerializedRead.meta(desc: :yaml_array)
         attribute :topic_type, Types::Strict::String
         attribute :topic_type_description, Types::Strict::String
-        attribute :content_value, Types::ARSerializedWrite.meta(desc: :yaml_array)
+        attribute :content_value, Types::ARSerializedWrite.meta(desc: :yaml_array), read: Types::ARSerializedRead.meta(desc: :yaml_array)
         attribute :content_type, Types::Strict::String
         attribute :content_type_description, Types::Strict::String
         attribute :description, Types::Strict::String

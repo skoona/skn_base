@@ -12,10 +12,10 @@ module Skn
 
     class ContentProfileEntry < Dry::Struct
       # attribute :id, Types::Strict::Int
-      attribute :topic_value, Types::ARSerializedRead.meta(desc: :yaml_array)
+      attribute :topic_value, Types::Strict::Array.meta(desc: :yaml_array)
       attribute :topic_type, Types::Strict::String
       attribute :topic_type_description, Types::Strict::String
-      attribute :content_value, Types::ARSerializedRead.meta(desc: :yaml_array)
+      attribute :content_value, Types::Strict::Array.meta(desc: :yaml_array)
       attribute :content_type, Types::Strict::String
       attribute :content_type_description, Types::Strict::String
       attribute :description, Types::Strict::String

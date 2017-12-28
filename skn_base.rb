@@ -6,7 +6,7 @@ require_relative "boot"
 module Skn
   class SknBase < Roda
 
-    use Rack::CommonLogger, SknSettings.logger
+    use Rack::CommonLogger, Logging.logger['WEB']
     use Rack::Session::Cookie, secret: SknSettings.skn_base.secret, key: "_skn_base_session", domain: '.skoona.net'
     use Rack::Protection
     use Rack::MethodOverride
