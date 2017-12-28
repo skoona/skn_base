@@ -30,6 +30,10 @@ gem 'sass'
 # gem 'tilt-pipeline'
 # gem 'tilt-indirect'
 
+# Core Components
+gem 'dry-types'
+gem 'dry-struct'
+
 # General Utilities
 gem 'skn_utils'
 gem 'rake'

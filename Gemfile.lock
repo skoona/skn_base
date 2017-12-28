@@ -171,6 +171,8 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt
+  dry-struct
+  dry-types
   erubis
   execjs
   logging
