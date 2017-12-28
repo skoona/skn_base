@@ -10,17 +10,18 @@
 # http://github.com/RailsApps/rails-composer/issues
 #----------------------------------------------------------------------------
 
+semantic/dist
 config/settings.local.yml
 config/settings/*.local.yml
 
 # bundler state
-/.bundle
-/vendor/bundle/
-/vendor/ruby/
+.bundle
+vendor
+
 
 public/assets/
 
-/log/*
+log/*
 /tmp/*
 
 # add /config/database.yml if it contains passwords

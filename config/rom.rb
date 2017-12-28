@@ -2,7 +2,6 @@
 #
 
 module Skn
-
   SknSettings.rom = ROM.container(:sql, SknSettings.postgresql.url,
                        user: SknSettings.postgresql.user,
                        password: SknSettings.postgresql.password) do |config|
@@ -93,9 +92,7 @@ module Skn
         end
       end
     end
-
   end
-
 end
 
 require 'persistence/repositories'
