@@ -7,7 +7,7 @@
 
 module Relations
 
-  class ProfileType < ROM::Relation[:sql]
+  class ProfileTypes < ROM::Relation[:sql]
     schema(:profile_types, infer: false) do
 
       attribute :id, Types::Serial #PrimaryKey
@@ -31,7 +31,7 @@ module Relations
   end
 
   # Join Table
-  class ContentProfilesEntry < ROM::Relation[:sql]
+  class ContentProfilesEntries < ROM::Relation[:sql]
     schema(:content_profiles_entries, infer: false) do
 
       attribute :id, Types::Serial #PrimaryKey
@@ -49,7 +49,7 @@ module Relations
     end
   end
 
-  class ContentProfileEntry < ROM::Relation[:sql]
+  class ContentProfileEntries < ROM::Relation[:sql]
     schema(:content_profile_entries, infer: false) do
 
       attribute :id, Types::Serial #PrimaryKey
@@ -80,12 +80,12 @@ module Relations
     end
   end
 
-  class ContentProfile < ROM::Relation[:sql]
+  class ContentProfiles < ROM::Relation[:sql]
     schema(:content_profiles, infer: false) do
 
       attribute :id, Types::Serial #PrimaryKey
       attribute :person_authentication_key, Types::Strict::String
-      attribute :profile_type_id, Types::ForeignKey(:profile_type) #               Types::Int.meta(foreign_key: true, relation: :profile_types)
+      attribute :profile_type_id, Types::ForeignKey(:profile_types) #               Types::Int.meta(foreign_key: true, relation: :profile_types)
       attribute :authentication_provider, Types::Strict::String
       attribute :username, Types::Strict::String
       attribute :display_name, Types::Strict::String
@@ -97,7 +97,7 @@ module Relations
       # foreign_key(:profile_types)
 
       associations do
-        belongs_to :profile_type
+        belongs_to :profile_types
         has_many   :content_profile_entries, through: :content_profiles_entries #, view: :ordered
       end
     end

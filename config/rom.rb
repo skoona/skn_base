@@ -30,10 +30,10 @@ module Skn
 
     config.gateways[:default].use_logger(Logging.logger['ROM'])
 
-    config.register_relation Relations::ProfileType
-    config.register_relation Relations::ContentProfilesEntry
-    config.register_relation Relations::ContentProfileEntry
-    config.register_relation Relations::ContentProfile
+    config.register_relation Relations::ProfileTypes
+    config.register_relation Relations::ContentProfilesEntries
+    config.register_relation Relations::ContentProfileEntries
+    config.register_relation Relations::ContentProfiles
   end
 
   SknSettings.rom = ROM.container(db_config)

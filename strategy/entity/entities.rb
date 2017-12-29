@@ -5,13 +5,13 @@
 module Entity
 
   class ProfileType < Dry::Struct
-    # attribute :id, Types::Strict::Int
+    attribute :id, Types::Strict::Int
     attribute :name, Types::String
     attribute :description, Types::String
   end
 
   class ContentProfileEntry < Dry::Struct
-    # attribute :id, Types::Strict::Int
+    attribute :id, Types::Strict::Int
     attribute :topic_value, Types::Strict::Array.meta(desc: :yaml_array)
     attribute :topic_type, Types::Strict::String
     attribute :topic_type_description, Types::Strict::String
@@ -24,7 +24,7 @@ module Entity
   end
 
   class ContentProfile < Dry::Struct
-    # attribute :id, Types::Strict::Int
+    attribute :id, Types::Strict::Int
     attribute :person_authentication_key, Types::Strict::String
     attribute :authentication_provider, Types::Strict::String
     attribute :username, Types::Strict::String
@@ -33,11 +33,11 @@ module Entity
     attribute :created_at, Types::Strict::Time
     attribute :updated_at, Types::Strict::Time
 
-    attribute :profile_type, Types.Constructor(ProfileType)
+    attribute :profile_types, Types.Constructor(ProfileType)
   end
 
   class ProfileEntry < Dry::Struct
-    # attribute :id, Types::Strict::Int
+    attribute :id, Types::Strict::Int
     attribute :person_authentication_key, Types::Strict::String
     attribute :authentication_provider, Types::Strict::String
     attribute :username, Types::Strict::String
@@ -46,7 +46,7 @@ module Entity
     attribute :created_at, Types::Strict::Time
     attribute :updated_at, Types::Strict::Time
 
-    attribute :profile_type, Types.Constructor(ProfileType)
+    attribute :profile_types, Types.Constructor(ProfileType)
     attribute :content_profile_entries, Types::Array.of(ContentProfileEntry)
   end
 
