@@ -54,8 +54,8 @@ module Types
   include Dry::Types.module
 
   Email = String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
-  ARSerializedRead = Types.Constructor(Types.Array(Types::Strict::String)) { |yaml_str| Psych.load(yaml_str) }
-  ARSerializedWrite = Types.Constructor(Types::Strict::String) { |ary_of_str| Psych.dump(ary_of_str) }
+  SerializedArrayRead = Types.Constructor(Types.Array(Types::Strict::String)) { |yaml_str| Psych.load(yaml_str) }
+  SerializedArrayWrite = Types.Constructor(Types::Strict::String) { |ary_of_str| Psych.dump(ary_of_str) }
 end
 
 ##
@@ -150,10 +150,10 @@ module Skn
     config.relation(:content_profile_entries) do
       schema(infer: false) do
         attribute :id, Types::Strict::Int.meta(primary_key: true)
-        attribute :topic_value, Types::ARSerializedWrite.meta(desc: :yaml_array), read: Types::ARSerializedRead.meta(desc: :yaml_array)
+        attribute :topic_value, Types::SerializedArrayWrite.meta(desc: :yaml_array), read: Types::SerializedArrayRead.meta(desc: :yaml_array)
         attribute :topic_type, Types::Strict::String
         attribute :topic_type_description, Types::Strict::String
-        attribute :content_value, Types::ARSerializedWrite.meta(desc: :yaml_array), read: Types::ARSerializedRead.meta(desc: :yaml_array)
+        attribute :content_value, Types::SerializedArrayWrite.meta(desc: :yaml_array), read: Types::SerializedArrayRead.meta(desc: :yaml_array)
         attribute :content_type, Types::Strict::String
         attribute :content_type_description, Types::Strict::String
         attribute :description, Types::Strict::String
@@ -239,7 +239,7 @@ end
 6. Several plugin automatically require and instantiate other plugins on their own.  Each plugin has to be reviewed to understand its side effects or dependancies.
 7. Require vs AutoLoad? `Autoload` would prevent loading the whole app when it's not needed during test or CLI operations.  However, `Require` does allow me to control what's loaded and any dependancies with greater clarity.
 8. Not sure about the lifecycle of critical objects in Roda yet.  How to create something that will survive the request/response cycle; like the database component.
-
+9. Planning to switch from Bootstrap to Semantic-UI after a bit.
 
 ### Code Cache
 

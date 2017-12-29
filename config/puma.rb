@@ -1,11 +1,17 @@
+#!/usr/bin/env puma
+
+# config/puma.rb
+
+
 # Puma can serve each request in a thread from an internal thread pool.
 # The `threads` method setting takes two numbers a minimum and maximum.
 # Any libraries that use thread pools should be configured to match
 # the maximum value specified for Puma. Default is set to 5 threads for minimum
 # and maximum, this matches the default thread size of Active Record.
 #
+
 threads_count = 5
-threads threads_count, threads_count
+threads 0, threads_count
 
 directory '.'
 
@@ -23,5 +29,3 @@ environment ENV.fetch("RACK_ENV") { "development" }
 
 # Allow puma to be restarted by `rails restart` command.
 plugin :tmp_restart
-
-# stdout_redirect 'log/stdout', 'log/stderr', true

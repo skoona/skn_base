@@ -17,7 +17,7 @@ config/settings/*.local.yml
 # bundler state
 .bundle
 vendor
-
+docs/*
 
 public/assets/
 

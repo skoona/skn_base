@@ -2,6 +2,22 @@
 #
 
 module Skn
+
+# ## Initialize rom-rb
+#
+# rom-rb is built to be non-intrusive. When we initialize it here, all our
+# relations and commands are bundled into a single container that we can
+# inject into our app.
+#
+# Configure rom-rb to use an in-memory SQLite database via its SQL adapter,
+# register our articls relation, then build and finalize the persistence
+# container.
+
+#   config = ROM::Configuration.new(:sql, "sqlite::memory")
+#   config.register_relation Relations::Articles
+#   container = ROM.container(config)
+
+
   SknSettings.rom = ROM.container(:sql, SknSettings.postgresql.url,
                        user: SknSettings.postgresql.user,
                        password: SknSettings.postgresql.password) do |config|
@@ -10,7 +26,7 @@ module Skn
 
     config.relation(:content_profiles) do
       schema(infer: false) do
-        attribute :id, Types::Strict::Int.meta(primary_key: true)
+        attribute :id, Types::SerialPrimaryKey
         attribute :person_authentication_key, Types::Strict::String
         attribute :profile_type_id, Types::Int.meta(foreign_key: true, relation: :profile_type)
         attribute :authentication_provider, Types::Strict::String
@@ -34,11 +50,11 @@ module Skn
 
     config.relation(:content_profile_entries) do
       schema(infer: false) do
-        attribute :id, Types::Strict::Int.meta(primary_key: true)
-        attribute :topic_value, Types::ARSerializedWrite.meta(desc: :yaml_array), read: Types::ARSerializedRead.meta(desc: :yaml_array)
+        attribute :id, Types::SerialPrimaryKey
+        attribute :topic_value, Types::SerializedArrayWrite.meta(desc: :yaml_array), read: Types::SerializedArrayRead.meta(desc: :yaml_array)
         attribute :topic_type, Types::Strict::String
         attribute :topic_type_description, Types::Strict::String
-        attribute :content_value, Types::ARSerializedWrite.meta(desc: :yaml_array), read: Types::ARSerializedRead.meta(desc: :yaml_array)
+        attribute :content_value, Types::SerializedArrayWrite.meta(desc: :yaml_array), read: Types::SerializedArrayRead.meta(desc: :yaml_array)
         attribute :content_type, Types::Strict::String
         attribute :content_type_description, Types::Strict::String
         attribute :description, Types::Strict::String
@@ -64,7 +80,7 @@ module Skn
 
     config.relation(:profile_types) do
       schema(infer: false) do
-        attribute :id, Types::Strict::Int.meta(primary_key: true)
+        attribute :id, Types::SerialPrimaryKey
         attribute :name, Types::Strict::String
         attribute :description, Types::Strict::String
         attribute :created_at, Types::Strict::Time
@@ -80,7 +96,7 @@ module Skn
     config.relation(:content_profiles_entries) do
       schema(infer: false) do
 
-        attribute :id, Types::Strict::Int.meta(primary_key: true)
+        attribute :id, Types::SerialPrimaryKey
         attribute :content_profile_id, Types::Int.meta(foreign_key: true, relation: :content_profiles)
         attribute :content_profile_entry_id, Types::Int.meta(foreign_key: true, relation: :content_profile_entries)
 

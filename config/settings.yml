@@ -1,6 +1,6 @@
 ---
 Packaging:
-  pomVersion: 0.1.1
+  releaseVersion: <%= Skn::Version %>
   isTest: false
   isDevelopment: false
   isStaging: false
@@ -8,7 +8,9 @@ Packaging:
   configName: base
   short_name: skn
 
-env: !ruby/string:Utility::StringInquirer <%= ENV['RACK_ENV'] %>
+# Create a EnvStringHandler to support: SknSettings.env.development?
+# Yes, its YAML trick
+env: !ruby/string:SknUtils::EnvStringHandler <%= ENV['RACK_ENV'] %>
 
 skn_base:
   secret: "37ae095d4e6ad226c79a03393f743d6c4f4f34f6123b9bef537beade8f364c36f9f7b10192ccd29c9ca4e75bff4207929304132849d0defc803a926406bb8876"

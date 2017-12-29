@@ -23,7 +23,7 @@ gem 'uglifier'
 
 gem 'sass'
 # gem 'bootstrap-sass'
-gem 'semantic-ui-sass'
+# gem 'semantic-ui-sass'
 # gem 'sprockets-sass'
 # gem 'roda-sprocket_assets'
 
