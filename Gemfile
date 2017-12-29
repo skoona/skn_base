@@ -23,6 +23,7 @@ gem 'uglifier'
 
 gem 'sass'
 # gem 'bootstrap-sass'
+gem 'semantic-ui-sass'
 # gem 'sprockets-sass'
 # gem 'roda-sprocket_assets'
 
@@ -52,7 +53,7 @@ gem "bcrypt"
 group :development do
   gem 'pry-byebug'
   gem "racksh"
-  gem 'rubocop'
+  gem 'rubocop', require: false
 end
 
 group :test do
