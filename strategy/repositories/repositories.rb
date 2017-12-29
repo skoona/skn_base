@@ -9,7 +9,7 @@ module Repositories
     end
 
     def entry_info_by_pak(pak)
-      aggregate(:profile_type, :content_profile_entries).where( person_authentication_key: pak ).map_to(Skn::Entities::ProfileEntry).one
+      aggregate(:profile_type, :content_profile_entries).where( person_authentication_key: pak ).map_to(Entity::ProfileEntry).one
     end
 
     def query(conditions)

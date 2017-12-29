@@ -1,5 +1,6 @@
-# File ./strategy/entities/entities.rb
+# File ./strategy/entity/entities.rb
 #
+# Output Records via Mapping
 
 module Entity
 

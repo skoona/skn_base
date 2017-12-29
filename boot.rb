@@ -54,10 +54,6 @@ end
 
 
 begin
-  require 'skn_dry_types'
-  require 'entity/entities'
-  require 'entity/entities'
-  require 'entity/entities'
   require_relative 'config/rom'
 
 rescue StandardError => ex
