@@ -34,6 +34,7 @@ gem 'sass'
 # Core Components
 gem 'dry-types'
 gem 'dry-struct'
+gem 'dry-monads'
 
 # General Utilities
 gem 'skn_utils'

@@ -1,8 +1,9 @@
-# File: ./strategy/repositories/repositories.rb
+# File: ./strategy/repositories/profiles.rb
 #
 module Repositories
 
   class Profiles < ROM::Repository[:content_profiles]
+    struct_namespace Entity
 
     def entry_infos
       aggregate(:profile_types, :content_profile_entries).map_to(Entity::ProfileEntry).to_a
@@ -27,7 +28,5 @@ module Repositories
     #       .one!
     # end
   end
-
-  # Todo: Users aggregate
 
 end

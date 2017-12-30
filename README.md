@@ -138,6 +138,24 @@ Entity
 9. Planning to switch from Bootstrap to Semantic-UI after a bit.
 
 
+### File Tree
+```bash
+[jscott@imac SknBase]$ tree -L 1
+    .
+    ├── assets                  - Sass/Javascripts
+    ├── boot.rb                 - LoadPath Management and Log file setup
+    ├── config                  - Initialization Classes and Configurations
+    ├── config.ru               - Rack Initializer
+    ├── public                  - Images and Fonts
+    ├── routes                  - Nested Routing Trees as MVC Controller replacements
+    ├── skn_base.rb             - Main Roda Web App
+    ├── strategy                - Business Components ( System )
+    └── views                   - Nested HTML Templates and Helpers
+
+    5 directories, 3 files
+```
+
+
 ### Code Cache
 ```ruby
 

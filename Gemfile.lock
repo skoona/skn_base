@@ -23,6 +23,9 @@ GEM
       dry-container (~> 0.2, >= 0.2.6)
       dry-core (~> 0.2)
       dry-equalizer (~> 0.2)
+    dry-monads (0.4.0)
+      dry-core (~> 0.3, >= 0.3.3)
+      dry-equalizer
     dry-struct (0.4.0)
       dry-core (~> 0.4, >= 0.4.1)
       dry-equalizer (~> 0.2)
@@ -172,6 +175,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt
+  dry-monads
   dry-struct
   dry-types
   erubis

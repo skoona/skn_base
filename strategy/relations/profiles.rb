@@ -1,4 +1,4 @@
-# File: ./strategy/relations/relations.rb
+# File: ./strategy/relations/profiles.rb
 #
 
 # Define a canonical schema for this relation. This will be used when we
@@ -19,7 +19,6 @@ module Relations
       primary_key :id
     end
 
-    struct_namespace Entity
     auto_struct true
 
     def by_id(id)
@@ -66,7 +65,6 @@ module Relations
       primary_key :id
     end
 
-    struct_namespace Entity
     auto_struct true
 
     def by_id(id)
@@ -102,7 +100,6 @@ module Relations
       end
     end
 
-    struct_namespace Entity
     auto_struct true
 
     # Define some composable, reusable query methods to return filtered

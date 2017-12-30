@@ -1,4 +1,4 @@
-# File ./strategy/entity/entities.rb
+# File ./strategy/entity/profile.rb
 #
 # Output Records via Mapping
 
@@ -6,8 +6,8 @@ module Entity
 
   class ProfileType < Dry::Struct
     attribute :id, Types::Strict::Int
-    attribute :name, Types::String
-    attribute :description, Types::String
+    attribute :name, Types::Strict::String
+    attribute :description, Types::Strict::String
   end
 
   class ContentProfileEntry < Dry::Struct
@@ -33,7 +33,7 @@ module Entity
     attribute :created_at, Types::Strict::Time
     attribute :updated_at, Types::Strict::Time
 
-    attribute :profile_types, Types.Constructor(ProfileType)
+    attribute :profile_types, ProfileType
   end
 
   class ProfileEntry < Dry::Struct
@@ -46,8 +46,12 @@ module Entity
     attribute :created_at, Types::Strict::Time
     attribute :updated_at, Types::Strict::Time
 
-    attribute :profile_types, Types.Constructor(ProfileType)
+    attribute :profile_types, ProfileType
     attribute :content_profile_entries, Types::Array.of(ContentProfileEntry)
+
+    def profile_name
+      profile_types.name
+    end
   end
 
 end

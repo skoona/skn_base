@@ -1,12 +1,13 @@
 # File: ./config/rom.rb
 #
 
-require 'rom'
-
 require_relative 'skn_dry_types'
-require 'entity/entities'
-require 'relations/relations'
-require 'repositories/repositories'
+require 'entity/profile'
+require 'entity/user'
+require 'relations/profiles'
+require 'relations/users'
+require 'repositories/profiles'
+require 'repositories/users'
 
 module Skn
 
@@ -15,14 +16,7 @@ module Skn
 # rom-rb is built to be non-intrusive. When we initialize it here, all our
 # relations and commands are bundled into a single container that we can
 # inject into our app.
-#
-# Configure rom-rb to use an in-memory SQLite database via its SQL adapter,
-# register our articls relation, then build and finalize the persistence
-# container.
-
-#   config = ROM::Configuration.new(:sql, "sqlite::memory")
-#   config.register_relation Relations::Articles
-#   container = ROM.container(config)
+# ##
 
   db_config = ROM::Configuration.new(:sql, SknSettings.postgresql.url,
                        user: SknSettings.postgresql.user,
@@ -34,6 +28,7 @@ module Skn
     config.register_relation Relations::ContentProfilesEntries
     config.register_relation Relations::ContentProfileEntries
     config.register_relation Relations::ContentProfiles
+    config.register_relation Relations::Users
   end
 
   SknSettings.rom = ROM.container(db_config)
