@@ -1,15 +1,15 @@
-# File: ./boot.rb
+# File: ./main/boot.rb
 
-ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __FILE__)
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 
 %w[strategy routes].each do |path_name|
-  codes = File.expand_path(path_name, __dir__)
+  codes = File.expand_path("../#{path_name}", __dir__)
   $LOAD_PATH.unshift(codes) unless $LOAD_PATH.include?(codes)
 end
 
 begin
   require 'bundler/setup' # Setup LoadPath for gems listed in the Gemfile.
-  require_relative 'config/version'                 # Skn::Version
+  require_relative '../config/version'                 # Skn::Version
   require "securerandom"                            # Augments User Security
 
   Bundler.require(:default, ENV['RACK_ENV'].to_sym) # Require all the gems for this environment
@@ -54,7 +54,7 @@ end
 
 
 begin
-  require_relative 'config/rom'
+  require_relative '../persistence/persistence'
 
 rescue StandardError => ex
   $stderr.puts ex.message

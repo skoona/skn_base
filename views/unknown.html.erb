@@ -1,3 +1,11 @@
-<h2>Unknown Error</h2>
+<h2><%= exception.class %></h2>
 
+<section>
 <p>Your Request could not be processed!</p>
+<p><%= exception.message %></p>
+<ul>
+  <% exception.backtrace[0..12].each do |bt| -%>
+    <li><%= bt %></li>
+  <% end %>
+</ul>
+</section>

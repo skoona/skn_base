@@ -3,7 +3,7 @@
 # File: ./config.ru
 
 require 'puma'
-require_relative "skn_base"
+require_relative "main/skn_base"
 
 app = case ENV['RACK_ENV']
         when 'development', 'test'

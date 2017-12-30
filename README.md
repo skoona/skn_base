@@ -140,19 +140,44 @@ Entity
 
 ### File Tree
 ```bash
-[jscott@imac SknBase]$ tree -L 1
+[SknBase]
     .
-    ├── assets                  - Sass/Javascripts
-    ├── boot.rb                 - LoadPath Management and Log file setup
-    ├── config                  - Initialization Classes and Configurations
+    ├── assets
+    │   ├── css/                - Sass based CSS
+    │   └── js/                 - JQuery, BootStrap, and general Javascript
+    ├── config
+    │   ├── settings/           - SknSettings Environment-biased Application Settings
+    │   ├── puma.rb
+    │   ├── settings.yml        - Default Application Settings
+    │   └── version.rb          - Application Version Object
     ├── config.ru               - Rack Initializer
-    ├── public                  - Images and Fonts
-    ├── routes                  - Nested Routing Trees as MVC Controller replacements
-    ├── skn_base.rb             - Main Roda Web App
-    ├── strategy                - Business Components ( System )
-    └── views                   - Nested HTML Templates and Helpers
+    ├── main
+    │   ├── skn_base.rb         - Main Roda Web App/Adapter
+    │   └── boot.rb             - LoadPath Management and Log file setup
+    ├── persistence
+    │   ├── entity              - Entity Structs for User and Profile entities
+    │   ├── relations           - Users and Profiles definitions
+    │   ├── repositories        - User and Profile repos
+    │   └── persistence.rb      - ROM-RB setup
+    ├── public
+    │   ├── images/             - View Images
+    │   └── fonts/              - View Fonts
+    ├── routes
+    │   ├── profiles.rb         - Profile Routes
+    │   └── users.rb            - User Routes
+    ├── strategy                - Business UseCases
+    └── views
+        ├── helpers/            - View HTML Helpers
+        ├── layouts/            - Site Layout
+        ├── profiles/           - Profile Pages
+        ├── users/              - User Pages
+        ├── about.html.erb      - Root Pages...
+        ├── contact.html.erb
+        ├── homepage.html.erb
+        ├── http_404.html.erb
+        ├── http_500.html.erb
+        └── unknown.html.erb
 
-    5 directories, 3 files
 ```
 
 

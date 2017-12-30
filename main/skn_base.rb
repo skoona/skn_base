@@ -1,4 +1,4 @@
-# File: ./skn_base.rb
+# File: ./main/skn_base.rb
 # Desc: Main Application entry point
 
 require_relative "boot"
@@ -22,7 +22,7 @@ module Skn
     plugin :csrf
     plugin :render, {
         engine: 'html.erb',
-        allowed_paths: %w[views views/layouts views/profiles],
+        allowed_paths: ['views', 'views/layouts', 'views/profiles'],
         layout: '/application',
         layout_opts: {views: 'views/layouts'}
     }
@@ -39,15 +39,10 @@ module Skn
     plugin :not_found do
        view :http_404
     end
-    plugin :error_handler do
-      view :unknown
+    plugin :error_handler do |uncaught_exception|
+      # response.status = 404
+      view :unknown, locals: {exception: uncaught_exception }
     end
-
-    # Named Routes
-    Dir['./routes/*.rb'].each{|f| require f}
-
-    # view helpers
-    Dir['./views/helpers/*.rb'].each{|f| require f}
 
     route do |r|
 
@@ -71,3 +66,17 @@ module Skn
 
   end
 end
+
+# Named Routes
+Dir['./routes/*.rb'].each{|f| require f }
+
+# view helpers
+Dir['./views/helpers/*.rb'].each{|f| require f }
+
+# ##
+#
+# Load Business Logic after this mark.
+# - Loadpath has been established and all gems have been required.
+#
+# ##
+

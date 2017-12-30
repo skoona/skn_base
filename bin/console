@@ -2,6 +2,7 @@
 #
 # File: ./bin/console
 
-require File.expand_path('../skn_base', __dir__)
+
+require File.expand_path('../main/skn_base', __dir__)
 
 Pry.start

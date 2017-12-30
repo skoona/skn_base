@@ -1,4 +1,4 @@
-# File ./strategy/entity/profile.rb
+# File ./persistence/entity/profile.rb
 #
 # Output Records via Mapping
 

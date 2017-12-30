@@ -1,4 +1,4 @@
-# File: ./strategy/relations/profiles.rb
+# File: ./persistence/relations/profiles.rb
 #
 
 # Define a canonical schema for this relation. This will be used when we

@@ -1,4 +1,4 @@
-# File: ./strategy/repositories/profiles.rb
+# File: ./persistence/repositories/profiles.rb
 #
 module Repositories
 

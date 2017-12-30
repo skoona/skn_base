@@ -5,8 +5,8 @@ module Skn
     route('profiles') do |r|
       set_view_subdir 'profiles'
 
-      r.get "content" do
-        view(:content)
+      r.get "resources" do
+        view(:resources)
       end
 
     end
