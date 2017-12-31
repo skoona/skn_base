@@ -4,7 +4,7 @@
 
 module Entity
 
-  class User < Dry::Struct
+  class User < ROM::Struct
     attribute :id, Types::Strict::Int
     attribute :username, Types::Strict::String
     attribute :name, Types::Strict::String
@@ -23,6 +23,10 @@ module Entity
     attribute :assigned_roles, Types::Strict::Array.meta(desc: :yaml_array)
     attribute :remember_token_digest , Types::Strict::String.optional
     attribute :user_options, Types::Strict::Array.meta(desc: :yaml_array)
+
+    def pak
+      person_authenticated_key
+    end
   end
 
 end

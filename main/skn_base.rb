@@ -22,7 +22,7 @@ module Skn
     plugin :csrf
     plugin :render, {
         engine: 'html.erb',
-        allowed_paths: ['views', 'views/layouts', 'views/profiles'],
+        allowed_paths: ['views', 'views/layouts', 'views/profiles', 'views/users'],
         layout: '/application',
         layout_opts: {views: 'views/layouts'}
     }
@@ -33,15 +33,16 @@ module Skn
            css_dir: 'stylesheets',
            js_dir: 'javascript',
            css: ['skn_base.css.scss' ] ,
-           js: ['jquery-3.2.1.js', 'bootstrap-3.3.7.js', 'skn_base.js'],
+           js: ['jquery-3.2.1.js', 'bootstrap-3.3.7.js', 'jquery.matchHeight.js', 'bootstrap-select.js',
+                'jquery.dataTables.js', 'dataTables.bootstrap.js', 'skn-base.custom.js'],
            dependencies: {'_bootstrap.scss' => Dir['assets/stylesheets/**/*.scss', 'assets/stylesheets/*.scss'] }
 
     plugin :not_found do
-       view :http_404
+       view :http_404, path: File.expand_path('../views/http_404.html.erb', __dir__)
     end
     plugin :error_handler do |uncaught_exception|
       # response.status = 404
-      view :unknown, locals: {exception: uncaught_exception }
+      view :unknown, locals: {exception: uncaught_exception }, path: File.expand_path('../views/unknown.html.erb', __dir__)
     end
 
     route do |r|

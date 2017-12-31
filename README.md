@@ -143,8 +143,8 @@ Entity
 [SknBase]
     .
     ├── assets
-    │   ├── css/                - Sass based CSS
-    │   └── js/                 - JQuery, BootStrap, and general Javascript
+    │   ├── stylesheets/        - Sass based CSS
+    │   └── javascript/         - JQuery, BootStrap, and general Javascript
     ├── config
     │   ├── settings/           - SknSettings Environment-biased Application Settings
     │   ├── puma.rb

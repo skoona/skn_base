@@ -44,6 +44,24 @@ module Relations
     def by_id(id)
       where(id: id)
     end
+
+    def find_by(col, val)
+      where(col => val)
+    end
+
+    #Security Related methods
+    # def encrypt_password
+    #   self.password_digest = BCrypt::Password.create(password)
+    # end
+    #
+    # def self.authenticate(email, password)
+    #   user = filter(Sequel.function(:lower, :email) => Sequel.function(:lower, email)).first
+    #   user && user.valid_password?(password) ? user : nil
+    # end
+    #
+    # def valid_password?(password)
+    #   BCrypt::Password.new(self.password_hash) == password
+    # end
   end
 
 end

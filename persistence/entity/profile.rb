@@ -4,13 +4,13 @@
 
 module Entity
 
-  class ProfileType < Dry::Struct
+  class ProfileType < ROM::Struct
     attribute :id, Types::Strict::Int
     attribute :name, Types::Strict::String
     attribute :description, Types::Strict::String
   end
 
-  class ContentProfileEntry < Dry::Struct
+  class ContentProfileEntry < ROM::Struct
     attribute :id, Types::Strict::Int
     attribute :topic_value, Types::Strict::Array.meta(desc: :yaml_array)
     attribute :topic_type, Types::Strict::String
@@ -23,7 +23,7 @@ module Entity
     attribute :updated_at, Types::Strict::Time
   end
 
-  class ContentProfile < Dry::Struct
+  class ContentProfile < ROM::Struct
     attribute :id, Types::Strict::Int
     attribute :person_authentication_key, Types::Strict::String
     attribute :authentication_provider, Types::Strict::String
@@ -34,9 +34,16 @@ module Entity
     attribute :updated_at, Types::Strict::Time
 
     attribute :profile_types, ProfileType
+
+    def profile_name
+      profile_types.name
+    end
+    def profile_type
+      profile_type
+    end
   end
 
-  class ProfileEntry < Dry::Struct
+  class ProfileEntry < ROM::Struct
     attribute :id, Types::Strict::Int
     attribute :person_authentication_key, Types::Strict::String
     attribute :authentication_provider, Types::Strict::String
@@ -51,6 +58,12 @@ module Entity
 
     def profile_name
       profile_types.name
+    end
+    def profile_type
+      profile_type
+    end
+    def entries
+      content_profile_entries
     end
   end
 

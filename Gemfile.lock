@@ -169,6 +169,8 @@ GEM
     uglifier (4.1.0)
       execjs (>= 0.3.0, < 3)
     unicode-display_width (1.3.0)
+    warden (1.2.7)
+      rack (>= 1.0)
 
 PLATFORMS
   ruby
@@ -201,6 +203,7 @@ DEPENDENCIES
   therubyracer
   tilt
   uglifier
+  warden
 
 RUBY VERSION
    ruby 2.4.2p198

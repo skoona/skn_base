@@ -23,7 +23,7 @@
     <![endif]-->
   </head>
 
-  <body class="language-ruby preload" data-request-path="<%= request.path %>" data-request-matched="<%= request.matched_path %>" >
+  <body class="language-ruby preload" data-request-path="<%= request.path.split('/')[1] %>" data-request-matched="<%= request.path.split('/')[2] || request.path.split('/')[1] %>" data-relative-path="">
 
     <%= render( 'layouts/_header') %>
 
@@ -32,10 +32,24 @@
 
       <%= yield %>
 
-      <p>Production: <%= SknSettings.env.production? %></p>
-      <p>Development: <%= SknSettings.env.development? %></p>
-      <p><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Env: <%= SknSettings.env %></p>
-      <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span> Path: <%= request.path %></p>
+      <% unless request.params.empty? %>
+          <section>
+            <p>Request Params</p>
+            <ul>
+              <% request.params.to_h.each_pair do |k,v| -%>
+                  <li><%= "#{k}: #{v}" %></li>
+              <% end %>
+            </ul>
+          </section>
+      <% end %>
+
+      <section>
+        <p>Production: <%= SknSettings.env.production? %></p>
+        <p>Development: <%= SknSettings.env.development? %></p>
+        <p><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Env: <%= SknSettings.env %></p>
+        <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span> RPath: <%= request.path %></p>
+        <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span> MPath: <%= request.matched_path %></p>
+      </section>
     </div>
 
     <%= render( 'layouts/_footer') %>

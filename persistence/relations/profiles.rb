@@ -34,12 +34,10 @@ module Relations
     schema(:content_profiles_entries, infer: false) do
 
       attribute :id, Types::Serial #PrimaryKey
-      attribute :content_profile_id, Types::ForeignKey(:content_profiles)              #Types::Int.meta(foreign_key: true, relation: :content_profiles)
-      attribute :content_profile_entry_id, Types::ForeignKey(:content_profile_entries) #Types::Int.meta(foreign_key: true, relation: :content_profile_entries)
+      attribute :content_profile_id, Types::ForeignKey(:content_profiles)
+      attribute :content_profile_entry_id, Types::ForeignKey(:content_profile_entries)
 
       primary_key :id
-      # foreign_key :content_profiles
-      # foreign_key :content_profile_entries
 
       associations do
         belongs_to :content_profiles
@@ -81,9 +79,9 @@ module Relations
   class ContentProfiles < ROM::Relation[:sql]
     schema(:content_profiles, infer: false) do
 
-      attribute :id, Types::Serial #PrimaryKey
+      attribute :id, Types::Serial
       attribute :person_authentication_key, Types::Strict::String
-      attribute :profile_type_id, Types::ForeignKey(:profile_types) #               Types::Int.meta(foreign_key: true, relation: :profile_types)
+      attribute :profile_type_id, Types::ForeignKey(:profile_types)
       attribute :authentication_provider, Types::Strict::String
       attribute :username, Types::Strict::String
       attribute :display_name, Types::Strict::String
@@ -92,7 +90,6 @@ module Relations
       attribute :updated_at, Types::Strict::Time
 
       primary_key :id
-      # foreign_key(:profile_types)
 
       associations do
         belongs_to :profile_types

@@ -51,6 +51,8 @@ gem "rack-protection"
 gem "rack_csrf"
 gem "bcrypt"
 
+gem 'warden'
+
 group :development do
   gem 'pry-byebug'
   gem "racksh"
