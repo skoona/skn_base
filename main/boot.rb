@@ -55,6 +55,8 @@ end
 
 begin
   require_relative '../persistence/persistence'
+  require 'secure/user_profile'
+  require_relative 'warden'
 
 rescue StandardError => ex
   $stderr.puts ex.message

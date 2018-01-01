@@ -10,10 +10,10 @@
       advanced ContentProfile features used to provide you personalized and secure access to protected resources.
     </p>
     <p>
-      <a class="btn btn-primary btn-lg" href="/users/users" role="button">More about Users View</a>
+      <a class="btn btn-primary btn-lg" href="/profiles/users" role="button">More about Users View</a>
     </p>
   </div>
 
-  <h3 class="text-center">Welcome UserName<br/><small>Secured Documents</small></h3>
+  <h3 class="text-center">Welcome <%= valid_user? ? current_user.name : 'UserName' %><br/><small>Secured Documents</small></h3>
 
 </article>

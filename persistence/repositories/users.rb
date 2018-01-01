@@ -13,12 +13,20 @@ module Repositories
       users.where(conditions).map_to(Entity::User).to_a
     end
 
+    def by_pak(pak)
+      find_by(person_authenticated_key: pak)
+    end
+
     def [](id)
-      by_id(id).map_to(Entity::User).one
+      users.by_id(id).map_to(Entity::User).one
     end
 
     def by_id(id)
-      where(id: id)
+      users.by_id(id).one
+    end
+
+    def find_by(col_val_hash)
+      users.where(col_val_hash).one
     end
 
   end

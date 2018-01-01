@@ -8,30 +8,30 @@
   </section>
 
   <section>
-    <form action="login" method="post" role="form">
+    <form action="/sessions/signin" method="post" role="form">
       <%= csrf_tag %>
 
         <div class="form-group has-feedback">
-          <label for="users_username" class="sr-only">Username</label>
-          <input autofocus="autofocus" placeholder="Your Username" type="text" name="users[username]" id="users_username" class="form-control" required>
+          <label for="sessions_username" class="sr-only">Username</label>
+          <input autofocus="autofocus" placeholder="Your Username" type="text" name="sessions[username]" id="sessions_username" class="form-control" required>
           <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
         </div>
 
         <div class="form-group has-feedback">
-          <label for="users_password" class="sr-only">Password</label>
-          <input type="password" class="form-control" name="users[password]" id="users_password" placeholder="Your Password" required>
+          <label for="sessions_password" class="sr-only">Password</label>
+          <input type="password" class="form-control" name="sessions[password]" id="sessions_password" placeholder="Your Password" required>
           <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
         </div>
 
 
         <div class="form-control-static">
-          <a href="users/password_resets/new">forgotten password?</a>
+          <a href="sessions/password_resets/new">forgotten password?</a>
         </div>
 
         <div class="checkbox">
           <label>
-            <input value="0" type="checkbox" name="users[remember_me_token]" type="hidden">
-            <input value="1" type="checkbox" checked="checked" name="users[remember_me_token]" id="users_remember_me_token">
+            <input value="0" type="checkbox" name="sessions[remember_me_token]" type="hidden">
+            <input value="1" type="checkbox" checked="checked" name="sessions[remember_me_token]" id="sessions_remember_me_token">
             <span class="add-on"> Remember me until logout; on this computer.</span>
           </label>
         </div>

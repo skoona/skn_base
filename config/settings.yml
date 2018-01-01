@@ -19,3 +19,20 @@ postgresql:
   url: postgres://localhost/SknServices_development
   user: postgres
   password: postgres
+
+security:
+  extra_digest_strength: 3
+  session_expires: 480                # 8 hours
+  remembered_for: 2160                # 32 hours
+  verify_login_after_seconds: 14400   # 4 hours
+  ! public_pages: # not easily stored in the xml, because of leading slash
+   - /assets
+   - /images
+   - /fonts
+   - /public
+   - /sessions
+   - /signout
+   - /about
+   - /contact
+  user_cache:
+    0: 'UserProfile Object'

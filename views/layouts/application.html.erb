@@ -28,6 +28,10 @@
     <%= render( 'layouts/_header') %>
 
     <div class="container" role="main">
+      <section>
+        <%= render 'layouts/_messages' %>
+      </section>
+
       <div class="page-header"><h4>Skoona Explorations: <small><strong><em>Basic Application</em></strong> from scratch using Roda</small></h4></div>
 
       <%= yield %>

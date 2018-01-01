@@ -18,9 +18,27 @@
           <li><a class="<%= menu_active?('/about') %>" href="/about">About</a></li>
           <li><a class="<%= menu_active?('/contact') %>" href="/contact">Contact</a></li>
           <li><a class="<%= menu_active?('/profiles/resources') %>" href="/profiles/resources">Resources</a></li>
-          <li><a class="<%= menu_active?('/users/users') %>" href="/users/users">User</a></li>
-          <li><a class="<%= menu_active?('/users/login') %>" href="/users/login">Login</a></li>
         </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li>
+            <% if valid_user? %>
+                <a rel="nofollow" data-method="delete" href="/sessions/logout">
+                  <span><i class="glyphicon glyphicon-log-out"></i>&nbsp;Sign out</span>
+                </a>
+            <% else %>
+                <a rel="nofollow" href="/sessions/signin">
+                  <span><i class="glyphicon glyphicon-log-in"></i>&nbsp;Sign in</span>
+                </a>
+            <% end %>
+          </li>
+        </ul>
+        <% if valid_user? %>
+            <p class="navbar-text navbar-right">Signed in as
+                <a href="<%= '/profiles/users' %>">
+                  <span><i class="glyphicon glyphicon-user"></i>&nbsp;<small><%= current_user.name %></small></span>
+                </a>
+            </p>
+        <% end %>
       </div>
     </div>
   </nav>

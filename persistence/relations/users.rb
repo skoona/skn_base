@@ -37,16 +37,8 @@ module Relations
 
     # Define some composable, reusable query methods to return filtered
     # results from our database table. We'll use them in a moment.
-    def by_pak(pak)
-      where(person_authenticated_key: pak)
-    end
-
     def by_id(id)
       where(id: id)
-    end
-
-    def find_by(col, val)
-      where(col => val)
     end
 
     #Security Related methods

@@ -20,14 +20,25 @@ module Skn
     plugin :content_for
     plugin :head
     plugin :csrf
+    plugin :flash
     plugin :render, {
         engine: 'html.erb',
-        allowed_paths: ['views', 'views/layouts', 'views/profiles', 'views/users'],
+        allowed_paths: ['views', 'views/layouts', 'views/profiles', 'views/sessions'],
         layout: '/application',
         layout_opts: {views: 'views/layouts'}
     }
     plugin :static, %w[/images /fonts]
     plugin :multi_route
+
+    use Warden::Manager do |manager|
+      manager.default_scope = :access_profile
+      manager.default_strategies :api_auth, :remember_token, :password, :not_authorized
+      manager.scope_defaults :access_profile,
+                             store: true,
+                             strategies: [:password, :not_authorized],
+                             action: '/sessions/unauthenticated'
+      manager.failure_app = self
+    end
 
     plugin :assets,
            css_dir: 'stylesheets',
@@ -47,7 +58,10 @@ module Skn
 
     route do |r|
 
+
       r.root do
+        # binding.pry
+
         view(:homepage)
       end
 
