@@ -101,7 +101,6 @@ end
 # - All attempts to auth have been tried (i.e. all valid strategies)
 #
 Warden::Manager.after_failed_fetch do |user,auth,opts|
-  # puts "===============[DEBUG]:af #{self.class}\##{__method__}"
   auth.logger.debug " Warden::Manager.after_failed_fetch(ONLY) :remember_token present?(#{!auth.request.cookies["remember_token"].nil?}), opts=#{opts}, session.id=#{auth.request.session[:session_id]}"
   true
 end
@@ -118,11 +117,9 @@ end
 # UnAuthenticated action is to allow another login attempt, thus we allow it to flow to failure_app of SessionsController#new
 #
 Warden::Manager.before_failure do |env, opts|
-  # puts "===============[DEBUG]:bf #{self.class}\##{__method__}"
-
   env['warden'].request.cookies.delete( 'remember_token')
   env['warden'].request.cookies.delete( SknSettings.skn_base.session_key.to_s)
-  # env['warden'].reset_session!
+  env['warden'].reset_session!
   env['warden'].logger.debug " Warden::Manager.before_failure(ONLY) path:#{env['PATH_INFO']}, session.id=#{env['warden'].request.session[:session_id]}"
   true
 end

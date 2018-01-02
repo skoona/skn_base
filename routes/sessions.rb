@@ -29,11 +29,10 @@ module Skn
 
       r.is 'unauthenticated' do
         session[:return_to] = env['warden.options'][:attempted_path]
+
         warden_messages
-        request.path_info ="/sessions/signin"
-        # response.status = 403
-        # r.redirect('/sessions/signin')
-        view(:signin)
+        response.status = 403
+        view(:unauthenticated, locals: {attempted_page: session[:return_to] })
       end
 
     end

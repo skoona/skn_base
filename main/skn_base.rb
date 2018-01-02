@@ -26,7 +26,7 @@ module Skn
       manager.scope_defaults :access_profile, {
                              store: true,
                              strategies: [:api_auth, :password, :remember_token, :not_authorized],
-                             action: '/sessions/unauthenticated' }
+                             action: 'sessions/unauthenticated' }
       manager.failure_app = self
       manager[:roda_class] = self
     end

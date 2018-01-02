@@ -22,6 +22,8 @@ module Skn
     end
 
     def login_required?
+      env['warden.options'] = {} unless env['warden.options']
+      env['warden.options'][:attempted_path] = request.path
       return false if public_page?
       warden.authenticate!(message: 'Sign in Required!')
     end
