@@ -20,7 +20,6 @@ gem "therubyracer", platform: [:mri, :ruby]
 # gem 'therubyrhino', platform: :jruby
 gem 'uglifier'
 
-
 gem 'sass'
 # gem 'bootstrap-sass'
 # gem 'semantic-ui-sass'
@@ -38,6 +37,7 @@ gem 'dry-monads'
 
 # General Utilities
 gem 'skn_utils'
+gem 'time_math2', require: 'time_math'
 gem 'rake'
 
 # Persistence
@@ -50,7 +50,6 @@ gem 'rack-contrib'
 gem "rack-protection"
 gem "rack_csrf"
 gem "bcrypt"
-
 gem 'warden'
 
 group :development do

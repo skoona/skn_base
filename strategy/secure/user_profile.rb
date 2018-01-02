@@ -37,6 +37,10 @@ class UserProfile
     @attributes.to_h
   end
 
+  def active?
+    @attributes[:active]
+  end
+
   def self.authenticate(username, password)
      find_and_authenticate(username, password)
   end
@@ -45,24 +49,23 @@ class UserProfile
     user = user_repo.find_by(username: username)
     if user && valid_digest?(user.password_digest, password)
       userp = self.new(user.to_h)
-      user_cache_add(userp) if userp
-      puts "#{self.name}##{__method__}(success) Returns => #{userp.to_h}"
+      SknSettings.logger.debug "#{self.name}##{__method__}(success) Returns => #{userp.name}"
       userp
     else
-      puts "#{self.name}##{__method__}(Failed) Returns => #{user.to_h}"
+      SknSettings.logger.debug "#{self.name}##{__method__}(Failed) Returns => #{user&.name}"
       nil
     end
   end
 
   # Warden calls this
   def self.fetch_cached_user(id_num)
-    userp = user_cache_fetch(id_num)
+    userp = user_cache.fetch(id_num)
     if userp && !userp.last_login_time_expired?
       userp.last_access = Time.now.getlocal
     else
-      userp = nil
+      userp = nil  # force login as time has expired or cache was purged.
     end
-    puts "#{self.name}##{__method__}() Returns => #{userp.to_h}"
+    SknSettings.logger.debug "#{self.name}##{__method__}() Returns => #{userp&.name}"
 
     userp
   end
@@ -73,21 +76,21 @@ class UserProfile
     upp = nil
     value = user_repo.find_by(remember_token: token)
     upp = self.new(value.to_h) if value and valid_digest?(value.remember_token_digest, token)
-    user_cache_add(upp) if upp
+    user_cache.add(upp) if upp
     upp
   end
 
   # Warden calls this or any service
   def self.logout(id_num)
     return nil unless id_num.present?
-    userp = user_cache_fetch(id_num)
+    userp = user_cache.fetch(id_num)
     userp.disable_authentication_controls if userp.present?
   end
 
   def last_login_time_expired?
     a = (Time.now.getlocal.to_i - last_access.to_i)
     time_is_up = (a > login_after_seconds )
-    puts "#{self.name}##{__method__}() Returns => #{time_is_up}"
+    SknSettings.logger.debug "#{self.name}##{__method__}() Returns => #{time_is_up}"
     time_is_up
   end
 
@@ -95,7 +98,7 @@ class UserProfile
   # Warden will call this methods
   def disable_authentication_controls
     self.last_access = Time.now.getlocal
-    self.user_cache_delete(attributes(:id))
+    self.user_cache.delete(attributes(:id))
     attributes(:active, false)
     true
   end
@@ -104,8 +107,20 @@ class UserProfile
   def enable_authentication_controls
     attributes(:active, true)
     self.last_access = Time.now.getlocal
-    self.user_cache_add(self)
+    self.class.user_cache.add(self)
     true
+  end
+
+  # Warden will call this methods
+  def self.security_session_time
+    minutes_from_now(SknSettings.security.session_expires.to_i)
+  end
+  def self.security_remember_time
+    minutes_from_now(SknSettings.security.remembered_for.to_i)
+  end
+  def self.minutes_from_now(val=20)
+    # Time.now.advance(:minutes => val)
+    TimeMath.min.advance(Time.now, val) # val.minutes.from_now
   end
 
   protected
@@ -114,25 +129,8 @@ class UserProfile
     Repositories::Users.new(SknSettings.rom)
   end
 
-  def self.user_cache_add(userp)
-    return false if userp.nil? || !userp.respond_to?(:id)
-    user_cache[userp.id] = userp
-    true
-  end
-
-  def self.user_cache_delete(userp)
-    return false if userp.nil?
-    uid = userp.respond_to?(:id) ? userp.id : userp
-    user_cache.delete_field(uid)
-    true
-  end
-
-  def self.user_cache_fetch(id_num)
-    user_cache[id_num]
-  end
-
   def self.user_cache
-    SknSettings.security.user_cache
+     @user_cache ||= Secure::UserProfileCache.new
   end
 
   def regenerate_remember_token!

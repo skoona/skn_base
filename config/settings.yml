@@ -11,9 +11,12 @@ Packaging:
 # Create a EnvStringHandler to support: SknSettings.env.development?
 # Yes, its YAML trick
 env: !ruby/string:SknUtils::EnvStringHandler <%= ENV['RACK_ENV'] %>
+app_root: <%=  File.expand_path(__dir__, '.').freeze %>
 
 skn_base:
   secret: "37ae095d4e6ad226c79a03393f743d6c4f4f34f6123b9bef537beade8f364c36f9f7b10192ccd29c9ca4e75bff4207929304132849d0defc803a926406bb8876"
+  session_key: _skn_base_session
+  session_domain: .skoona.net
 
 postgresql:
   url: postgres://localhost/SknServices_development
@@ -25,7 +28,13 @@ security:
   session_expires: 480                # 8 hours
   remembered_for: 2160                # 32 hours
   verify_login_after_seconds: 14400   # 4 hours
-  ! public_pages: # not easily stored in the xml, because of leading slash
+
+  profile_cache: !ruby/object:Concurrent::Map {backend: {0: UserProfiles Object}, write_lock: !ruby/object:Thread::Mutex {}, default_proc: nil }
+
+  user_cache:
+    0: UserProfile Objects
+
+  ! public_pages:
    - /assets
    - /images
    - /fonts
@@ -34,5 +43,5 @@ security:
    - /signout
    - /about
    - /contact
-  user_cache:
-    0: 'UserProfile Object'
+
+

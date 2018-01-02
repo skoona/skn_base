@@ -3,12 +3,10 @@
 
 <article>
 
-  <section class="page-header">
-    <h1 class="text-center">Sign in</h1>
-  </section>
-
   <section>
-    <form action="/sessions/signin" method="post" role="form">
+    <div class="container">
+    <form class="form-signin" action="/sessions/signin" method="post" role="form">
+      <h2 class="form-signin-heading">Please sign in</h2>
       <%= csrf_tag %>
 
         <div class="form-group has-feedback">
@@ -25,7 +23,7 @@
 
 
         <div class="form-control-static">
-          <a href="sessions/password_resets/new">forgotten password?</a>
+          <a href="password_resets/new">forgotten password?</a>
         </div>
 
         <div class="checkbox">
@@ -37,6 +35,7 @@
         </div>
         <button type="submit" name="commit" value="login" class="submit btn-primary btn-block">Sign in</button>
     </form>
+    </div>
   </section>
 
 </article>

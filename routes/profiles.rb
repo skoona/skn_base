@@ -3,17 +3,18 @@
 module Skn
   class SknBase
     route('profiles') do |r|
+      SknSettings.logger.debug "DEBUG: PROFILES-ROUTE PASSING => #{request.path}, REQUEST-METHOD => #{request.request_method}"
 
-      login_required?(r)
+      login_required?
       set_view_subdir 'profiles'
 
       r.get "resources" do
-        flash[:notice] = warden.errors.full_messages unless warden.errors.empty?
+        warden_messages
         view(:resources)
       end
 
       r.get "users" do
-        flash[:notice] = warden.errors.full_messages unless warden.errors.empty?
+        warden_messages
         view(:users)
       end
 
