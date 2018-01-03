@@ -1,52 +1,62 @@
 # File: ./strategy/secure/user_profile_cache.rb
 #
 # Add/Fetch/Delete UserProfile objects from ThreadSafe Cache
+# Uses ThreadSafe::Hash from Concurrent-Ruby Gem
+# Object are stored in Array with timestamp, fetch auto expires cache
+
+# require 'concurrent'
 
 module Secure
   class UserProfileCache
+    include Singleton
 
-    def self.call(id_num, opts={})
-      self.new(opts).call(id_num)
+    def initialize
+      @_user_cache = Concurrent::Hash.new
+      @_session_expires = SknSettings.security.session_expires
     end
 
-    def initialize(opts={})
-      @cache = opts.fetch(:backend, SknSettings.security.user_cache)
-      @logger = opts.fetch(:logger, SknSettings.logger)
+    # Standard Interface
+    def fetch(key)
+      get(key)
     end
 
-    def fetch(id_num)
-      userp = user_cache[id_num]
-      @logger.debug "#{self.class.name}##{__method__}() Acted on: #{userp.respond_to?(:name) ? userp&.name : userp}"
-      userp
-    end
-    alias_method :fetch_cached_user, :fetch
-    alias_method :call, :fetch
-
-    def add(userp)
-      return false if userp.nil? || !userp.respond_to?(:id)
-      user_cache[userp.id] = userp
-      @logger.debug "#{self.class.name}##{__method__}() Acted on: #{userp&.name}"
-      true
+    def add(key, obj)
+      put(key, obj)
+      nil
     end
 
-    def delete(userp)
-      return false if userp.nil?
-      uid = userp.respond_to?(:id) ? userp.id : userp
-      user_cache.delete(uid)
-      @logger.debug "#{self.class.name}##{__method__}() Acted on: #{userp&.name}"
-      true
+    def delete(key)
+      remove(key)
     end
 
     def size
-      sz = user_cache.size
-      @logger.debug "#{self.class.name}##{__method__}() returned: #{sz}"
-      sz
+      @_user_cache.size
     end
 
     private
 
-    def user_cache
-      @cache
+    def get(key)
+      return nil if expired?(key)
+      pkg = @_user_cache[key]
+      pkg[1] = Time.now.getlocal
+      pkg.first
     end
+
+    def put(key, object)
+      @_user_cache[key] = [object, Time.now.getlocal]
+      nil
+    end
+
+    def expired?(key)
+      pkg = @_user_cache[key]
+      return true if pkg.nil?
+      TimeMath.min.measure(pkg.last, Time.now.getlocal) > @_session_expires
+    end
+
+    def remove(key)
+      @_user_cache.delete(key)
+      nil
+    end
+
   end
 end

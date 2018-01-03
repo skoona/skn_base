@@ -3,13 +3,10 @@
 module Skn
   class SknBase
 
-    def remember_cookie_set
-      if request.params["remember_me_token"].eql?("1")
-        response.set_cookie('remember_token', { value: remember, expires: remembered_for , httponly: true })
-      end
-    end
-    def remember_cookie_clear
-      response.delete_cookie('remember_token')
+    def login_required?
+      session['skn.attempted.page'] = request.path
+      return false if public_page?
+      warden.authenticate!(message: 'Sign in Required!', roda_request: request)
     end
 
     def warden_messages
@@ -21,19 +18,13 @@ module Skn
       warden.authenticated?
     end
 
-    def login_required?
-      env['warden.options'] = {} unless env['warden.options']
-      env['warden.options'][:attempted_path] = request.path
-      return false if public_page?
-      warden.authenticate!(message: 'Sign in Required!')
-    end
-
     def redirect_to_origin
-      if session[:return_to] && (session[:return_to].start_with?('/session') || session[:return_to].eql?('/new'))
-        '/profiles/resources'
-      else
-        session[:return_to]
+      orig = session['skn.attempted.page']
+      if orig.nil? || orig.empty? || orig.start_with?('/session') || orig.eql?('/new')
+        orig = '/profiles/resources'
       end
+      SknSettings.logger.debug "#{self.class}##{__method__}() Returns: [#{orig}]"
+      orig
     end
 
     def public_page?
@@ -68,9 +59,9 @@ module Skn
     end
     alias_method :current_user=, :user=
 
-    def logout(*args)
+    def logout(*list_of_scopes)
       warden.raw_session.inspect  # Without this inspect here.  The session does not clear :|
-      warden.logout(*args)
+      warden.logout(*list_of_scopes)
     end
 
     # Proxy to the authenticate method on warden

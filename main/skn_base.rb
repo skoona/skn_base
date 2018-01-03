@@ -29,6 +29,7 @@ module Skn
                              action: 'sessions/unauthenticated' }
       manager.failure_app = self
       manager[:roda_class] = self
+      manager[:public_pages] = SknSettings.security.public_pages
     end
 
     plugin :all_verbs
@@ -75,7 +76,7 @@ module Skn
 
       r.assets unless SknSettings.env.production?
 
-      SknSettings.logger.debug "DEBUG: MAIN-ROUTE PASSING => #{request.path}, OPTS => #{opts[:root]}, REQUEST-METHOD => #{request.request_method}"
+      warden_messages
 
       r.multi_route
 

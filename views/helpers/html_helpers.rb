@@ -1,4 +1,4 @@
-# File: views/helpers/base_helpers.rb
+# File: views/helpers/html_helpers.rb
 #
 module Skn
   class SknBase
@@ -16,6 +16,20 @@ module Skn
       else
         flash[type] = [text]
       end
+    end
+
+    def attempted_page_name
+      attempted_page&.empty? ? '' : attempted_page.split('/').last
+    end
+    def attempted_page
+      session['skn.attempted.page'] || ""
+    end
+
+    def current_page_name
+      current_page&.empty? ? '' : current_page.split('/').last
+    end
+    def current_page
+      request.path
     end
 
   end

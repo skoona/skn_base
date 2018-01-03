@@ -37,6 +37,7 @@ gem 'dry-monads'
 
 # General Utilities
 gem 'skn_utils'
+gem 'concurrent-ruby', require: 'concurrent'
 gem 'time_math2', require: 'time_math'
 gem 'rake'
 

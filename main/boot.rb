@@ -55,7 +55,6 @@ end
 
 begin
   require_relative '../persistence/persistence'
-  require 'secure/user_profile_cache'
   require 'secure/user_profile'
   require_relative 'warden'
 

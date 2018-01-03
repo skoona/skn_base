@@ -178,6 +178,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt
+  concurrent-ruby
   dry-monads
   dry-struct
   dry-types

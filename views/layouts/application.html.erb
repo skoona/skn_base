@@ -12,7 +12,6 @@
 
     <%= assets(:css, media: :all) %>
     <%= assets(:js) %>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" media="screen" rel="stylesheet" type="text/css" />
 
     <link rel="icon" type="image/x-icon"  href="/public/images/favicon.ico">
 
@@ -51,11 +50,12 @@
       <section>
         <p>Production: <%= SknSettings.env.production? %></p>
         <p>Development: <%= SknSettings.env.development? %></p>
-        <p><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Env: <%= SknSettings.env %></p>
-        <p><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> ReturnTo: <%= request.session[:return_to] %></p>
-        <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span> RPath: <%= request.path %></p>
-        <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span> MPath: <%= request.matched_path %></p>
-        <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span> RMeth: <%= request.request_method %></p>
+        <p><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;Environment: <%= SknSettings.env %></p>
+        <p><i class="fa fa-handshake-o fa-lg" aria-hidden="true"></i>&nbsp;Attempted Page: <%= attempted_page %></p>
+        <p><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;Current Page: <%= current_page %></p>
+        <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Request Path: <%= request.path %></p>
+        <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Matched Path: <%= request.matched_path %></p>
+        <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Request Method: <%= request.request_method %></p>
       </section>
     </main>
 

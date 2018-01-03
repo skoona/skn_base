@@ -14,7 +14,7 @@ env: !ruby/string:SknUtils::EnvStringHandler <%= ENV['RACK_ENV'] %>
 app_root: <%=  File.expand_path(__dir__, '.').freeze %>
 
 skn_base:
-  secret: "37ae095d4e6ad226c79a03393f743d6c4f4f34f6123b9bef537beade8f364c36f9f7b10192ccd29c9ca4e75bff4207929304132849d0defc803a926406bb8876"
+  secret: 37ae095d4e6ad226c79a03393f743d6c4d51b19fd8f6850e9ce5041312e631f6f9f7b10192ccd29c9ca4e75bff4207929304132849d0defc803a926406bbb676
   session_key: _skn_base_session
   session_domain: .skoona.net
 
@@ -35,13 +35,18 @@ security:
     0: UserProfile Objects
 
   ! public_pages:
-   - /assets
-   - /images
-   - /fonts
-   - /public
-   - /sessions
-   - /signout
-   - /about
-   - /contact
+    - /assets
+    - /images
+    - /fonts
+    - /public
+    - /sessions
+    - /about
+    - /contact
+
+  ! asset_paths:
+    - /assets
+    - /images
+    - /fonts
+    - /public
 
 
