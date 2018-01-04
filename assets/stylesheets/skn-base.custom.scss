@@ -12,9 +12,9 @@ html {
   min-height: 100%;
 }
 body > .container { // top level wrapper in layout, applys to any container that an immediate child of body, i.e. main
-  padding: 70px 6px 72px 6px; // top right bottom left
+  padding: 2px 6px 70px 6px; // top right bottom left
 }
-main {                   // main page container, without menu or footer
+main {      // main page container, without menu or footer
   @extend .container;
 }
 article {                     // a whole page typically

@@ -83,7 +83,7 @@ Warden::Strategies.add(:password) do
   def authenticate!
     user = UserProfile.find_and_authenticate(params["sessions"]["username"], params["sessions"]["password"])
    logger.debug " Warden::Strategies.add(:password) User: [#{user&.name}]"
-    (user and user.active?) ? success!(user, "Signed in successfully. Password") : fail("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
+    (user and user.active?) ? success!(user, "Signed in successfully. Password") : fail!("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
   rescue => e
     fail("Your Credentials are invalid or expired. [Password](#{e.message})")
   end
@@ -91,14 +91,14 @@ end
 
 ##
 # This will always fail, and is used as the last option should prior options fail
-Warden::Strategies.add(:not_authorized) do
+Warden::Strategies.add(:not_authenticated) do
   def valid?
     true
   end
 
   def authenticate!
-   logger.debug " Warden::Strategies.add(:not_authorized) method: [#{request.request_method}]"
-    fail!("Your Credentials are invalid or expired. Not Authorized! [NotAuthorized](FailNotAuthorized)")
+   logger.debug " Warden::Strategies.add(:not_authenticated) method: [#{request.request_method}]"
+    fail!("Authentication is Required to access this page!  Please Sign in.  [NotAuthenticated](FailNotAuthorized)")
   end
 end
 
@@ -144,7 +144,7 @@ Warden::Manager.before_failure do |env, opts|
   these_cookies = opts[:roda_request] ? opts[:roda_request].cookies : env['warden'].request.cookies
   these_cookies.delete( 'remember_token')
   opts[:roda_request].session['_flash'] = {} if opts[:roda_request].session['_flash'].nil?
-  env['warden'].flash_message(opts[:roda_request].session['_flash'], :danger, env['warden'].message) if opts[:roda_request] && env['warden'].message
+  env['warden'].flash_message(opts[:roda_request].session['_flash'], :info, env['warden'].message) if opts[:roda_request] && env['warden'].message
   env['warden'].logger.debug " Warden::Manager.before_failure(ONLY) path:#{env['PATH_INFO']}, AttemptedPage: #{env['warden'].request.session['skn.attempted.page']}, session.id=#{env['warden'].request.session[:session_id]}, Msg: #{env['warden'].message}"
   true
 end
@@ -203,7 +203,12 @@ Warden::Manager.before_logout do |user,auth,opts|
   user&.disable_authentication_controls
   these_cookies.delete( SknSettings.skn_base.session_key.to_s)
   auth.reset_session!
-  auth.request.flash[:success] = opts[:message] if opts[:message]
+  if opts[:roda_request] and opts[:roda_request].respond_to?(:flash)
+    opts[:roda_request].flash[:success] = opts[:message]
+  else
+    opts[:roda_request].session['_flash'] = {} if opts[:roda_request].session['_flash'].nil?
+    auth.flash_message(opts[:roda_request].session['_flash'], :success, opts[:message]) if opts[:roda_request] && opts[:message]
+  end
   auth.logger.debug " Warden::Manager.before_logout(#{user&.name})"
 
   true

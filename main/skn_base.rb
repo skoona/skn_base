@@ -8,9 +8,9 @@ module Skn
 
     use Rack::CommonLogger, Logging.logger['WEB']
     use Rack::Session::Cookie, {
-          secret: SknSettings.skn_base.secret,
-          key: SknSettings.skn_base.session_key,
-          domain: SknSettings.skn_base.session_domain
+        secret: SknSettings.skn_base.secret,
+        key: SknSettings.skn_base.session_key,
+        domain: SknSettings.skn_base.session_domain
     }
     use Rack::Cookies
     use Rack::Protection
@@ -18,18 +18,6 @@ module Skn
 
     use Rack::Reloader  if SknSettings.env.development?
     use Rack::ShowExceptions
-
-    use Warden::Manager do |manager|
-      manager.default_scope = :access_profile
-      manager.default_strategies :api_auth, :remember_token, :password, :not_authorized
-      manager.scope_defaults :access_profile, {
-                             store: true,
-                             strategies: [:api_auth, :password, :remember_token, :not_authorized],
-                             action: 'sessions/unauthenticated' }
-      manager.failure_app = self
-      manager[:roda_class] = self
-      manager[:public_pages] = SknSettings.security.public_pages
-    end
 
     plugin :all_verbs
     plugin :symbol_views
@@ -58,15 +46,29 @@ module Skn
            dependencies: {'_bootstrap.scss' => Dir['assets/stylesheets/**/*.scss', 'assets/stylesheets/*.scss'] }
     }
     plugin :not_found do
-       view :http_404, path: File.expand_path('../views/http_404.html.erb', __dir__)
+       view :http_404, path: File.expand_path('views/http_404.html.erb', opts[:root])
     end
     plugin :error_handler do |uncaught_exception|
       # response.status = 404
-      view :unknown, locals: {exception: uncaught_exception }, path: File.expand_path('../views/unknown.html.erb', __dir__)
+      view :unknown, locals: {exception: uncaught_exception }, path: File.expand_path('views/unknown.html.erb', opts[:root])
     end
     plugin :cookies, domain: SknSettings.skn_base.session_domain, path: '/'
 
-    opts[:root] = Pathname(__FILE__).join("..").realpath.dirname.freeze
+    # ##
+    # Placed Here so Flash and Cookie plugins can add instance methods to Roda and the Response instances respectively
+    # ##
+    use Warden::Manager do |manager|
+      manager.default_scope = :access_profile
+      manager.default_strategies :api_auth, :remember_token, :password, :not_authenticated
+      manager.scope_defaults :access_profile, {
+          store: true,
+          strategies: [:api_auth, :remember_token, :password, :not_authenticated],
+          action: 'sessions/unauthenticated' }
+      manager.failure_app = self
+      manager[:roda_class] = self
+      manager[:public_pages] = SknSettings.security.public_pages
+    end
+
 
     # ##
     # Routing Table
@@ -80,8 +82,8 @@ module Skn
       r.multi_route
 
       r.root do
-        # binding.pry
-
+        flash.now[:success] = ['Welcome to Home Page!', 'Multiple Messages Are Supported']
+        flash.now[:info] = ['All messages time out!', 'Except for :danger or Error messages!']
         view(:homepage)
       end
 
