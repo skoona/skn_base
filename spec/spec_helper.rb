@@ -1,7 +1,17 @@
-ENV['RAILS_ENV'] = 'test'
 ENV['RACK_ENV'] = 'test'
 
-require 'bundler/setup'
+# require 'bundler/setup'
+
+require File.expand_path('../main/skn_base', __dir__)
+
+require 'rspec'
+require 'capybara/rspec'
+
+require 'warden/test/helpers'
+require 'warden/test/warden_helpers'
+require "rack_session_access/capybara"
+require 'capybara-screenshot/rspec'
+require 'capybara/poltergeist'
 
 require 'simplecov'
 
@@ -10,8 +20,7 @@ SimpleCov.start do
   add_filter '/spec/'
 end
 
-require 'skn_base'
-require 'rspec'
+Dir[ Skn::SknBase.opts[:root].join("spec/support/**/*.rb") ].each { |f| require f }
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
@@ -44,5 +53,25 @@ RSpec.configure do |config|
   end
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
+
+  config.include Rack::Test::Methods
+  config.include Warden::Test::WardenHelpers          # asset_paths, on_next_request, test_reset!
+  config.include Warden::Test::Helpers                # login_as(u, opts), logout(scope), CALLS ::Warden.test_mode!
+  config.include FeatureHelpers  #, type: :feature       # logged_as(user) session injection for cucumber/capybara
+
+  config.before(:each) do
+    Capybara.use_default_driver       # switch back to default driver
+    # Capybara.default_host = 'http://test.host'
+  end
+
+  config.append_after(:each) do
+    Warden.test_reset!
+    # Capybara.current_session.driver.reset!
+    Capybara.reset_sessions!
+  end
+
+  def sign_in(user, opts=nil)
+    warden.set_user(user,opts)
+  end
 
 end

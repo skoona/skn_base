@@ -1,9 +1,23 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
     ast (2.3.0)
     bcrypt (3.1.11)
+    builder (3.2.3)
     byebug (9.1.0)
+    capybara (2.17.0)
+      addressable
+      mini_mime (>= 0.1.3)
+      nokogiri (>= 1.3.3)
+      rack (>= 1.0.0)
+      rack-test (>= 0.5.4)
+      xpath (>= 2.0, < 4.0)
+    capybara-screenshot (1.0.18)
+      capybara (>= 1.0, < 3)
+      launchy
+    cliver (0.3.2)
     coderay (1.1.2)
     concurrent-ruby (1.0.5)
     deep_merge (1.2.1)
@@ -51,17 +65,27 @@ GEM
     ice_nine (0.11.2)
     inflecto (0.0.2)
     json (2.1.0)
+    launchy (2.4.3)
+      addressable (~> 2.3)
     libv8 (3.16.14.19)
     little-plugger (1.1.4)
     logging (2.2.2)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
     method_source (0.9.0)
+    mini_mime (1.0.0)
+    mini_portile2 (2.3.0)
     multi_json (1.12.2)
+    nokogiri (1.8.1)
+      mini_portile2 (~> 2.3.0)
     parallel (1.12.1)
     parser (2.4.0.2)
       ast (~> 2.3)
     pg (0.21.0)
+    poltergeist (1.17.0)
+      capybara (~> 2.1)
+      cliver (~> 0.3.1)
+      websocket-driver (>= 0.2.0)
     powerpack (0.1.1)
     pry (0.11.3)
       coderay (~> 1.1.0)
@@ -69,6 +93,7 @@ GEM
     pry-byebug (3.5.1)
       byebug (~> 9.1)
       pry (~> 0.10)
+    public_suffix (3.0.1)
     puma (3.11.0)
     rack (2.0.3)
     rack-contrib (2.0.1)
@@ -79,6 +104,9 @@ GEM
       rack (>= 1.0, < 3)
     rack_csrf (2.6.0)
       rack (>= 1.1.0)
+    rack_session_access (0.1.1)
+      builder (>= 2.0.0)
+      rack (>= 1.0.0)
     racksh (1.0.0)
       rack (>= 1.0)
       rack-test (>= 0.5)
@@ -174,12 +202,18 @@ GEM
     unicode-display_width (1.3.0)
     warden (1.2.7)
       rack (>= 1.0)
+    websocket-driver (0.7.0)
+      websocket-extensions (>= 0.1.0)
+    websocket-extensions (0.1.3)
+    xpath (3.0.0)
+      nokogiri (~> 1.8)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   bcrypt
+  capybara-screenshot
   concurrent-ruby
   dry-auto_inject
   dry-container
@@ -188,14 +222,17 @@ DEPENDENCIES
   dry-types
   erubis
   execjs
+  faker
   logging
   pg
+  poltergeist
   pry-byebug
   puma
   rack-contrib
   rack-protection
   rack-test
   rack_csrf
+  rack_session_access
   racksh
   rake
   roda (~> 3.3.0)

@@ -6,7 +6,10 @@ require_relative "boot"
 module Skn
   class SknBase < Roda
 
+    opts[:root] = Pathname(__FILE__).join("..").realpath.dirname.freeze
+
     use Rack::CommonLogger, Logging.logger['WEB']
+
     use Rack::Session::Cookie, {
         secret: SknSettings.skn_base.secret,
         key: SknSettings.skn_base.session_key,
@@ -18,6 +21,7 @@ module Skn
 
     use Rack::Reloader  if SknSettings.env.development?
     use Rack::ShowExceptions
+    use Rack::NestedParams
 
     plugin :all_verbs
     plugin :symbol_views
@@ -69,6 +73,9 @@ module Skn
       manager[:public_pages] = SknSettings.security.public_pages
     end
 
+    if SknSettings.env.test?
+      use RackSessionAccess::Middleware
+    end
 
     # ##
     # Routing Table
