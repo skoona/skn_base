@@ -34,6 +34,9 @@ gem 'sass'
 gem 'dry-types'
 gem 'dry-struct'
 gem 'dry-monads'
+gem 'dry-container'
+gem 'dry-auto_inject'
+
 
 # General Utilities
 gem 'skn_utils'
@@ -61,6 +64,7 @@ end
 
 group :test do
   gem 'rspec'
+  gem 'rack-test'
   gem 'simplecov'
   gem "rom-factory"
 end

@@ -10,8 +10,7 @@ module Skn
     use Rack::Session::Cookie, {
           secret: SknSettings.skn_base.secret,
           key: SknSettings.skn_base.session_key,
-          domain: SknSettings.skn_base.session_domain,
-          expires:UserProfile.security_session_time
+          domain: SknSettings.skn_base.session_domain
     }
     use Rack::Cookies
     use Rack::Protection

@@ -1,8 +1,6 @@
 # config/warden.rb
 # require 'warden'
 
-# User Cache for serializers
-# SknSettings.user_cache(user_id_number)
 
 class Warden::SessionSerializer
   ##
@@ -145,7 +143,9 @@ end
 Warden::Manager.before_failure do |env, opts|
   these_cookies = opts[:roda_request] ? opts[:roda_request].cookies : env['warden'].request.cookies
   these_cookies.delete( 'remember_token')
-  env['warden'].logger.debug " Warden::Manager.before_failure(ONLY) path:#{env['PATH_INFO']}, AttemptedPage: #{env['warden'].request.session['skn.attempted.page']}, session.id=#{env['warden'].request.session[:session_id]}"
+  opts[:roda_request].session['_flash'] = {} if opts[:roda_request].session['_flash'].nil?
+  env['warden'].flash_message(opts[:roda_request].session['_flash'], :danger, env['warden'].message) if opts[:roda_request] && env['warden'].message
+  env['warden'].logger.debug " Warden::Manager.before_failure(ONLY) path:#{env['PATH_INFO']}, AttemptedPage: #{env['warden'].request.session['skn.attempted.page']}, session.id=#{env['warden'].request.session[:session_id]}, Msg: #{env['warden'].message}"
   true
 end
 
@@ -168,13 +168,14 @@ Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
   user&.enable_authentication_controls
 
   domain_part = ("." + auth.env["SERVER_NAME"].split('.')[1..2].join('.')).downcase
-  remembered_for = UserProfile.security_remember_time
+  remembered_for = auth.security_remember_time
+  sessions_last = auth.security_session_time
 
   these_cookies = opts[:roda_request] ? opts[:roda_request].cookies : auth.cookies
 
   if remember
     if SknSettings.env.production?
-      these_cookies['remember_token'] = { value: remember, domain: domain_part, expires: UserProfile.security_session_time, httponly: true, secure: true }
+      these_cookies['remember_token'] = { value: remember, domain: domain_part, expires: sessions_last, httponly: true, secure: true }
     else
       these_cookies['remember_token'] = { value: remember, domain: domain_part, expires: remembered_for , httponly: true }
     end
@@ -184,6 +185,9 @@ Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
 
   if opts[:roda_request] and opts[:roda_request].respond_to?(:flash)
     opts[:roda_request].flash[:success] = opts[:message]
+  else
+    opts[:roda_request].session['_flash'] = {} if opts[:roda_request].session['_flash'].nil?
+    auth.flash_message(opts[:roda_request].session['_flash'], :success, opts[:message]) if opts[:roda_request] && opts[:message]
   end
 
   auth.logger.debug " Warden::Manager.after_set_user(#{user&.name}) AttemptedPage: #{auth.request.session['skn.attempted.page']}"
@@ -217,6 +221,27 @@ end
 
 module Warden::Mixins::Common
 
+  def flash_message(flash, rtype, text)
+    type = [:success, :info, :warning, :danger].include?(rtype.to_sym) ? rtype.to_sym : :info
+    if flash[type] and flash[type].is_a?(Array)
+      flash[type] << text
+    elsif flash[type] and flash[type].is_a?(String)
+      flash[type] = [flash[type], text]
+    else
+      flash[type] = [text]
+    end
+  end
+
+  def request
+    return @request if @request
+    req = env.dig('warden.options', :roda_request)
+    if req
+      request = req
+    else
+      Rack::Request.new(env)
+    end
+  end
+
   def cookies
     @cookies ||= request.cookies
   end
@@ -237,5 +262,17 @@ module Warden::Mixins::Common
     raw_session.inspect # why do I have to inspect it to get it to clear?
     raw_session.clear
   end
+
+  # Warden will call this methods
+  def security_session_time
+    minutes_from_now(SknSettings.security.session_expires.to_i)
+  end
+  def security_remember_time
+    minutes_from_now(SknSettings.security.remembered_for.to_i)
+  end
+  def minutes_from_now(val=20)
+    TimeMath.min.advance(Time.now.getlocal, val) # val.minutes.from_now
+  end
+
 
 end # end common

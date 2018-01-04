@@ -12,7 +12,7 @@ module Secure
 
     def initialize
       @_user_cache = Concurrent::Hash.new
-      @_session_expires = SknSettings.security.session_expires
+      @_session_expires = SknSettings.security.session_expires.to_i
     end
 
     # Standard Interface
@@ -50,7 +50,9 @@ module Secure
     def expired?(key)
       pkg = @_user_cache[key]
       return true if pkg.nil?
-      TimeMath.min.measure(pkg.last, Time.now.getlocal) > @_session_expires
+      status = TimeMath.min.measure(pkg[1], Time.now.getlocal) > @_session_expires
+      remove(key) if status
+      status
     end
 
     def remove(key)

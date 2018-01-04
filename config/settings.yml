@@ -29,11 +29,6 @@ security:
   remembered_for: 2160                # 32 hours
   verify_login_after_seconds: 14400   # 4 hours
 
-  profile_cache: !ruby/object:Concurrent::Map {backend: {0: UserProfiles Object}, write_lock: !ruby/object:Thread::Mutex {}, default_proc: nil }
-
-  user_cache:
-    0: UserProfile Objects
-
   ! public_pages:
     - /assets
     - /images

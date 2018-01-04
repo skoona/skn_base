@@ -2,16 +2,14 @@
 #
 # Interface to UserProfileCache, assume auto expiration of cached items
 
-require 'secure/user_profile_cache'
-
 module Secure
   module UserProfileCacheProvider
 
     def self.included(klass)
-      klass.extend ClassMethods
+      klass.extend CacheClassMethods
     end
 
-    module ClassMethods
+    module CacheClassMethods
       # UserProfile Interface
       def cache_provider_fetch_user(id_num)
         userp = user_profile_cache_provider.fetch(id_num.to_i)
