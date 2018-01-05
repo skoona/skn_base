@@ -15,11 +15,6 @@ require 'capybara/poltergeist'
 
 require 'simplecov'
 
-SimpleCov.start do
-  # any custom configs like groups and filters can be here at a central place
-  add_filter '/spec/'
-end
-
 Dir[ Skn::SknBase.opts[:root].join("spec/support/**/*.rb") ].each { |f| require f }
 
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
@@ -72,6 +67,10 @@ RSpec.configure do |config|
 
   def sign_in(user, opts=nil)
     warden.set_user(user,opts)
+  end
+
+  def app
+    Skn::SknBase.app
   end
 
 end

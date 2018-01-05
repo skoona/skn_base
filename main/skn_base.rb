@@ -10,12 +10,12 @@ module Skn
 
     use Rack::CommonLogger, Logging.logger['WEB']
 
+    use Rack::Cookies
     use Rack::Session::Cookie, {
         secret: SknSettings.skn_base.secret,
         key: SknSettings.skn_base.session_key,
         domain: SknSettings.skn_base.session_domain
     }
-    use Rack::Cookies
     use Rack::Protection
     use Rack::MethodOverride
 
@@ -25,7 +25,7 @@ module Skn
 
     plugin :all_verbs
     plugin :symbol_views
-    plugin :view_options
+    plugin :cookies, domain: SknSettings.skn_base.session_domain, path: '/'
     plugin :content_for
     plugin :head
     plugin :csrf, raise: true, skip_if: lambda { |request|
@@ -39,7 +39,8 @@ module Skn
         layout: '/application',
         layout_opts: {views: 'views/layouts'}
     }
-    plugin :static, %w[/images /fonts]
+    plugin :view_options
+    plugin :public             #:static, %w[/images /fonts]
     plugin :multi_route
     plugin :assets, {
            css_dir: 'stylesheets',
@@ -56,20 +57,18 @@ module Skn
       # response.status = 404
       view :unknown, locals: {exception: uncaught_exception }, path: File.expand_path('views/unknown.html.erb', opts[:root])
     end
-    plugin :cookies, domain: SknSettings.skn_base.session_domain, path: '/'
 
     # ##
-    # Placed Here so Flash and Cookie plugins can add instance methods to Roda and the Response instances respectively
+    # Placed Here so Flash and Cookie plugins can add instance methods to Roda
     # ##
     use Warden::Manager do |manager|
       manager.default_scope = :access_profile
       manager.default_strategies :api_auth, :remember_token, :password, :not_authenticated
       manager.scope_defaults :access_profile, {
           store: true,
-          strategies: [:api_auth, :remember_token, :password, :not_authenticated],
+          strategies: [:password, :not_authenticated],
           action: 'sessions/unauthenticated' }
       manager.failure_app = self
-      manager[:roda_class] = self
       manager[:public_pages] = SknSettings.security.public_pages
     end
 
@@ -84,13 +83,20 @@ module Skn
 
       r.assets unless SknSettings.env.production?
 
-      warden_messages
+      r.public
+
+      r.on(['fonts', 'images']) do
+        r.public
+      end
 
       r.multi_route
+
+      warden_messages
 
       r.root do
         flash.now[:success] = ['Welcome to Home Page!', 'Multiple Messages Are Supported']
         flash.now[:info] = ['All messages time out!', 'Except for :danger or Error messages!']
+        flash.now[:warning] = "Single messages are also supported!"
         view(:homepage)
       end
 

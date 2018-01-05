@@ -9,13 +9,12 @@ module Skn
 
       r.on 'signin' do
         r.get do
-          warden_messages
           view(:signin)
         end
 
         r.post do
           # request.params[:sessions] => {"username"=>"developer", "password"=>"developer99", "remember_me_token"=>"1"}
-          authenticate!(message: 'You have been Signed in!', roda_request: request) # unless authenticated? # double posted
+          authenticate! # unless authenticated? # double posted
           warden_messages
           r.redirect(redirect_to_origin)
         end

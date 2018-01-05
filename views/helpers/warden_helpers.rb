@@ -6,7 +6,7 @@ module Skn
     def login_required?
       session['skn.attempted.page'] = request.path
       return false if public_page?
-      warden.authenticate!(message: 'Sign in Required!', roda_request: request)
+      warden.authenticate!(message: 'Sign in Required!')
     end
 
     def warden_messages
@@ -15,6 +15,7 @@ module Skn
     end
 
     def valid_user?
+      link_warden
       warden.authenticated?
     end
 
@@ -31,7 +32,7 @@ module Skn
       publics.any? {|p| p.start_with?(request.path) } || request.path.eql?('/')
     end
     def publics
-      @publics ||= SknSettings.security.public_pages
+      @_publics ||= SknSettings.security.public_pages
     end
 
     # The main accessor for the warden proxy instance
@@ -43,6 +44,7 @@ module Skn
     # Proxy to the authenticated? method on warden
     # :api: public
     def authenticated?(*args)
+      link_warden
       warden.authenticated?(*args)
     end
     alias_method :logged_in?, :authenticated?
@@ -60,26 +62,28 @@ module Skn
     alias_method :current_user=, :user=
 
     def logout(*list_of_scopes)
+      link_warden
       warden.raw_session.inspect  # Without this inspect here.  The session does not clear :|
       warden.logout(*list_of_scopes)
     end
 
     # Proxy to the authenticate method on warden
     # :api: public
-    def authenticate(*args)
-      warden.authenticate(*args)
-    end
-
-    # Proxy to the authenticate method on warden
-    # :api: public
     def authenticate!(*args)
-      defaults = {}
+      defaults = {roda_request: request}
       if args.last.is_a? Hash
         args[-1] = defaults.merge(args.last)
       else
         args << defaults
       end
       warden.authenticate!(*args)
+    end
+
+    # If our copy of env is different from warden's copy, this serves no purpose
+    # however, warden api's which take options do work in this fashion
+    def link_warden
+      env['warden.options'] = {} if env['warden.options'].nil?
+      env['warden.options'].merge!({roda_request: request})
     end
   end
 end

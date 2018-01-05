@@ -1,8 +1,17 @@
 <% content_for(:title, "About") %>
 
-<div class="page-header"><h4>Skoona Explorations: <small><strong><em>Basic Application</em></strong> from scratch using Roda</small></h4></div>
-
 <article>
-  <h1>About Me</h1>
-  <p>I am currently building my first Roda application!</p>
+
+  <div class="jumbotron annular-eclipse">
+    <h1 class="big-chalk">About</h1>
+    <p>
+      Exploring Roda and alternative web patterns available for the Ruby language.
+    </p>
+    <p>
+      <a class="btn btn-primary btn-lg" href="/about" role="button">About this application.</a>
+    </p>
+  </div>
+
+  <h3 class="text-center">Welcome <%= valid_user? ? current_user.name : 'UserName' %><br/><small>About Page</small></h3>
+
 </article>

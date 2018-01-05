@@ -39,8 +39,8 @@ Warden::Strategies.add(:api_auth) do
 
   def authenticate!
     user = UserProfile.find_and_authenticate(auth.credentials[0],auth.credentials[1])
-   logger.debug " Warden::Strategies.add(:api_auth) User: [#{user&.name}]"
-    (user and user.active) ? success!(user, "Signed in successfully.  Basic") : fail("Your Credentials are invalid or expired. Invalid username or password!  Fail Basic")
+    logger.debug " Warden::Strategies.add(:api_auth) User: [#{user&.name}]"
+      (user and user.active) ? success!(user, "Signed in successfully.  Basic") : fail("Your Credentials are invalid or expired. Invalid username or password!  Fail Basic")
   rescue => e
     fail("Your Credentials are invalid or expired.  Not Authorized! [ApiAuth](#{e.message})")
   end
@@ -50,18 +50,15 @@ end
 # Use the remember_token from the requests cookies to authorize user
 Warden::Strategies.add(:remember_token) do
   def valid?
-    rc = !request.cookies["remember_token"]
+    rc = !!request.cookies["remember_token"]
     logger.debug " Warden::Strategies.add(:remember_token) [#{rc ? 'Selected' : 'Not Selected'}]"
     rc
   end
 
   def authenticate!
-    remember_token = request.cookies["remember_token"]
-    token = Base64.decode64(remember_token.split('--').first)
-    token = token[1..-2] if token[0] == '"'
-    user = UserProfile.fetch_remembered_user(token)
-   logger.debug " Warden::Strategies.add(:remember_token) User: [#{user&.name}]"
-    (user and user.active?) ? success!(user, "Session successfully restored. Remembered!") : fail("Your session has expired. FailRemembered")
+    user = UserProfile.fetch_remembered_user(request.cookies["remember_token"])
+    logger.debug " Warden::Strategies.add(:remember_token) User: [#{user&.name}]"
+      (user and user.active?) ? success!(user, "Session successfully restored. Remembered!") : fail("Your session has expired. FailRemembered")
   rescue => e
     fail("Your Credentials are invalid or expired. Not Authorized! [RememberToken](#{e.message})")
   end
@@ -82,8 +79,8 @@ Warden::Strategies.add(:password) do
 
   def authenticate!
     user = UserProfile.find_and_authenticate(params["sessions"]["username"], params["sessions"]["password"])
-   logger.debug " Warden::Strategies.add(:password) User: [#{user&.name}]"
-    (user and user.active?) ? success!(user, "Signed in successfully. Password") : fail!("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
+    logger.debug " Warden::Strategies.add(:password) User: [#{user&.name}]"
+      (user and user.active?) ? success!(user, "Signed in successfully. Password") : fail!("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
   rescue => e
     fail("Your Credentials are invalid or expired. [Password](#{e.message})")
   end
@@ -111,9 +108,26 @@ end
 #     proxy - The warden proxy object for the request
 # ##
 Warden::Manager.on_request do |proxy|
-  unless proxy.asset_request?
-    proxy.logger.debug " Warden::Manager.on_request(public:#{proxy.public_page?}) PathInfo: #{proxy.env['PATH_INFO']}, AttemptedPage: #{proxy.request.session['skn.attempted.page']}, SessionID=#{proxy.request.session[:session_id]}, Method: #{proxy.env['REQUEST_METHOD']}"
+
+  unless proxy.public_page?
+
+    # If session has expired logout the user, unless remember cookie is still valid
+    # Browser deletes cookies that have expired so remembered should be nil or false
+    # #fetch cached user will make it inactive if login timer expires
+    if proxy.user and !proxy.user.active?
+      proxy.logger.debug " Warden::Manager.on_request(Logout: Session Expired)"
+      proxy.logout
+      proxy.flash_message(:success, "Your Session has Expired! [Warden](#on_request)")
+    end
+
+    # see if we can restore a session via API or RememberToken
+    unless !!proxy.user
+      proxy.logger.debug " Warden::Manager.on_request(Attempt Remembered)"
+      proxy.authenticate(:api_auth, :remember_token)
+    end
+    proxy.logger.debug " Warden::Manager.on_request() PathInfo: #{proxy.env['PATH_INFO']}, AttemptedPage: #{proxy.raw_session['skn.attempted.page']}, SessionID=#{proxy.raw_session[:session_id]}, Method: #{proxy.env['REQUEST_METHOD']}"
   end
+
   true
 end
 
@@ -124,28 +138,25 @@ end
 #
 Warden::Manager.after_failed_fetch do |user,auth,opts|
   unless auth.public_page?
-    auth.logger.debug " Warden::Manager.after_failed_fetch(ONLY) PathInfo: #{auth.env['PATH_INFO']}, :remember_token present?(#{!auth.request.cookies["remember_token"].nil?}), opts=#{opts}, session_id=#{auth.request.session[:session_id]}"
+    auth.cookies.delete( 'remember_token')
+    auth.logger.debug " Warden::Manager.after_failed_fetch(ONLY) PathInfo: #{auth.env['PATH_INFO']}, :remember_token present?(#{!!auth.cookies["remember_token"]}), opts=#{opts}, session_id=#{auth.raw_session[:session_id]}"
   end
   true
 end
 
-##
-# Injects the :new action on SessionsController
+# ##
 #
 # A callback that runs just prior to the failure application being called.
 # This callback occurs after PATH_INFO has been modified for the failure (default /unauthenticated)
 # In this callback you can mutate the environment as required by the failure application
-# If a Rails controller were used for the failure_app for example, you would need to set request[:params][:action] = :unauthenticated
 # Ref: https://github.com/hassox/warden/blob/master/lib/warden/hooks.rb
 #
 # UnAuthenticated action is to allow another login attempt, thus we allow it to flow to failure_app of SessionsController#new
-#
+# ##
 Warden::Manager.before_failure do |env, opts|
-  these_cookies = opts[:roda_request] ? opts[:roda_request].cookies : env['warden'].request.cookies
-  these_cookies.delete( 'remember_token')
-  opts[:roda_request].session['_flash'] = {} if opts[:roda_request].session['_flash'].nil?
-  env['warden'].flash_message(opts[:roda_request].session['_flash'], :info, env['warden'].message) if opts[:roda_request] && env['warden'].message
-  env['warden'].logger.debug " Warden::Manager.before_failure(ONLY) path:#{env['PATH_INFO']}, AttemptedPage: #{env['warden'].request.session['skn.attempted.page']}, session.id=#{env['warden'].request.session[:session_id]}, Msg: #{env['warden'].message}"
+  env['warden'].cookies.delete( 'remember_token')
+  env['warden'].flash_message(:info, env['warden'].message) if env['warden'].message
+  env['warden'].logger.debug " Warden::Manager.before_failure(ONLY) path:#{env['PATH_INFO']}, AttemptedPage: #{env['warden'].raw_session['skn.attempted.page']}, session.id=#{env['warden'].raw_session[:session_id]}, Msg: #{env['warden'].message}"
   true
 end
 
@@ -161,8 +172,8 @@ end
 # are the same as in after_set_user.
 # -- after_authentication --
 Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
-  remember = 'Some Kind of Value as Token'
-  remember = user&.remember_token
+  remember = false
+  remember = user&.remember_token  if auth.cookies['remember_token'] || '1'.eql?(auth.params.dig('sessions', 'remember_me_token'))
 
   # setup user for session and object caching, and resolve authorization groups/roles
   user&.enable_authentication_controls
@@ -171,26 +182,21 @@ Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
   remembered_for = auth.security_remember_time
   sessions_last = auth.security_session_time
 
-  these_cookies = opts[:roda_request] ? opts[:roda_request].cookies : auth.cookies
-
   if remember
     if SknSettings.env.production?
-      these_cookies['remember_token'] = { value: remember, domain: domain_part, expires: sessions_last, httponly: true, secure: true }
+      auth.cookies['remember_token'] = { value: remember, domain: domain_part, expires: sessions_last, httponly: true, secure: true }
     else
-      these_cookies['remember_token'] = { value: remember, domain: domain_part, expires: remembered_for , httponly: true }
+      auth.logger.debug " Warden::Manager.after_set_user(#{user&.name}) Settings RememberMe Cookie"
+      auth.cookies['remember_token'] = { value: remember, domain: domain_part, expires: remembered_for , httponly: true }
     end
   else
-    these_cookies.delete('remember_token')
+    auth.cookies.delete('remember_token', { value: remember, domain: domain_part })
   end
 
-  if opts[:roda_request] and opts[:roda_request].respond_to?(:flash)
-    opts[:roda_request].flash[:success] = opts[:message]
-  else
-    opts[:roda_request].session['_flash'] = {} if opts[:roda_request].session['_flash'].nil?
-    auth.flash_message(opts[:roda_request].session['_flash'], :success, opts[:message]) if opts[:roda_request] && opts[:message]
-  end
+  auth.flash_message(:success, opts[:message]) if opts[:message]
+  auth.flash_message(:info, auth.message) if auth.message
 
-  auth.logger.debug " Warden::Manager.after_set_user(#{user&.name}) AttemptedPage: #{auth.request.session['skn.attempted.page']}"
+  auth.logger.debug " Warden::Manager.after_set_user(#{user&.name}) AttemptedPage: #{auth.raw_session['skn.attempted.page']}"
   true
 end
 
@@ -198,17 +204,14 @@ end
 # A callback that runs just prior to the logout of each scope.
 # Logout the user object
 Warden::Manager.before_logout do |user,auth,opts|
-  these_cookies = opts[:roda_request] ? opts[:roda_request].cookies : auth.cookies
   user&.active = true
   user&.disable_authentication_controls
-  these_cookies.delete( SknSettings.skn_base.session_key.to_s)
+
+  auth.cookies.delete('remember_token', { value: remember, domain: domain_part })
+  auth.raw_session.inspect
   auth.reset_session!
-  if opts[:roda_request] and opts[:roda_request].respond_to?(:flash)
-    opts[:roda_request].flash[:success] = opts[:message]
-  else
-    opts[:roda_request].session['_flash'] = {} if opts[:roda_request].session['_flash'].nil?
-    auth.flash_message(opts[:roda_request].session['_flash'], :success, opts[:message]) if opts[:roda_request] && opts[:message]
-  end
+
+  auth.flash_message(:success, opts[:message]) if opts[:message]
   auth.logger.debug " Warden::Manager.before_logout(#{user&.name})"
 
   true
@@ -226,7 +229,11 @@ end
 
 module Warden::Mixins::Common
 
-  def flash_message(flash, rtype, text)
+  def flash_message(rtype, text)
+    return if request.env['rack.session'].nil?
+    request.env['rack.session']['_flash'] = {} if request.env['rack.session']['_flash'].nil?
+    flash = request.env['rack.session']['_flash']
+
     type = [:success, :info, :warning, :danger].include?(rtype.to_sym) ? rtype.to_sym : :info
     if flash[type] and flash[type].is_a?(Array)
       flash[type] << text
@@ -238,21 +245,21 @@ module Warden::Mixins::Common
   end
 
   def request
-    return @request if @request
+    return @request if instance_variable_defined?('@request')
     req = env.dig('warden.options', :roda_request)
     if req
-      request = req
+      @request = req
     else
-      Rack::Request.new(env)
+      @request = Rack::Request.new(env)
     end
   end
 
   def cookies
-    @cookies ||= request.cookies
+    request.cookies || request.env['rack.cookies'] ||  env['rack.cookies']
   end
 
   def public_page?
-    config[:public_pages].any? {|p| env['PATH_INFO'].start_with?(p) } || env['PATH_INFO'].eql?('/')
+    ((config[:public_pages].any? {|p| env['PATH_INFO'].start_with?(p) }) || (env['PATH_INFO'].eql?('/')))
   end
 
   def logger

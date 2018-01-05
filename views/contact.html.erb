@@ -1,8 +1,15 @@
 <% content_for(:title, "Contact") %>
 
-<div class="page-header"><h4>Skoona Explorations: <small><strong><em>Basic Application</em></strong> from scratch using Roda</small></h4></div>
-
 <article>
-  <h1>Contact</h1>
-  <p>You can send me an email or connect with me on Twitter/Facebook/Google/etc.</p>
+
+  <div class="jumbotron earth-valley">
+    <h1 class="big-chalk">Contact</h1>
+    <p>You can send me an email or connect with me on Twitter/LinkedIn/etc.</p>
+    <p>
+      <a class="btn btn-primary btn-lg" href="/contact" role="button">Contact me.</a>
+    </p>
+  </div>
+
+  <h3 class="text-center">Welcome <%= valid_user? ? current_user.name : 'UserName' %><br/><small>Contact Page</small></h3>
+
 </article>

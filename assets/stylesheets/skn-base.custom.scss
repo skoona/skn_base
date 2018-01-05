@@ -110,36 +110,15 @@ img {
     height: auto !important;
   }
 
-  .galaxy-home { // .jumbotron.galaxy
+  /*
+   * Ref: https://www.smashingmagazine.com/2009/09/backgrounds-in-css-everything-you-need-to-know/
+   */
+  .jumbotron-images { // Common for Jumbotron Images
     position: relative;
-    background: #000 url("../../images/galaxy-view-2007.jpg") center center;
+    background: #000;
     width: 100%;
     height: 32%;
-    background-size: cover;
-    overflow: hidden;
-
-    h1.big-chalk {
-      text-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
-      font-weight: bold;
-      color: #fff;
-      font-size: 600%;
-    }
-    p {
-      color: #fff;
-      font-weight: bold;
-    }
-    ol > li {
-      color: #fff;
-      font-weight: bold;
-    }
-  }
-
-  .galaxy-man { // .jumbotron.galaxy
-    position: relative;
-    background: #000 url("../../images/galaxy-man.jpg") center center;
-    width: 100%;
-    height: 32%;
-    background-size: cover;
+    background-size: contain; // cover
     overflow: hidden;
 
     h1.big-chalk {
@@ -162,144 +141,25 @@ img {
     }
   }
 
-  .galaxy-squared { // .jumbotron.galaxy
-    position: relative;
-    background: #000 url("../../images/galaxy-squared.jpg") center center;
-    width: 100%;
-    height: 32%;
-    background-size: cover;
-    overflow: hidden;
-
-    h1.big-chalk {
-      text-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
-      font-weight: bold;
-      color: #fff;
-      font-size: 600%;
-    }
-    p {
-      color: #fff;
-      font-weight: bold;
-    }
-    ul > li {
-      color: #fff;
-      font-weight: bold;
-    }
-    ol > li {
-      color: #fff;
-      font-weight: bold;
-    }
+  .halo-pano { // home
+    @extend .jumbotron-images;
+    background: #000 url("../../images/halo_pano_beletsky.jpg") center center;
   }
-
-  .galaxy-stars { // .jumbotron.galaxy
-    position: relative;
-    background: #000 url("../../images/galaxy-stars.jpg") center center;
-    width: 100%;
-    height: 32%;
-    background-size: cover;
-    overflow: hidden;
-
-    h1.big-chalk {
-      text-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
-      font-weight: bold;
-      color: #fff;
-      font-size: 600%;
-    }
-    p {
-      color: #fff;
-      font-weight: bold;
-    }
-    ul > li {
-      color: #fff;
-      font-weight: bold;
-    }
-    ol > li {
-      color: #fff;
-      font-weight: bold;
-    }
-  }
-
-  .galaxy-dunes_mars {
-    position: relative;
+  .galaxy-dunes_mars { // users
+    @extend .jumbotron-images;
     background: #000 url("../../images/galaxy-dunes_mars.jpg") center center;
-    width: 100%;
-    height: 32%;
-    background-size: cover;
-    overflow: hidden;
-
-    h1.big-chalk {
-      text-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
-      font-weight: bold;
-      color: #fff;
-      font-size: 600%;
-    }
-    p {
-      color: #fff;
-      font-weight: bold;
-    }
-    ul > li {
-      color: #fff;
-      font-weight: bold;
-    }
-    ol > li {
-      color: #fff;
-      font-weight: bold;
-    }
   }
-
-  .earth-snow {
-    position: relative;
+  .earth-snow {  // resources
+    @extend .jumbotron-images;
     background: #000 url("../../images/SnowTreesAurora_Destribats_3000.jpg") center center;
-    width: 100%;
-    height: 32%;
-    background-size: cover;
-    overflow: hidden;
-
-    h1.big-chalk {
-      text-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
-      font-weight: bold;
-      color: #fff;
-      font-size: 600%;
-    }
-    p {
-      color: #fff;
-      font-weight: bold;
-    }
-    ul > li {
-      color: #fff;
-      font-weight: bold;
-    }
-    ol > li {
-      color: #fff;
-      font-weight: bold;
-    }
   }
-
-  .earth-valley {
-    position: relative;
+  .earth-valley { // contact
+    @extend .jumbotron-images;
     background: #000 url("../../images/MonumentValley_Masterson_2048.jpg") center center;
-    width: 100%;
-    height: 32%;
-    background-size: cover;
-    overflow: hidden;
-
-    h1.big-chalk {
-      text-shadow: 2px 2px 2px rgba(0, 0, 0, .3);
-      font-weight: bold;
-      color: #fff;
-      font-size: 600%;
-    }
-    p {
-      color: #fff;
-      font-weight: bold;
-    }
-    ul > li {
-      color: #fff;
-      font-weight: bold;
-    }
-    ol > li {
-      color: #fff;
-      font-weight: bold;
-    }
+  }
+  .annular-eclipse { // about
+    @extend .jumbotron-images;
+    background: #000 url("../../images/AnnularEclipse_Pinski_1522.jpg") center center;
   }
 
 }

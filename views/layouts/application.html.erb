@@ -28,33 +28,54 @@
     <%= render( 'layouts/_header') %>
 
     <main role="main">
-      <section>
-        <%= render 'layouts/_messages' %>
-      </section>
+
+      <%= render 'layouts/_messages' %>
 
       <%= yield %>
 
-      <% unless request.params.empty? %>
-          <section>
-            <p>Request Params</p>
+      <section>
+        <% unless request.params.empty? %>
+            <div class="col-md-4">
+              <h4>Request Params</h4>
+              <ul>
+                <% request.params.to_h.each_pair do |k,v| -%>
+                    <li><%= "#{k}: #{v}" %></li>
+                <% end %>
+              </ul>
+            </div>
+        <% end %>
+        <% unless env['warden.options'].nil? %>
+          <div class="col-md-4">
+            <h4>Warden Options</h4>
             <ul>
-              <% request.params.to_h.each_pair do |k,v| -%>
-                  <li><%= "#{k}: #{v}" %></li>
+              <% env['warden.options'].each_pair do |k,v| -%>
+                  <li><%= "#{k}: #{v}:#{v.object_id}" %></li>
               <% end %>
             </ul>
-          </section>
-      <% end %>
+          </div>
+        <% end %>
 
-      <section>
-        <p>Production: <%= SknSettings.env.production? %></p>
-        <p>Development: <%= SknSettings.env.development? %></p>
-        <p><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;Environment: <%= SknSettings.env %></p>
-        <p><i class="fa fa-handshake-o fa-lg" aria-hidden="true"></i>&nbsp;Attempted Page: <%= attempted_page %></p>
-        <p><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;Current Page: <%= current_page %></p>
-        <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Request Path: <%= request.path %></p>
-        <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Matched Path: <%= request.matched_path %></p>
-        <p><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Request Method: <%= request.request_method %></p>
+        <div class="col-md-4">
+          <h4>Critical Factors</h4>
+          <ul>
+            <li>Production: <%= SknSettings.env.production? %></li>
+            <li>Development: <%= SknSettings.env.development? %></li>
+            <li><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;Environment: <%= SknSettings.env %></li>
+            <li>
+              <% if attempted_page.empty? %>
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"/>&nbsp;Attempted Page: <%= attempted_page %>
+              <% else %>
+                <i class="fa fa-handshake-o fa-lg" aria-hidden="true"></i>&nbsp;Attempted Page: <%= attempted_page %>
+              <% end %>
+            </li>
+            <li><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;Current Page: <%= current_page %></li>
+            <li><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Request Path: <%= request.path %></li>
+            <li><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Matched Path: <%= request.matched_path %></li>
+            <li><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Request Method: <%= request.request_method %></li>
+          </ul>
+        </div>
       </section>
+
     </main>
 
     <%= render( 'layouts/_footer') %>

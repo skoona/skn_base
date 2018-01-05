@@ -1,5 +1,7 @@
 # Capybara.asset_host = 'http://localhost:3000'
 
+Capybara.app = Skn::SknBase.app
+
 # Tell it to use xpath rather than css selectors
 Capybara.configure do |config|
   # config.default_host = 'test.host'

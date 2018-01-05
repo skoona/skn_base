@@ -40,10 +40,10 @@ module Secure
 
     # Warden calls this
     def self.fetch_remembered_user (token=nil)
-      return nil unless token.present?
+      return nil if token.nil?
       upp = nil
       user_obj = user_repo.find_by(remember_token: token)
-      upp = self.new(user_obj) if value and valid_digest?(value.remember_token_digest, token)
+      upp = self.new(user_obj) if user_obj and valid_digest?(user_obj.remember_token_digest, token)
       cache_provider_add_user(upp) if upp
       upp
     end

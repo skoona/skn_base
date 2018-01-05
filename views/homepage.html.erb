@@ -1,7 +1,15 @@
 <% content_for(:title, "Home") %>
 
-<div class="page-header"><h4>Skoona Explorations: <small><strong><em>Basic Application</em></strong> from scratch using Roda</small></h4></div>
-
 <article>
-  <p>Warden Enabled!</p>
+
+  <div class="jumbotron halo-pano">
+    <h1 class="big-chalk">Skoona's Exploration</h1>
+    <p><strong><em>Basic Application</em></strong> from scratch using Roda</p>
+    <p>
+      <a class="btn btn-primary btn-lg" href="/" role="button">More...</a>
+    </p>
+  </div>
+
+  <h3 class="text-center">Welcome <%= valid_user? ? current_user.name : 'UserName' %><br/><small>Landing Page</small></h3>
+
 </article>
