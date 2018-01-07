@@ -2,13 +2,13 @@
 
 source "https://rubygems.org"
 
-ruby "2.4.2"
+# ruby "2.4.2"
 
 gem 'logging'
 
 # Web framework: Core
 gem "puma"
-gem "roda", "~> 3.3.0"
+gem "roda"
 
 # Web framework: Html
 gem "tilt"
@@ -57,7 +57,7 @@ gem "bcrypt"
 gem 'warden'
 
 group :development do
-  gem 'pry-byebug'
+  gem 'pry'
   gem "racksh"
   gem 'rubocop', require: false
 end

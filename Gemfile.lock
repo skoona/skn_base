@@ -6,7 +6,6 @@ GEM
     ast (2.3.0)
     bcrypt (3.1.11)
     builder (3.2.3)
-    byebug (9.1.0)
     capybara (2.17.0)
       addressable
       mini_mime (>= 0.1.3)
@@ -90,9 +89,6 @@ GEM
     pry (0.11.3)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
-    pry-byebug (3.5.1)
-      byebug (~> 9.1)
-      pry (~> 0.10)
     public_suffix (3.0.1)
     puma (3.11.0)
     rack (2.0.3)
@@ -177,12 +173,12 @@ GEM
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-progressbar (1.9.0)
-    sass (3.5.4)
+    sass (3.5.5)
       sass-listen (~> 4.0.0)
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    sequel (5.3.0)
+    sequel (5.4.0)
     simplecov (0.15.1)
       docile (~> 1.1.0)
       json (>= 1.8, < 3)
@@ -226,7 +222,7 @@ DEPENDENCIES
   logging
   pg
   poltergeist
-  pry-byebug
+  pry
   puma
   rack-contrib
   rack-protection
@@ -235,7 +231,7 @@ DEPENDENCIES
   rack_session_access
   racksh
   rake
-  roda (~> 3.3.0)
+  roda
   rom
   rom-factory
   rom-sql
@@ -249,9 +245,6 @@ DEPENDENCIES
   time_math2
   uglifier
   warden
-
-RUBY VERSION
-   ruby 2.4.2p198
 
 BUNDLED WITH
    1.15.2

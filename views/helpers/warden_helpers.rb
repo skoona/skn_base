@@ -10,18 +10,17 @@ module Skn
     end
 
     def warden_messages
-      flash_message(:info, warden.message) unless warden.message.nil?
+      flash_message(:info, warden.message) unless warden.message.nil? # From Strategies
       flash_message(:danger, warden.errors.full_messages) unless warden.errors.empty?
     end
 
     def valid_user?
-      link_warden
       warden.authenticated?
     end
 
     def redirect_to_origin
       orig = session['skn.attempted.page']
-      if orig.nil? || orig.empty? || orig.start_with?('/session') || orig.eql?('/new')
+      if orig.nil? || orig.empty? || orig.start_with?('/sessions') || orig.eql?('/signin')
         orig = '/profiles/resources'
       end
       SknSettings.logger.debug "#{self.class}##{__method__}() Returns: [#{orig}]"
@@ -44,7 +43,6 @@ module Skn
     # Proxy to the authenticated? method on warden
     # :api: public
     def authenticated?(*args)
-      link_warden
       warden.authenticated?(*args)
     end
     alias_method :logged_in?, :authenticated?
@@ -62,7 +60,6 @@ module Skn
     alias_method :current_user=, :user=
 
     def logout(*list_of_scopes)
-      link_warden
       warden.raw_session.inspect  # Without this inspect here.  The session does not clear :|
       warden.logout(*list_of_scopes)
     end
@@ -70,7 +67,7 @@ module Skn
     # Proxy to the authenticate method on warden
     # :api: public
     def authenticate!(*args)
-      defaults = {roda_request: request}
+      defaults = {}
       if args.last.is_a? Hash
         args[-1] = defaults.merge(args.last)
       else
@@ -79,11 +76,5 @@ module Skn
       warden.authenticate!(*args)
     end
 
-    # If our copy of env is different from warden's copy, this serves no purpose
-    # however, warden api's which take options do work in this fashion
-    def link_warden
-      env['warden.options'] = {} if env['warden.options'].nil?
-      env['warden.options'].merge!({roda_request: request})
-    end
   end
 end

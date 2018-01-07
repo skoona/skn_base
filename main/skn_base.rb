@@ -8,72 +8,81 @@ module Skn
 
     opts[:root] = Pathname(__FILE__).join("..").realpath.dirname.freeze
 
-    use Rack::CommonLogger, Logging.logger['WEB']
+    use Rack::CommonLogger
 
-    use Rack::Cookies
+    # use Rack::Cookies
     use Rack::Session::Cookie, {
         secret: SknSettings.skn_base.secret,
         key: SknSettings.skn_base.session_key,
         domain: SknSettings.skn_base.session_domain
     }
-    use Rack::Protection
     use Rack::MethodOverride
+    use Rack::Protection
 
-    use Rack::Reloader  if SknSettings.env.development?
     use Rack::ShowExceptions
     use Rack::NestedParams
+    use Rack::Reloader
 
     plugin :all_verbs
-    plugin :symbol_views
-    plugin :cookies, domain: SknSettings.skn_base.session_domain, path: '/'
-    plugin :content_for
-    plugin :head
-    plugin :csrf, raise: true, skip_if: lambda { |request|
-      ['HTTP_AUTHORIZATION', 'X-HTTP_AUTHORIZATION',
-       'X_HTTP_AUTHORIZATION', 'REDIRECT_X_HTTP_AUTHORIZATION'].any? {|k| request.env.key?(k) }
+    plugin :public             #:static, %w[/images /fonts]
+    plugin :csrf, { raise: false,
+                    skip_if: lambda { |request|
+                      ['HTTP_AUTHORIZATION', 'X-HTTP_AUTHORIZATION',
+                       'X_HTTP_AUTHORIZATION', 'REDIRECT_X_HTTP_AUTHORIZATION'].any? {|k|
+                        request.env.key?(k) }
+                    }
     }
-    plugin :flash
     plugin :render, {
         engine: 'html.erb',
         allowed_paths: ['views', 'views/layouts', 'views/profiles', 'views/sessions'],
         layout: '/application',
         layout_opts: {views: 'views/layouts'}
     }
-    plugin :view_options
-    plugin :public             #:static, %w[/images /fonts]
-    plugin :multi_route
     plugin :assets, {
-           css_dir: 'stylesheets',
-           js_dir: 'javascript',
-           css: ['skn_base.css.scss' ] ,
-           js: ['jquery-3.2.1.js', 'bootstrap-3.3.7.js', 'jquery.matchHeight.js', 'bootstrap-select.js',
-                'jquery.dataTables.js', 'dataTables.bootstrap.js', 'skn-base.custom.js'],
-           dependencies: {'_bootstrap.scss' => Dir['assets/stylesheets/**/*.scss', 'assets/stylesheets/*.scss'] }
+        css_dir: 'stylesheets',
+        js_dir: 'javascript',
+        css: ['skn_base.css.scss' ] ,
+        js: ['jquery-3.2.1.js', 'bootstrap-3.3.7.js', 'jquery.matchHeight.js', 'bootstrap-select.js',
+             'jquery.dataTables.js', 'dataTables.bootstrap.js', 'skn-base.custom.js'],
+        dependencies: {'_bootstrap.scss' => Dir['assets/stylesheets/**/*.scss', 'assets/stylesheets/*.scss'] }
     }
+    plugin :view_options
+    plugin :symbol_views
+    plugin :content_for
+    plugin :head
+    plugin :flash
+
+    # if SknSettings.env.test?
+    #   use RackSessionAccess::Middleware
+    # end
+
     plugin :not_found do
-       view :http_404, path: File.expand_path('views/http_404.html.erb', opts[:root])
+      view :http_404, path: File.expand_path('views/http_404.html.erb', opts[:root])
     end
     plugin :error_handler do |uncaught_exception|
       # response.status = 404
       view :unknown, locals: {exception: uncaught_exception }, path: File.expand_path('views/unknown.html.erb', opts[:root])
     end
 
+    plugin :multi_route
+
     # ##
     # Placed Here so Flash and Cookie plugins can add instance methods to Roda
     # ##
-    use Warden::Manager do |manager|
-      manager.default_scope = :access_profile
-      manager.default_strategies :api_auth, :remember_token, :password, :not_authenticated
-      manager.scope_defaults :access_profile, {
+    use Warden::Manager do |config|
+      config.default_scope = :access_profile
+      config.default_strategies :api_auth, :remember_token, :password, :not_authenticated
+      config.scope_defaults :access_profile, {
           store: true,
-          strategies: [:password, :not_authenticated],
+          strategies: [:api_auth, :remember_token, :password, :not_authenticated],
           action: 'sessions/unauthenticated' }
-      manager.failure_app = self
-      manager[:public_pages] = SknSettings.security.public_pages
-    end
-
-    if SknSettings.env.test?
-      use RackSessionAccess::Middleware
+      config.failure_app = self
+      config[:public_pages] = SknSettings.security.public_pages
+      config[:production] = SknSettings.env.production?
+      config[:asset_paths_ary] = SknSettings.security.asset_paths
+      config[:sys_logger] = (Logging.logger['WAR'] || SknSettings.logger)
+      config[:session_expires] = SknSettings.security.session_expires.to_i
+      config[:remember_for] = SknSettings.security.remembered_for.to_i
     end
 
     # ##
@@ -91,7 +100,7 @@ module Skn
 
       r.multi_route
 
-      warden_messages
+      # warden_messages
 
       r.root do
         flash.now[:success] = ['Welcome to Home Page!', 'Multiple Messages Are Supported']
