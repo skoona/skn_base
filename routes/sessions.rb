@@ -7,6 +7,8 @@ module Skn
 
       set_view_subdir 'sessions'
 
+      # raise StandardError, "Looking at Program Stack"
+
       r.on 'signin' do
         r.get do
           view(:signin)
@@ -27,9 +29,9 @@ module Skn
       end
 
       r.is 'unauthenticated' do
-        response.status = 203
+        response.status = 401
         warden_messages
-        view(:unauthenticated)
+        view('unauthenticated')
       end
 
     end

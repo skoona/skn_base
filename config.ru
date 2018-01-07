@@ -12,4 +12,4 @@ app = case ENV['RACK_ENV']
           Skn::SknBase.freeze.app
       end
 
-run(app)
+run app

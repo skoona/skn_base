@@ -33,48 +33,86 @@
 
       <%= yield %>
 
-      <section>
-        <% unless request.params.empty? %>
+      <% unless ['users', 'signin'].any? {|x| x.eql?(current_page_name) } %>
+        <section>
+          <% unless request.params.empty? %>
             <div class="col-md-4">
-              <h4>Request Params</h4>
+              <div class="well-lg">
+                <h4>Request Params</h4>
+                <ul>
+                  <% request.params.to_h.each_pair do |k,v| -%>
+                    <% if v.is_a?(Hash) %>
+                      <p><%= k %></p>
+                      <ul>
+                        <% v.each_pair do |ik,iv| %>
+                          <li><%= "#{ik}: #{iv}" %></li>
+                        <% end %>
+                      </ul>
+                    <% else %>
+                      <li><%= "#{k}: #{v}" %></li>
+                    <% end %>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="col-md-4">
+            <% unless env['warden.options'].nil? %>
+              <div class="well-lg">
+                <h4>Warden Options</h4>
+                <ul>
+                  <% env['warden.options'].each_pair do |k,v| -%>
+                    <% if v.is_a?(Hash) %>
+                      <p><%= k %></p>
+                      <ul>
+                        <% v.each_pair do |ik,iv| %>
+                          <li><%= "#{ik}: #{iv}" %></li>
+                        <% end %>
+                      </ul>
+                    <% else %>
+                      <li><%= "#{k}: #{v}:#{v.object_id}" %></li>
+                    <% end %>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+            <% unless request.cookies.nil? %>
+              <div class="well-lg">
+                <h4>Cookies</h4>
+                <ul>
+                  <% request.cookies.each do |k,v| -%>
+                    <li><%= "#{k}: #{v[0..8]}" %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+          </div>
+
+          <div class="col-md-4">
+            <div class="well-lg">
+              <h4>Rutime Status</h4>
               <ul>
-                <% request.params.to_h.each_pair do |k,v| -%>
-                    <li><%= "#{k}: #{v}" %></li>
-                <% end %>
+                <li>Production: <%= SknSettings.env.production? %></li>
+                <li>Development: <%= SknSettings.env.development? %></li>
+                <li><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;Environment: <%= SknSettings.env %></li>
+                <li>
+                  <% if attempted_page.empty? %>
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"/>&nbsp;Attempted Page: <%= attempted_page %>
+                  <% else %>
+                    <i class="fa fa-handshake-o fa-lg" aria-hidden="true"></i>&nbsp;Attempted Page: <%= attempted_page %>
+                  <% end %>
+                </li>
+                <li><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;Current Page: <%= current_page %></li>
+                <li><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Request Path: <%= request.path %></li>
+                <li><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Matched Path: <%= request.matched_path %></li>
+                <li><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Request Method: <%= request.request_method %></li>
               </ul>
             </div>
-        <% end %>
-        <% unless env['warden.options'].nil? %>
-          <div class="col-md-4">
-            <h4>Warden Options</h4>
-            <ul>
-              <% env['warden.options'].each_pair do |k,v| -%>
-                  <li><%= "#{k}: #{v}:#{v.object_id}" %></li>
-              <% end %>
-            </ul>
           </div>
-        <% end %>
 
-        <div class="col-md-4">
-          <h4>Critical Factors</h4>
-          <ul>
-            <li>Production: <%= SknSettings.env.production? %></li>
-            <li>Development: <%= SknSettings.env.development? %></li>
-            <li><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;Environment: <%= SknSettings.env %></li>
-            <li>
-              <% if attempted_page.empty? %>
-                <span class="glyphicon glyphicon-ok" aria-hidden="true"/>&nbsp;Attempted Page: <%= attempted_page %>
-              <% else %>
-                <i class="fa fa-handshake-o fa-lg" aria-hidden="true"></i>&nbsp;Attempted Page: <%= attempted_page %>
-              <% end %>
-            </li>
-            <li><span class="glyphicon glyphicon-ok" aria-hidden="true"></span>&nbsp;Current Page: <%= current_page %></li>
-            <li><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Request Path: <%= request.path %></li>
-            <li><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Matched Path: <%= request.matched_path %></li>
-            <li><span class="glyphicon glyphicon-check" aria-hidden="true"></span>&nbsp;Request Method: <%= request.request_method %></li>
-          </ul>
-        </div>
-      </section>
+        </section>
+      <% end %>
 
     </main>
 

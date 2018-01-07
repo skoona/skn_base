@@ -3,15 +3,9 @@
 # Ref: http://tutorials.jumpstartlab.com/topics/capybara/capybara_with_rack_test.html
 
 
-describe "#Home pages Respond Correctly. " do
+describe "Application pages Respond Correctly. " do
+
   it "returns http success" do
-
-    # env = { "REQUEST_METHOD" => "GET", "PATH_INFO" => "/" }
-    # response = app.call(env)
-    #
-    # expect(response).to be_success
-    # expect(response).to render_template 'homepage'
-
     get "/"
     expect(last_response.status).to eq 200
 
@@ -20,5 +14,16 @@ describe "#Home pages Respond Correctly. " do
 
     get "/contact"
     expect(last_response.status).to eq 200
+
+    get "/sessions/signin"
+    expect(last_response.status).to eq 200
+  end
+
+  it "returns http Unauthorized" do
+    get "/profiles/users"
+    expect(last_response.status).to eq 401
+
+    get "/profiles/resources"
+    expect(last_response.status).to eq 401
   end
 end

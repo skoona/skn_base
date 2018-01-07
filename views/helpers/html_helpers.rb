@@ -10,7 +10,7 @@ module Skn
     def flash_message(rtype, text)
       type = [:success, :info, :warning, :danger].include?(rtype.to_sym) ? rtype.to_sym : :info
       if flash[type] and flash[type].is_a?(Array)
-        flash[type] << text
+        flash[type].push( text )
       elsif flash[type] and flash[type].is_a?(String)
         flash[type] = [flash[type], text]
       else

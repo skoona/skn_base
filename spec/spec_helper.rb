@@ -6,6 +6,8 @@ require File.expand_path('../main/skn_base', __dir__)
 
 require 'rspec'
 require 'capybara/rspec'
+require 'capybara/dsl'
+require 'rack/test'
 
 require 'warden/test/helpers'
 require 'warden/test/warden_helpers'
@@ -14,6 +16,7 @@ require 'capybara-screenshot/rspec'
 require 'capybara/poltergeist'
 
 require 'simplecov'
+require 'code_coverage'
 
 Dir[ Skn::SknBase.opts[:root].join("spec/support/**/*.rb") ].each { |f| require f }
 
@@ -53,6 +56,7 @@ RSpec.configure do |config|
   config.include Warden::Test::WardenHelpers          # asset_paths, on_next_request, test_reset!
   config.include Warden::Test::Helpers                # login_as(u, opts), logout(scope), CALLS ::Warden.test_mode!
   config.include FeatureHelpers  #, type: :feature       # logged_as(user) session injection for cucumber/capybara
+  config.include TestUsers
 
   config.before(:each) do
     Capybara.use_default_driver       # switch back to default driver

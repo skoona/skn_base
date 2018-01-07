@@ -1,0 +1,1613 @@
+-- noinspection SqlNoDataSourceInspectionForFile
+
+--
+-- PostgreSQL database dump
+-- 'SknServices_development'
+
+-- Dumped from database version 10.1
+-- Dumped by pg_dump version 10.0
+
+-- Started on 2018-01-06 16:23:47 EST
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 1 (class 3079 OID 12544)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2589 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 221 (class 1259 OID 30875)
+-- Name: ar_internal_metadata; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE ar_internal_metadata (
+    key character varying NOT NULL,
+    value character varying,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE ar_internal_metadata OWNER TO postgres;
+
+--
+-- TOC entry 197 (class 1259 OID 30694)
+-- Name: content_profile_entries; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE content_profile_entries (
+    id integer NOT NULL,
+    topic_value character varying,
+    topic_type character varying(255),
+    topic_type_description character varying(255),
+    content_value character varying,
+    content_type character varying(255),
+    content_type_description character varying(255),
+    description character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE content_profile_entries OWNER TO postgres;
+
+--
+-- TOC entry 196 (class 1259 OID 30692)
+-- Name: content_profile_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE content_profile_entries_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE content_profile_entries_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2590 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: content_profile_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE content_profile_entries_id_seq OWNED BY content_profile_entries.id;
+
+
+--
+-- TOC entry 199 (class 1259 OID 30705)
+-- Name: content_profiles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE content_profiles (
+    id integer NOT NULL,
+    person_authentication_key character varying(255),
+    profile_type_id integer,
+    authentication_provider character varying(255),
+    username character varying(255),
+    display_name character varying(255),
+    email character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE content_profiles OWNER TO postgres;
+
+--
+-- TOC entry 201 (class 1259 OID 30718)
+-- Name: content_profiles_entries; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE content_profiles_entries (
+    id integer NOT NULL,
+    content_profile_id integer,
+    content_profile_entry_id integer
+);
+
+
+ALTER TABLE content_profiles_entries OWNER TO postgres;
+
+--
+-- TOC entry 200 (class 1259 OID 30716)
+-- Name: content_profiles_entries_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE content_profiles_entries_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE content_profiles_entries_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2591 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: content_profiles_entries_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE content_profiles_entries_id_seq OWNED BY content_profiles_entries.id;
+
+
+--
+-- TOC entry 198 (class 1259 OID 30703)
+-- Name: content_profiles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE content_profiles_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE content_profiles_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2592 (class 0 OID 0)
+-- Dependencies: 198
+-- Name: content_profiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE content_profiles_id_seq OWNED BY content_profiles.id;
+
+
+--
+-- TOC entry 203 (class 1259 OID 30728)
+-- Name: content_type_opts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE content_type_opts (
+    id integer NOT NULL,
+    value character varying(255),
+    description character varying(255),
+    type_name character varying(255),
+    content_type_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE content_type_opts OWNER TO postgres;
+
+--
+-- TOC entry 202 (class 1259 OID 30726)
+-- Name: content_type_opts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE content_type_opts_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE content_type_opts_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2593 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: content_type_opts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE content_type_opts_id_seq OWNED BY content_type_opts.id;
+
+
+--
+-- TOC entry 205 (class 1259 OID 30740)
+-- Name: content_types; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE content_types (
+    id integer NOT NULL,
+    name character varying(255),
+    description character varying(255),
+    value_data_type character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE content_types OWNER TO postgres;
+
+--
+-- TOC entry 204 (class 1259 OID 30738)
+-- Name: content_types_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE content_types_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE content_types_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2594 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: content_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE content_types_id_seq OWNED BY content_types.id;
+
+
+--
+-- TOC entry 207 (class 1259 OID 30751)
+-- Name: profile_types; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE profile_types (
+    id integer NOT NULL,
+    name character varying(255),
+    description character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE profile_types OWNER TO postgres;
+
+--
+-- TOC entry 206 (class 1259 OID 30749)
+-- Name: profile_types_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE profile_types_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE profile_types_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2595 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: profile_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE profile_types_id_seq OWNED BY profile_types.id;
+
+
+--
+-- TOC entry 220 (class 1259 OID 30867)
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE schema_migrations (
+    version character varying NOT NULL
+);
+
+
+ALTER TABLE schema_migrations OWNER TO postgres;
+
+--
+-- TOC entry 209 (class 1259 OID 30762)
+-- Name: topic_type_opts; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE topic_type_opts (
+    id integer NOT NULL,
+    value character varying(255),
+    description character varying(255),
+    type_name character varying(255),
+    topic_type_id integer,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE topic_type_opts OWNER TO postgres;
+
+--
+-- TOC entry 208 (class 1259 OID 30760)
+-- Name: topic_type_opts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE topic_type_opts_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE topic_type_opts_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2596 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: topic_type_opts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE topic_type_opts_id_seq OWNED BY topic_type_opts.id;
+
+
+--
+-- TOC entry 211 (class 1259 OID 30774)
+-- Name: topic_types; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE topic_types (
+    id integer NOT NULL,
+    name character varying(255),
+    description character varying(255),
+    value_based_y_n character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE topic_types OWNER TO postgres;
+
+--
+-- TOC entry 210 (class 1259 OID 30772)
+-- Name: topic_types_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE topic_types_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE topic_types_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2597 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: topic_types_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE topic_types_id_seq OWNED BY topic_types.id;
+
+
+--
+-- TOC entry 213 (class 1259 OID 30785)
+-- Name: user_group_roles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE user_group_roles (
+    id integer NOT NULL,
+    name character varying(255),
+    description character varying(255),
+    group_type character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE user_group_roles OWNER TO postgres;
+
+--
+-- TOC entry 212 (class 1259 OID 30783)
+-- Name: user_group_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE user_group_roles_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE user_group_roles_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2598 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: user_group_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE user_group_roles_id_seq OWNED BY user_group_roles.id;
+
+
+--
+-- TOC entry 215 (class 1259 OID 30797)
+-- Name: user_group_roles_user_roles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE user_group_roles_user_roles (
+    id integer NOT NULL,
+    user_group_role_id integer,
+    user_role_id integer
+);
+
+
+ALTER TABLE user_group_roles_user_roles OWNER TO postgres;
+
+--
+-- TOC entry 214 (class 1259 OID 30795)
+-- Name: user_group_roles_user_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE user_group_roles_user_roles_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE user_group_roles_user_roles_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2599 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: user_group_roles_user_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE user_group_roles_user_roles_id_seq OWNED BY user_group_roles_user_roles.id;
+
+
+--
+-- TOC entry 217 (class 1259 OID 30807)
+-- Name: user_roles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE user_roles (
+    id integer NOT NULL,
+    name character varying(255),
+    description character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE user_roles OWNER TO postgres;
+
+--
+-- TOC entry 216 (class 1259 OID 30805)
+-- Name: user_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE user_roles_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE user_roles_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2600 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: user_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE user_roles_id_seq OWNED BY user_roles.id;
+
+
+--
+-- TOC entry 219 (class 1259 OID 30819)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE users (
+    id integer NOT NULL,
+    username character varying(255),
+    name character varying(255),
+    email character varying(255),
+    password_digest character varying(255),
+    remember_token character varying(255),
+    password_reset_token character varying(255),
+    password_reset_date timestamp without time zone,
+    assigned_groups character varying(4096),
+    roles character varying(4096),
+    active boolean DEFAULT true,
+    file_access_token character varying(255),
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    person_authenticated_key character varying(255),
+    assigned_roles character varying(4096),
+    remember_token_digest character varying(255),
+    user_options character varying(4096)
+);
+
+
+ALTER TABLE users OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 30817)
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE users_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE users_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 2601 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE users_id_seq OWNED BY users.id;
+
+
+--
+-- TOC entry 2375 (class 2604 OID 30697)
+-- Name: content_profile_entries id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_profile_entries ALTER COLUMN id SET DEFAULT nextval('content_profile_entries_id_seq'::regclass);
+
+
+--
+-- TOC entry 2376 (class 2604 OID 30708)
+-- Name: content_profiles id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_profiles ALTER COLUMN id SET DEFAULT nextval('content_profiles_id_seq'::regclass);
+
+
+--
+-- TOC entry 2377 (class 2604 OID 30721)
+-- Name: content_profiles_entries id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_profiles_entries ALTER COLUMN id SET DEFAULT nextval('content_profiles_entries_id_seq'::regclass);
+
+
+--
+-- TOC entry 2378 (class 2604 OID 30731)
+-- Name: content_type_opts id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_type_opts ALTER COLUMN id SET DEFAULT nextval('content_type_opts_id_seq'::regclass);
+
+
+--
+-- TOC entry 2379 (class 2604 OID 30743)
+-- Name: content_types id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_types ALTER COLUMN id SET DEFAULT nextval('content_types_id_seq'::regclass);
+
+
+--
+-- TOC entry 2380 (class 2604 OID 30754)
+-- Name: profile_types id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY profile_types ALTER COLUMN id SET DEFAULT nextval('profile_types_id_seq'::regclass);
+
+
+--
+-- TOC entry 2381 (class 2604 OID 30765)
+-- Name: topic_type_opts id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY topic_type_opts ALTER COLUMN id SET DEFAULT nextval('topic_type_opts_id_seq'::regclass);
+
+
+--
+-- TOC entry 2382 (class 2604 OID 30777)
+-- Name: topic_types id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY topic_types ALTER COLUMN id SET DEFAULT nextval('topic_types_id_seq'::regclass);
+
+
+--
+-- TOC entry 2383 (class 2604 OID 30788)
+-- Name: user_group_roles id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY user_group_roles ALTER COLUMN id SET DEFAULT nextval('user_group_roles_id_seq'::regclass);
+
+
+--
+-- TOC entry 2384 (class 2604 OID 30800)
+-- Name: user_group_roles_user_roles id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY user_group_roles_user_roles ALTER COLUMN id SET DEFAULT nextval('user_group_roles_user_roles_id_seq'::regclass);
+
+
+--
+-- TOC entry 2385 (class 2604 OID 30810)
+-- Name: user_roles id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY user_roles ALTER COLUMN id SET DEFAULT nextval('user_roles_id_seq'::regclass);
+
+
+--
+-- TOC entry 2386 (class 2604 OID 30822)
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY users ALTER COLUMN id SET DEFAULT nextval('users_id_seq'::regclass);
+
+
+--
+-- TOC entry 2582 (class 0 OID 30875)
+-- Dependencies: 221
+-- Data for Name: ar_internal_metadata; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY ar_internal_metadata (key, value, created_at, updated_at) FROM stdin;
+environment	development	2018-01-03 05:26:40.869736	2018-01-03 05:26:40.869736
+\.
+
+
+--
+-- TOC entry 2558 (class 0 OID 30694)
+-- Dependencies: 197
+-- Data for Name: content_profile_entries; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY content_profile_entries (id, topic_value, topic_type, topic_type_description, content_value, content_type, content_type_description, description, created_at, updated_at) FROM stdin;
+1	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Experience	Monthly Experience Reports and Files	Branch Experience Statements	2018-01-03 05:26:45.60615	2018-01-03 05:26:45.60615
+2	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Commission	Monthly Commission Reports and Files	Access Branch Commission PDF Files	2018-01-03 05:26:45.619172	2018-01-03 05:26:45.619172
+3	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- AdvCancel\n	Notification	Email Notification of Related Events	Notify Branch of Policy Events	2018-01-03 05:26:45.634462	2018-01-03 05:26:45.634462
+4	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- '21'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:45.662215	2018-01-03 05:26:45.662215
+5	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- '12'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:45.687627	2018-01-03 05:26:45.687627
+6	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- '13'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:45.722445	2018-01-03 05:26:45.722445
+7	---\n- '0099'\n	Partner	This Corporate Account	---\n- "*.pdf"\n	Activity	Partner Relationship Reports	Partner Relationship Reports	2018-01-03 05:26:45.733364	2018-01-03 05:26:45.733364
+8	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Experience	Monthly Experience Reports and Files	Branch Experience Statements	2018-01-03 05:26:45.744359	2018-01-03 05:26:45.744359
+9	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Commission	Monthly Commission Reports and Files	Access Branch Commission CSV Files	2018-01-03 05:26:45.760737	2018-01-03 05:26:45.760737
+10	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- Cancel\n	Notification	Email Notification of Related Events	Notify Branch of Policy Events	2018-01-03 05:26:45.77216	2018-01-03 05:26:45.77216
+11	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- '34'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:45.802197	2018-01-03 05:26:45.802197
+12	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- '37'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:45.827912	2018-01-03 05:26:45.827912
+13	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- '31'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:45.853599	2018-01-03 05:26:45.853599
+14	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Experience	Monthly Experience Reports and Files	Branch Experience Statements	2018-01-03 05:26:45.866126	2018-01-03 05:26:45.866126
+15	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Commission	Monthly Commission Reports and Files	Access Branch Commission PDF Files	2018-01-03 05:26:45.880228	2018-01-03 05:26:45.880228
+16	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- FutCancel\n	Notification	Email Notification of Related Events	Notify Branch of Policy Events	2018-01-03 05:26:45.902612	2018-01-03 05:26:45.902612
+17	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- '24'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:45.929365	2018-01-03 05:26:45.929365
+18	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- '14'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:45.95888	2018-01-03 05:26:45.95888
+19	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- '3'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:45.985838	2018-01-03 05:26:45.985838
+20	---\n- Developer\n	UserGroups	Shared access to project working files	---\n- "*.pdf"\n	FileDownload	Project Related Resources	Shared access to project working files	2018-01-03 05:26:46.003105	2018-01-03 05:26:46.003105
+21	---\n- Developer\n	UserGroups	Shared access to project working files	---\n- "*.png"\n	FileDownload	Project Related Resources	Shared access to project working files	2018-01-03 05:26:46.019564	2018-01-03 05:26:46.019564
+22	---\n- Developer\n	UserGroups	Shared access to project working files	---\n- "*.jpg"\n	FileDownload	Project Related Resources	Shared access to project working files	2018-01-03 05:26:46.03674	2018-01-03 05:26:46.03674
+23	---\n- Developer\n	UserGroups	Shared access to project working files	---\n- "*.log"\n	FileDownload	Project Related Resources	Shared access to project working files	2018-01-03 05:26:46.050015	2018-01-03 05:26:46.050015
+24	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Experience	Monthly Experience Reports and Files	Branch Experience Statements	2018-01-03 05:26:46.060945	2018-01-03 05:26:46.060945
+25	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Commission	Monthly Commission Reports and Files	Access Branch Commission PDF Files	2018-01-03 05:26:46.075908	2018-01-03 05:26:46.075908
+26	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- AdvCancel\n	Notification	Email Notification of Related Events	Notify Branch of Policy Events	2018-01-03 05:26:46.090467	2018-01-03 05:26:46.090467
+27	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- '21'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:46.118598	2018-01-03 05:26:46.118598
+28	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- '12'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:46.157021	2018-01-03 05:26:46.157021
+29	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- '13'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:46.181142	2018-01-03 05:26:46.181142
+30	---\n- '0099'\n	Partner	This Corporate Account	---\n- "*.pdf"\n	Activity	Partner Relationship Reports	Partner Relationship Reports	2018-01-03 05:26:46.197808	2018-01-03 05:26:46.197808
+31	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Experience	Monthly Experience Reports and Files	Branch Experience Statements	2018-01-03 05:26:46.216958	2018-01-03 05:26:46.216958
+32	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- "*.csv"\n	Commission	Monthly Commission Reports and Files	Access Branch Commission CSV Files	2018-01-03 05:26:46.229679	2018-01-03 05:26:46.229679
+33	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- Cancel\n	Notification	Email Notification of Related Events	Notify Branch of Policy Events	2018-01-03 05:26:46.242181	2018-01-03 05:26:46.242181
+34	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- '34'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:46.275535	2018-01-03 05:26:46.275535
+35	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- '37'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:46.301431	2018-01-03 05:26:46.301431
+36	---\n- '0037'\n	Branch	Branch Actions for a specific branch	---\n- '31'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:46.354299	2018-01-03 05:26:46.354299
+37	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Experience	Monthly Experience Reports and Files	Branch Experience Statements	2018-01-03 05:26:46.368165	2018-01-03 05:26:46.368165
+38	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Commission	Monthly Commission Reports and Files	Access Branch Commission PDF Files	2018-01-03 05:26:46.381079	2018-01-03 05:26:46.381079
+39	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- FutCancel\n	Notification	Email Notification of Related Events	Notify Branch of Policy Events	2018-01-03 05:26:46.396567	2018-01-03 05:26:46.396567
+40	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- '24'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:46.423513	2018-01-03 05:26:46.423513
+41	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- '14'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:46.457229	2018-01-03 05:26:46.457229
+42	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- '3'\n	LicensedStates	Business Operational Metric	Licensed to operate in state	2018-01-03 05:26:46.481845	2018-01-03 05:26:46.481845
+43	---\n- EmployeePrimary\n	UserGroups	Shared access to project working files	---\n- "*.pdf"\n	FileDownload	Project Related Resources	Shared access to project working files	2018-01-03 05:26:46.508038	2018-01-03 05:26:46.508038
+44	---\n- EmployeePrimary\n	UserGroups	Shared access to project working files	---\n- "*.png"\n	FileDownload	Project Related Resources	Shared access to project working files	2018-01-03 05:26:46.525669	2018-01-03 05:26:46.525669
+45	---\n- EmployeePrimary\n	UserGroups	Shared access to project working files	---\n- "*.jpg"\n	FileDownload	Project Related Resources	Shared access to project working files	2018-01-03 05:26:46.538159	2018-01-03 05:26:46.538159
+46	---\n- EmployeePrimary\n	UserGroups	Shared access to project working files	---\n- "*.log"\n	FileDownload	Project Related Resources	Shared access to project working files	2018-01-03 05:26:46.551456	2018-01-03 05:26:46.551456
+47	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Experience	Monthly Experience Reports and Files	Branch Experience Statements	2018-01-03 05:26:46.565959	2018-01-03 05:26:46.565959
+48	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Commission	Monthly Commission Reports and Files	Access Branch Commission PDF Files	2018-01-03 05:26:46.583503	2018-01-03 05:26:46.583503
+49	---\n- '0034'\n	Branch	Branch Actions for a specific branch	---\n- AdvCancel\n	Notification	Email Notification of Related Events	Notify Branch of Policy Events	2018-01-03 05:26:46.597584	2018-01-03 05:26:46.597584
+50	---\n- '0099'\n	Partner	This Corporate Account	---\n- "*.pdf"\n	Activity	Partner Relationship Reports	Partner Relationship Reports	2018-01-03 05:26:46.610329	2018-01-03 05:26:46.610329
+51	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Experience	Monthly Experience Reports and Files	Branch Experience Statements	2018-01-03 05:26:46.622863	2018-01-03 05:26:46.622863
+52	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- "*.pdf"\n	Commission	Monthly Commission Reports and Files	Access Branch Commission PDF Files	2018-01-03 05:26:46.634824	2018-01-03 05:26:46.634824
+53	---\n- '0040'\n	Branch	Branch Actions for a specific branch	---\n- FutCancel\n	Notification	Email Notification of Related Events	Notify Branch of Policy Events	2018-01-03 05:26:46.650008	2018-01-03 05:26:46.650008
+54	---\n- EmployeeSecondary\n	UserGroups	Shared access to project working files	---\n- "*.pdf"\n	FileDownload	Project Related Resources	Shared access to project working files	2018-01-03 05:26:46.672712	2018-01-03 05:26:46.672712
+55	---\n- BranchPrimary\n	UserGroups	Shared access to project working files	---\n- "*.pdf"\n	FileDownload	Project Related Resources	Shared access to project working files	2018-01-03 05:26:46.693556	2018-01-03 05:26:46.693556
+56	---\n- '0099'\n	Partner	This Corporate Account	---\n- "*.pdf"\n	Activity	Partner Relationship Reports	Partner Relationship Reports	2018-01-03 05:26:46.71506	2018-01-03 05:26:46.71506
+57	---\n- VendorPrimary\n	UserGroups	Shared access to project working files	---\n- "*.log"\n	FileDownload	Project Related Resources	Shared access to project working files	2018-01-03 05:26:46.742974	2018-01-03 05:26:46.742974
+\.
+
+
+--
+-- TOC entry 2560 (class 0 OID 30705)
+-- Dependencies: 199
+-- Data for Name: content_profiles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY content_profiles (id, person_authentication_key, profile_type_id, authentication_provider, username, display_name, email, created_at, updated_at) FROM stdin;
+1	afc11abfe6b30a49b1c1c29210974b9f	1	SknService::Bcrypt	developer	Skoona Developer	skoona@gmail.com	2018-01-03 05:26:46.816034	2018-01-03 05:26:46.816034
+2	9f8a85364eb97371c356caf5e0c4c09e	2	SknService::Bcrypt	emtester	Department Manager	emtester@localhost.com	2018-01-03 05:26:46.912144	2018-01-03 05:26:46.912144
+3	d1a4ef7a188106f5b4dab00425155ba4	3	SknService::Bcrypt	eptester	Employee Primary User	appdev@localhost.com	2018-01-03 05:26:47.021007	2018-01-03 05:26:47.021007
+4	fde4b032babe93ca9359829f2ed52971	4	SknService::Bcrypt	estester	Employee Secondary User	appdev1@localhost.com	2018-01-03 05:26:47.103272	2018-01-03 05:26:47.103272
+5	72a802878f482b202f31ba5b0d706981	5	SknService::Bcrypt	bptester	Branch Primary User	appdev2@localhost.com	2018-01-03 05:26:47.166838	2018-01-03 05:26:47.166838
+6	6d941ab6cc1b07c93a30d3328c720d4e	6	SknService::Bcrypt	bstester	Branch Secondary User	appdev3@localhost.com	2018-01-03 05:26:47.217838	2018-01-03 05:26:47.217838
+7	de435ad900b41e7c6db748ec926ac03a	7	SknService::Bcrypt	vptester	Vendor Primary User	appdev4@localhost.com	2018-01-03 05:26:47.240065	2018-01-03 05:26:47.240065
+\.
+
+
+--
+-- TOC entry 2562 (class 0 OID 30718)
+-- Dependencies: 201
+-- Data for Name: content_profiles_entries; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY content_profiles_entries (id, content_profile_id, content_profile_entry_id) FROM stdin;
+1	1	1
+2	1	2
+3	1	3
+4	1	4
+5	1	5
+6	1	6
+7	1	7
+8	1	8
+9	1	9
+10	1	10
+11	1	11
+12	1	12
+13	1	13
+14	1	14
+15	1	15
+16	1	16
+17	1	17
+18	1	18
+19	1	19
+20	1	20
+21	1	21
+22	1	22
+23	1	23
+24	2	24
+25	2	25
+26	2	26
+27	2	27
+28	2	28
+29	2	29
+30	2	30
+31	2	31
+32	2	32
+33	2	33
+34	2	34
+35	2	35
+36	2	36
+37	2	37
+38	2	38
+39	2	39
+40	2	40
+41	2	41
+42	2	42
+43	2	43
+44	2	44
+45	2	45
+46	2	46
+47	3	24
+48	3	25
+49	3	26
+50	3	27
+51	3	28
+52	3	29
+53	3	30
+54	3	31
+55	3	32
+56	3	33
+57	3	34
+58	3	35
+59	3	36
+60	3	37
+61	3	38
+62	3	39
+63	3	40
+64	3	41
+65	3	42
+66	3	43
+67	3	44
+68	3	45
+69	3	46
+70	4	47
+71	4	48
+72	4	49
+73	4	50
+74	4	51
+75	4	52
+76	4	53
+77	4	54
+78	4	55
+79	5	47
+80	5	48
+81	5	49
+82	5	50
+83	5	51
+84	5	52
+85	5	53
+86	5	54
+87	5	55
+88	6	56
+89	6	57
+90	7	56
+91	7	57
+\.
+
+
+--
+-- TOC entry 2564 (class 0 OID 30728)
+-- Dependencies: 203
+-- Data for Name: content_type_opts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY content_type_opts (id, value, description, type_name, content_type_id, created_at, updated_at) FROM stdin;
+1	*.pdf	Document store Experience PDF Type	Experience	1	2018-01-03 05:26:45.276267	2018-01-03 05:26:45.276267
+2	*.pdf	Document store Commision Document Type ID	Commission	2	2018-01-03 05:26:45.286918	2018-01-03 05:26:45.286918
+3	*.csv	Document store Commision CSV Document Type ID	Commission	2	2018-01-03 05:26:45.288733	2018-01-03 05:26:45.288733
+4	AdvCancel	Advance Cancel	Notification	3	2018-01-03 05:26:45.3026	2018-01-03 05:26:45.3026
+5	FutCancel	Future Cancel	Notification	3	2018-01-03 05:26:45.305202	2018-01-03 05:26:45.305202
+6	Cancel	Cancel	Notification	3	2018-01-03 05:26:45.306959	2018-01-03 05:26:45.306959
+7	54	Alaska	LicensedStates	4	2018-01-03 05:26:45.357067	2018-01-03 05:26:45.357067
+8	1	Alabama	LicensedStates	4	2018-01-03 05:26:45.358909	2018-01-03 05:26:45.358909
+9	3	Arkansas	LicensedStates	4	2018-01-03 05:26:45.36048	2018-01-03 05:26:45.36048
+10	2	Arizona	LicensedStates	4	2018-01-03 05:26:45.361844	2018-01-03 05:26:45.361844
+11	4	California	LicensedStates	4	2018-01-03 05:26:45.363543	2018-01-03 05:26:45.363543
+12	5	Colorado	LicensedStates	4	2018-01-03 05:26:45.364917	2018-01-03 05:26:45.364917
+13	6	Connecticut	LicensedStates	4	2018-01-03 05:26:45.366512	2018-01-03 05:26:45.366512
+14	8	Washington Dc	LicensedStates	4	2018-01-03 05:26:45.368535	2018-01-03 05:26:45.368535
+15	7	Delaware	LicensedStates	4	2018-01-03 05:26:45.370202	2018-01-03 05:26:45.370202
+16	9	Florida	LicensedStates	4	2018-01-03 05:26:45.371681	2018-01-03 05:26:45.371681
+17	10	Georgia	LicensedStates	4	2018-01-03 05:26:45.373049	2018-01-03 05:26:45.373049
+18	52	Hawaii	LicensedStates	4	2018-01-03 05:26:45.374461	2018-01-03 05:26:45.374461
+19	14	Iowa	LicensedStates	4	2018-01-03 05:26:45.37586	2018-01-03 05:26:45.37586
+20	11	Idaho	LicensedStates	4	2018-01-03 05:26:45.377213	2018-01-03 05:26:45.377213
+21	12	Illinois	LicensedStates	4	2018-01-03 05:26:45.378594	2018-01-03 05:26:45.378594
+22	13	Indiana	LicensedStates	4	2018-01-03 05:26:45.379949	2018-01-03 05:26:45.379949
+23	15	Kansas	LicensedStates	4	2018-01-03 05:26:45.381393	2018-01-03 05:26:45.381393
+24	16	Kentucky	LicensedStates	4	2018-01-03 05:26:45.383233	2018-01-03 05:26:45.383233
+25	17	Louisiana	LicensedStates	4	2018-01-03 05:26:45.385886	2018-01-03 05:26:45.385886
+26	20	Massachusetts	LicensedStates	4	2018-01-03 05:26:45.387958	2018-01-03 05:26:45.387958
+27	19	Maryland	LicensedStates	4	2018-01-03 05:26:45.389875	2018-01-03 05:26:45.389875
+28	18	Maine	LicensedStates	4	2018-01-03 05:26:45.39141	2018-01-03 05:26:45.39141
+29	21	Michigan	LicensedStates	4	2018-01-03 05:26:45.392862	2018-01-03 05:26:45.392862
+30	22	Minnesota	LicensedStates	4	2018-01-03 05:26:45.395091	2018-01-03 05:26:45.395091
+31	24	Missouri	LicensedStates	4	2018-01-03 05:26:45.398782	2018-01-03 05:26:45.398782
+32	23	Mississippi	LicensedStates	4	2018-01-03 05:26:45.401758	2018-01-03 05:26:45.401758
+33	25	Montana	LicensedStates	4	2018-01-03 05:26:45.407233	2018-01-03 05:26:45.407233
+34	32	North Carolina	LicensedStates	4	2018-01-03 05:26:45.412144	2018-01-03 05:26:45.412144
+35	33	North Dakota	LicensedStates	4	2018-01-03 05:26:45.413956	2018-01-03 05:26:45.413956
+36	26	Nebraska	LicensedStates	4	2018-01-03 05:26:45.415375	2018-01-03 05:26:45.415375
+37	28	New Hampshire	LicensedStates	4	2018-01-03 05:26:45.417434	2018-01-03 05:26:45.417434
+38	29	New Jersey	LicensedStates	4	2018-01-03 05:26:45.41943	2018-01-03 05:26:45.41943
+39	30	New Mexico	LicensedStates	4	2018-01-03 05:26:45.421159	2018-01-03 05:26:45.421159
+40	27	Nevada	LicensedStates	4	2018-01-03 05:26:45.422568	2018-01-03 05:26:45.422568
+41	31	New York	LicensedStates	4	2018-01-03 05:26:45.42412	2018-01-03 05:26:45.42412
+42	34	Ohio	LicensedStates	4	2018-01-03 05:26:45.425644	2018-01-03 05:26:45.425644
+43	35	Oklahoma	LicensedStates	4	2018-01-03 05:26:45.4271	2018-01-03 05:26:45.4271
+44	36	Oregon	LicensedStates	4	2018-01-03 05:26:45.429142	2018-01-03 05:26:45.429142
+45	37	Pennsylvania	LicensedStates	4	2018-01-03 05:26:45.4309	2018-01-03 05:26:45.4309
+46	38	Rhode Island	LicensedStates	4	2018-01-03 05:26:45.43227	2018-01-03 05:26:45.43227
+47	39	South Carolina	LicensedStates	4	2018-01-03 05:26:45.433666	2018-01-03 05:26:45.433666
+48	40	South Dakota	LicensedStates	4	2018-01-03 05:26:45.435129	2018-01-03 05:26:45.435129
+49	41	Tennessee	LicensedStates	4	2018-01-03 05:26:45.436582	2018-01-03 05:26:45.436582
+50	42	Texas	LicensedStates	4	2018-01-03 05:26:45.43789	2018-01-03 05:26:45.43789
+51	43	Utah	LicensedStates	4	2018-01-03 05:26:45.439274	2018-01-03 05:26:45.439274
+52	45	Virginia	LicensedStates	4	2018-01-03 05:26:45.440613	2018-01-03 05:26:45.440613
+53	44	Vermont	LicensedStates	4	2018-01-03 05:26:45.441922	2018-01-03 05:26:45.441922
+54	46	Washington	LicensedStates	4	2018-01-03 05:26:45.443684	2018-01-03 05:26:45.443684
+55	48	Wisconsin	LicensedStates	4	2018-01-03 05:26:45.445245	2018-01-03 05:26:45.445245
+56	47	West Virginia	LicensedStates	4	2018-01-03 05:26:45.447965	2018-01-03 05:26:45.447965
+57	49	Wyoming	LicensedStates	4	2018-01-03 05:26:45.45075	2018-01-03 05:26:45.45075
+58	58	Puerto Rico	LicensedStates	4	2018-01-03 05:26:45.453424	2018-01-03 05:26:45.453424
+59	81	A F Americas	LicensedStates	4	2018-01-03 05:26:45.455154	2018-01-03 05:26:45.455154
+60	82	A F Europe	LicensedStates	4	2018-01-03 05:26:45.45727	2018-01-03 05:26:45.45727
+61	83	A F Pacific	LicensedStates	4	2018-01-03 05:26:45.458824	2018-01-03 05:26:45.458824
+62	84	American Samoa	LicensedStates	4	2018-01-03 05:26:45.460271	2018-01-03 05:26:45.460271
+63	85	Micronesia	LicensedStates	4	2018-01-03 05:26:45.461674	2018-01-03 05:26:45.461674
+64	86	Guam	LicensedStates	4	2018-01-03 05:26:45.463208	2018-01-03 05:26:45.463208
+65	87	Marshall Isl	LicensedStates	4	2018-01-03 05:26:45.46541	2018-01-03 05:26:45.46541
+66	88	N Mariana Isl	LicensedStates	4	2018-01-03 05:26:45.467436	2018-01-03 05:26:45.467436
+67	89	Palau	LicensedStates	4	2018-01-03 05:26:45.469851	2018-01-03 05:26:45.469851
+68	99	Not Found	LicensedStates	4	2018-01-03 05:26:45.473171	2018-01-03 05:26:45.473171
+69	*.pdf	Document store Project Status Report Document Type ID	Activity	5	2018-01-03 05:26:45.479688	2018-01-03 05:26:45.479688
+70	*.png	Project Related by Document Type PNG	FileDownload	6	2018-01-03 05:26:45.488213	2018-01-03 05:26:45.488213
+71	*.jpg	Project Related by Document Type JPEG	FileDownload	6	2018-01-03 05:26:45.489957	2018-01-03 05:26:45.489957
+72	*.pdf	Project Related by Document Type PDF	FileDownload	6	2018-01-03 05:26:45.491486	2018-01-03 05:26:45.491486
+73	*.log	Project Related by Document Type LOG	FileDownload	6	2018-01-03 05:26:45.493103	2018-01-03 05:26:45.493103
+\.
+
+
+--
+-- TOC entry 2566 (class 0 OID 30740)
+-- Dependencies: 205
+-- Data for Name: content_types; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY content_types (id, name, description, value_data_type, created_at, updated_at) FROM stdin;
+1	Experience	Monthly Experience Reports and Files	String	2018-01-03 05:26:45.273634	2018-01-03 05:26:45.273634
+2	Commission	Monthly Commission Reports and Files	String	2018-01-03 05:26:45.284905	2018-01-03 05:26:45.284905
+3	Notification	Email Notification of Related Events	String	2018-01-03 05:26:45.299681	2018-01-03 05:26:45.299681
+4	LicensedStates	Business Operational Metric	Integer	2018-01-03 05:26:45.354475	2018-01-03 05:26:45.354475
+5	Activity	Partner Relationship Reports	String	2018-01-03 05:26:45.47802	2018-01-03 05:26:45.47802
+6	FileDownload	Project Related Resources	String	2018-01-03 05:26:45.486174	2018-01-03 05:26:45.486174
+\.
+
+
+--
+-- TOC entry 2568 (class 0 OID 30751)
+-- Dependencies: 207
+-- Data for Name: profile_types; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY profile_types (id, name, description, created_at, updated_at) FROM stdin;
+1	Developer	Open Source Independent Consultancy	2018-01-03 05:26:45.230231	2018-01-03 05:26:45.230231
+2	Manager	Corporate Managers	2018-01-03 05:26:45.234725	2018-01-03 05:26:45.234725
+3	EmployeePrimary	Department Managers	2018-01-03 05:26:45.238044	2018-01-03 05:26:45.238044
+4	EmployeeSecondary	Corporate Staff	2018-01-03 05:26:45.240767	2018-01-03 05:26:45.240767
+5	BranchPrimary	Branch Manager	2018-01-03 05:26:45.243392	2018-01-03 05:26:45.243392
+6	BranchSecondary	Branch Staff	2018-01-03 05:26:45.246111	2018-01-03 05:26:45.246111
+7	VendorPrimary	Partner Manager	2018-01-03 05:26:45.248621	2018-01-03 05:26:45.248621
+8	VendorSecondary	Partner Staff	2018-01-03 05:26:45.251198	2018-01-03 05:26:45.251198
+\.
+
+
+--
+-- TOC entry 2581 (class 0 OID 30867)
+-- Dependencies: 220
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY schema_migrations (version) FROM stdin;
+20160113200706
+\.
+
+
+--
+-- TOC entry 2570 (class 0 OID 30762)
+-- Dependencies: 209
+-- Data for Name: topic_type_opts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY topic_type_opts (id, value, description, type_name, topic_type_id, created_at, updated_at) FROM stdin;
+1	0034	South Branch Number	Branch	1	2018-01-03 05:26:45.530178	2018-01-03 05:26:45.530178
+2	0037	North Branch Number	Branch	1	2018-01-03 05:26:45.53293	2018-01-03 05:26:45.53293
+3	0040	West Branch Number	Branch	1	2018-01-03 05:26:45.535664	2018-01-03 05:26:45.535664
+4	0099	Skoona Consulting	Partner	2	2018-01-03 05:26:45.542766	2018-01-03 05:26:45.542766
+5	Manager	Project Workfiles	UserGroups	3	2018-01-03 05:26:45.557435	2018-01-03 05:26:45.557435
+6	EmployeePrimary	Project Workfiles	UserGroups	3	2018-01-03 05:26:45.558905	2018-01-03 05:26:45.558905
+7	EmployeeSecondary	Project Workfiles	UserGroups	3	2018-01-03 05:26:45.560347	2018-01-03 05:26:45.560347
+8	VendorPrimary	Project Workfiles	UserGroups	3	2018-01-03 05:26:45.562396	2018-01-03 05:26:45.562396
+9	VendorSecondary	Project Workfiles	UserGroups	3	2018-01-03 05:26:45.565147	2018-01-03 05:26:45.565147
+10	BranchPrimary	Project Workfiles	UserGroups	3	2018-01-03 05:26:45.567667	2018-01-03 05:26:45.567667
+11	BranchSecondary	Project Workfiles	UserGroups	3	2018-01-03 05:26:45.569693	2018-01-03 05:26:45.569693
+12	Developer	Project Workfiles	UserGroups	3	2018-01-03 05:26:45.571661	2018-01-03 05:26:45.571661
+\.
+
+
+--
+-- TOC entry 2572 (class 0 OID 30774)
+-- Dependencies: 211
+-- Data for Name: topic_types; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY topic_types (id, name, description, value_based_y_n, created_at, updated_at) FROM stdin;
+1	Branch	Branch Actions for a specific branch	N	2018-01-03 05:26:45.527914	2018-01-03 05:26:45.527914
+2	Partner	This Corporate Account	N	2018-01-03 05:26:45.540894	2018-01-03 05:26:45.540894
+3	UserGroups	Shared access to project working files	N	2018-01-03 05:26:45.555813	2018-01-03 05:26:45.555813
+\.
+
+
+--
+-- TOC entry 2574 (class 0 OID 30785)
+-- Dependencies: 213
+-- Data for Name: user_group_roles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY user_group_roles (id, name, description, group_type, created_at, updated_at) FROM stdin;
+1	Developer	Open Source Independent Consultancy	Skoona Consulting	2018-01-03 05:26:41.348931	2018-01-03 05:26:41.348931
+2	Manager	Corporate Managers	Corporate Manager	2018-01-03 05:26:41.354652	2018-01-03 05:26:41.354652
+3	EmployeePrimary	Department Manager	Department Manager	2018-01-03 05:26:41.358931	2018-01-03 05:26:41.358931
+4	EmployeeSecondary	Corporate Staff	Corporate Staff	2018-01-03 05:26:41.363599	2018-01-03 05:26:41.363599
+5	BranchPrimary	Branch Manager	Branch Admin	2018-01-03 05:26:41.367547	2018-01-03 05:26:41.367547
+6	BranchSecondary	Branch Staff	Branch Staff	2018-01-03 05:26:41.371384	2018-01-03 05:26:41.371384
+7	VendorPrimary	Partner Manager	Partner Admin	2018-01-03 05:26:41.37592	2018-01-03 05:26:41.37592
+8	VendorSecondary	Partner Staff	Partner Staff	2018-01-03 05:26:41.381293	2018-01-03 05:26:41.381293
+\.
+
+
+--
+-- TOC entry 2576 (class 0 OID 30797)
+-- Dependencies: 215
+-- Data for Name: user_group_roles_user_roles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY user_group_roles_user_roles (id, user_group_role_id, user_role_id) FROM stdin;
+1	1	1
+2	1	2
+3	1	3
+4	1	4
+5	1	5
+6	1	6
+7	1	7
+8	1	8
+9	1	9
+10	1	10
+11	1	11
+12	1	12
+13	1	13
+14	1	14
+15	1	15
+16	1	16
+17	2	1
+18	2	2
+19	2	3
+20	2	4
+21	2	5
+22	2	6
+23	2	7
+24	2	8
+25	2	9
+26	2	10
+27	2	11
+28	2	12
+29	2	13
+30	2	14
+31	2	15
+32	2	16
+33	3	1
+34	3	2
+35	3	3
+36	3	4
+37	3	5
+38	3	6
+39	3	7
+40	3	8
+41	3	9
+42	3	10
+43	3	11
+44	3	12
+45	3	13
+46	3	15
+47	3	16
+48	4	4
+49	4	5
+50	4	6
+51	4	7
+52	4	8
+53	4	9
+54	4	10
+55	4	11
+56	4	12
+57	4	14
+58	4	16
+59	5	4
+60	5	5
+61	5	6
+62	5	7
+63	5	8
+64	5	9
+65	5	10
+66	5	11
+67	5	12
+68	5	14
+69	5	16
+70	6	4
+71	6	5
+72	6	6
+73	6	7
+74	6	8
+75	6	9
+76	6	10
+77	6	11
+78	6	12
+79	6	14
+80	7	8
+81	7	9
+82	7	10
+83	7	11
+84	7	12
+85	7	14
+86	8	8
+87	8	9
+88	8	10
+89	8	11
+90	8	12
+91	8	14
+\.
+
+
+--
+-- TOC entry 2578 (class 0 OID 30807)
+-- Dependencies: 217
+-- Data for Name: user_roles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY user_roles (id, name, description, created_at, updated_at) FROM stdin;
+1	Services.Action.Admin	Employee Managers	2018-01-03 05:26:41.23514	2018-01-03 05:26:41.23514
+2	Services.Action.Primary	Branch Managers	2018-01-03 05:26:41.242206	2018-01-03 05:26:41.242206
+3	Services.Action.Developer	Super User or Developer	2018-01-03 05:26:41.246812	2018-01-03 05:26:41.246812
+4	Services.Branch.Commission.Access	Access Branch Commission Statements	2018-01-03 05:26:41.250525	2018-01-03 05:26:41.250525
+5	Services.Branch.Experience.Access	Access Branch Experience Report	2018-01-03 05:26:41.254201	2018-01-03 05:26:41.254201
+6	Services.Branch.Notification.Access	Access Branch Notification Mailings	2018-01-03 05:26:41.25987	2018-01-03 05:26:41.25987
+7	Services.Branch.LicensedStates.Access	Access Branch Licensed USA States	2018-01-03 05:26:41.267161	2018-01-03 05:26:41.267161
+8	Services.UserGroups.FileDownload.Access	Access Shared UserGroup Resources	2018-01-03 05:26:41.275102	2018-01-03 05:26:41.275102
+9	Services.Partner.Activity.Access	Access Partner Project Resources	2018-01-03 05:26:41.28289	2018-01-03 05:26:41.28289
+10	Services.Action.ResetPassword	Reset Forgotten Password via EMail	2018-01-03 05:26:41.292119	2018-01-03 05:26:41.292119
+11	Services.Action.Use.ContentProfile	Consumer of Authorization Content Profile	2018-01-03 05:26:41.302006	2018-01-03 05:26:41.302006
+12	Services.Action.Use.UserRecords	Consumer of User Records	2018-01-03 05:26:41.308971	2018-01-03 05:26:41.308971
+13	Services.UserGroups.Admin.FileDownload	Administer Datafile Downloads	2018-01-03 05:26:41.313217	2018-01-03 05:26:41.313217
+14	Services.UserGroups.Use.FileDownload	Consumer of Datafile Downloads	2018-01-03 05:26:41.319087	2018-01-03 05:26:41.319087
+15	Services.Action.Admin.ContentProfile	Administer Authorization Content Profile	2018-01-03 05:26:41.325184	2018-01-03 05:26:41.325184
+16	Services.Action.Admin.UserRecords	Administer User Records	2018-01-03 05:26:41.329887	2018-01-03 05:26:41.329887
+\.
+
+
+--
+-- TOC entry 2580 (class 0 OID 30819)
+-- Dependencies: 219
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY users (id, username, name, email, password_digest, remember_token, password_reset_token, password_reset_date, assigned_groups, roles, active, file_access_token, created_at, updated_at, person_authenticated_key, assigned_roles, remember_token_digest, user_options) FROM stdin;
+1	developer	Skoona Developer	skoona@gmail.com	$2a$10$Hbfow5qqyTasPJf0Pj5ZnOmFbm0mltIgXIT3fMBWllzpBKYcMmbvO	BoucD3sGJFEHNPbxirmFlg	\N	\N	---\n- Developer\n	\N	t	\N	2018-01-03 05:26:42.620086	2018-01-03 05:26:42.620086	afc11abfe6b30a49b1c1c29210974b9f	---\n- Services.Action.Developer\n	$2a$07$Btg0lmFd7U6vlN/KSz8LNOf5iLxOjncVtG80SiL3f2kJJ9iFzOM.a	---\n- Developer\n- '0034'\n- '0037'\n- '0040'\n- '0099'\n
+2	emtester	Department Manager	emtester@localhost.com	$2a$10$t/EzFkK5lHydQ7BP6crGt.p4bO/ITV4Z3v45MNgR2sRR3w1qlhPyO	A1TyTYpQx6wCZOTxakWZOQ	\N	\N	---\n- Manager\n	\N	t	\N	2018-01-03 05:26:43.543296	2018-01-03 05:26:43.543296	9f8a85364eb97371c356caf5e0c4c09e	---\n- Services.Action.Admin\n	$2a$07$UbRvyrVW44VYketNmXLJJ.7U08Ixrnn2Dnn3dKGxFcRlJQcFj4RjG	---\n- Manager\n- '0034'\n- '0037'\n- '0040'\n- '0099'\n
+3	eptester	Employee Primary User	appdev@localhost.com	$2a$10$9HdbVaMBA0WmKejU2dfz0u4HO.qEpqYtAgeaBfqAKocBhwSMCBZW.	3kT0fYlvhXMSHFquUeW5Ng	\N	\N	---\n- EmployeePrimary\n	\N	t	\N	2018-01-03 05:26:43.64504	2018-01-03 05:26:43.64504	d1a4ef7a188106f5b4dab00425155ba4	---\n- Services.Action.Admin\n	$2a$07$yhH9TNKYYwkgPCU4FAUZpO0omIC.iYp2MAEVXA4OgC84P4ixs.BBC	---\n- EmployeePrimary\n- '0034'\n- '0037'\n- '0040'\n- '0099'\n
+4	estester	Employee Secondary User	appdev1@localhost.com	$2a$10$4CmW24t0hY9dk1WPWo/XLez0Wr98GZBkuBth/G/zb2GzgkWt1Amra	OmslWaM73Ys20EkO2g7gfQ	\N	\N	---\n- EmployeeSecondary\n	\N	t	\N	2018-01-03 05:26:44.632791	2018-01-03 05:26:44.632791	fde4b032babe93ca9359829f2ed52971	\N	$2a$07$mK7NL9RuYmXKRyhXWQmWrOnuKMfVXWqArfCihJeUUmTUE0kuRQElm	---\n- EmployeeSecondary\n- '0037'\n- '0099'\n
+5	bptester	Branch Primary User	appdev2@localhost.com	$2a$10$2SODlrQxL8edw0lZaxIdE..5wP2GP2D5JzpM5XzJVre88qBT55xP2	HEw082k46quYcugM1eM06Q	\N	\N	---\n- BranchPrimary\n	\N	t	\N	2018-01-03 05:26:44.741842	2018-01-03 05:26:44.741842	72a802878f482b202f31ba5b0d706981	---\n- Services.Action.Primary\n	$2a$07$9xoQqg9C9AABGUdtMd2Ef.gUhouNczhoMWk7Lpxi93Vi0Gmt/5BUi	---\n- BranchPrimary\n- '0034'\n- '0037'\n- '0040'\n- '0099'\n
+6	bstester	Branch Secondary User	appdev3@localhost.com	$2a$10$exhIcZMvqkAh.07zJSzjrOuTRLlP4z998XcPu92xuWyM9nQ3QME7u	tnzCAS2lxFDeU1prHPmX8Q	\N	\N	---\n- BranchSecondary\n	\N	t	\N	2018-01-03 05:26:44.835705	2018-01-03 05:26:44.835705	6d941ab6cc1b07c93a30d3328c720d4e	\N	$2a$07$a/iPcGC2yFc8xceeus23.eBhRffOzjDU1IkWLHK6io.72ekFu/WC2	---\n- BranchSecondary\n- '0037'\n- '0099'\n
+7	bnptester	Branch No Privileges User	appdev6@localhost.com	$2a$10$fUh9ZohI4DdtaSvbuSTpouoaDSrNoEgSAXcEs2Lj.DLGgvOfZkTeq	CQ127SNK_K_y_iJ7g8H5CA	\N	\N	---\n- BranchSecondary\n	\N	t	\N	2018-01-03 05:26:44.928536	2018-01-03 05:26:44.928536	3ff120a8263da86da2060a908e82fb01	\N	$2a$07$yr8YDTOcVKcn.0HB4KX5euG28l6QmZMJsttSKP14d69aFc2/nuWwG	\N
+8	vptester	Vendor Primary User	appdev4@localhost.com	$2a$10$3g0Q6IcjtYcYG/WyRYDY2uP75/tJmRqr.RiPLgeWqZQRu5ORraxW6	k35mNPYlJK4_I1jJjE56vw	\N	\N	---\n- VendorPrimary\n	\N	t	\N	2018-01-03 05:26:45.034094	2018-01-03 05:26:45.034094	de435ad900b41e7c6db748ec926ac03a	\N	$2a$07$V1heP7P5MYPCSfdHMQWsEOYgFVGONpjb3ChhMZPjzhLbr36FEArfO	---\n- VendorPrimary\n- '0099'\n
+9	vstester	Vendor Secondary User	appdev5@localhost.com	$2a$10$WqEwGLNdSh6/Wei9W4424uwB4vrhK0aRVV3SFP2TsWP3ij8Pil0Qm	lTVh4o06EVYLDiFFPowOBg	\N	\N	---\n- VendorSecondary\n	\N	t	\N	2018-01-03 05:26:45.127651	2018-01-03 05:26:45.127651	1676524620f367d101bf40dbe01adbfa	\N	$2a$07$rJpXFz7FUDv0uMemjEHH9eOeUJezzvTC742Imz0cXQOeZ04feopki	---\n- VendorSecondary\n- '0099'\n
+\.
+
+
+--
+-- TOC entry 2602 (class 0 OID 0)
+-- Dependencies: 196
+-- Name: content_profile_entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('content_profile_entries_id_seq', 57, true);
+
+
+--
+-- TOC entry 2603 (class 0 OID 0)
+-- Dependencies: 200
+-- Name: content_profiles_entries_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('content_profiles_entries_id_seq', 91, true);
+
+
+--
+-- TOC entry 2604 (class 0 OID 0)
+-- Dependencies: 198
+-- Name: content_profiles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('content_profiles_id_seq', 7, true);
+
+
+--
+-- TOC entry 2605 (class 0 OID 0)
+-- Dependencies: 202
+-- Name: content_type_opts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('content_type_opts_id_seq', 73, true);
+
+
+--
+-- TOC entry 2606 (class 0 OID 0)
+-- Dependencies: 204
+-- Name: content_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('content_types_id_seq', 6, true);
+
+
+--
+-- TOC entry 2607 (class 0 OID 0)
+-- Dependencies: 206
+-- Name: profile_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('profile_types_id_seq', 8, true);
+
+
+--
+-- TOC entry 2608 (class 0 OID 0)
+-- Dependencies: 208
+-- Name: topic_type_opts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('topic_type_opts_id_seq', 12, true);
+
+
+--
+-- TOC entry 2609 (class 0 OID 0)
+-- Dependencies: 210
+-- Name: topic_types_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('topic_types_id_seq', 3, true);
+
+
+--
+-- TOC entry 2610 (class 0 OID 0)
+-- Dependencies: 212
+-- Name: user_group_roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('user_group_roles_id_seq', 8, true);
+
+
+--
+-- TOC entry 2611 (class 0 OID 0)
+-- Dependencies: 214
+-- Name: user_group_roles_user_roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('user_group_roles_user_roles_id_seq', 91, true);
+
+
+--
+-- TOC entry 2612 (class 0 OID 0)
+-- Dependencies: 216
+-- Name: user_roles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('user_roles_id_seq', 16, true);
+
+
+--
+-- TOC entry 2613 (class 0 OID 0)
+-- Dependencies: 218
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('users_id_seq', 9, true);
+
+
+--
+-- TOC entry 2428 (class 2606 OID 30882)
+-- Name: ar_internal_metadata ar_internal_metadata_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY ar_internal_metadata
+    ADD CONSTRAINT ar_internal_metadata_pkey PRIMARY KEY (key);
+
+
+--
+-- TOC entry 2389 (class 2606 OID 30702)
+-- Name: content_profile_entries content_profile_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_profile_entries
+    ADD CONSTRAINT content_profile_entries_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2395 (class 2606 OID 30723)
+-- Name: content_profiles_entries content_profiles_entries_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_profiles_entries
+    ADD CONSTRAINT content_profiles_entries_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2391 (class 2606 OID 30713)
+-- Name: content_profiles content_profiles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_profiles
+    ADD CONSTRAINT content_profiles_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2399 (class 2606 OID 30736)
+-- Name: content_type_opts content_type_opts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_type_opts
+    ADD CONSTRAINT content_type_opts_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2402 (class 2606 OID 30748)
+-- Name: content_types content_types_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_types
+    ADD CONSTRAINT content_types_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2404 (class 2606 OID 30759)
+-- Name: profile_types profile_types_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY profile_types
+    ADD CONSTRAINT profile_types_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2426 (class 2606 OID 30874)
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- TOC entry 2407 (class 2606 OID 30770)
+-- Name: topic_type_opts topic_type_opts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY topic_type_opts
+    ADD CONSTRAINT topic_type_opts_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2409 (class 2606 OID 30782)
+-- Name: topic_types topic_types_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY topic_types
+    ADD CONSTRAINT topic_types_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2412 (class 2606 OID 30793)
+-- Name: user_group_roles user_group_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY user_group_roles
+    ADD CONSTRAINT user_group_roles_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2416 (class 2606 OID 30802)
+-- Name: user_group_roles_user_roles user_group_roles_user_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY user_group_roles_user_roles
+    ADD CONSTRAINT user_group_roles_user_roles_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2419 (class 2606 OID 30815)
+-- Name: user_roles user_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY user_roles
+    ADD CONSTRAINT user_roles_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2424 (class 2606 OID 30828)
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- TOC entry 2396 (class 1259 OID 30724)
+-- Name: index_content_profiles_entries_on_content_profile_entry_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX index_content_profiles_entries_on_content_profile_entry_id ON content_profiles_entries USING btree (content_profile_entry_id);
+
+
+--
+-- TOC entry 2397 (class 1259 OID 30725)
+-- Name: index_content_profiles_entries_on_content_profile_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX index_content_profiles_entries_on_content_profile_id ON content_profiles_entries USING btree (content_profile_id);
+
+
+--
+-- TOC entry 2392 (class 1259 OID 30714)
+-- Name: index_content_profiles_on_person_authentication_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX index_content_profiles_on_person_authentication_key ON content_profiles USING btree (person_authentication_key);
+
+
+--
+-- TOC entry 2393 (class 1259 OID 30715)
+-- Name: index_content_profiles_on_profile_type_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX index_content_profiles_on_profile_type_id ON content_profiles USING btree (profile_type_id);
+
+
+--
+-- TOC entry 2400 (class 1259 OID 30737)
+-- Name: index_content_types_on_content_type_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX index_content_types_on_content_type_id ON content_type_opts USING btree (content_type_id);
+
+
+--
+-- TOC entry 2405 (class 1259 OID 30771)
+-- Name: index_topic_types_on_topic_type_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX index_topic_types_on_topic_type_id ON topic_type_opts USING btree (topic_type_id);
+
+
+--
+-- TOC entry 2410 (class 1259 OID 30794)
+-- Name: index_user_group_roles_on_name; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX index_user_group_roles_on_name ON user_group_roles USING btree (name);
+
+
+--
+-- TOC entry 2413 (class 1259 OID 30803)
+-- Name: index_user_group_roles_user_roles_on_user_group_role_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX index_user_group_roles_user_roles_on_user_group_role_id ON user_group_roles_user_roles USING btree (user_group_role_id);
+
+
+--
+-- TOC entry 2414 (class 1259 OID 30804)
+-- Name: index_user_group_roles_user_roles_on_user_role_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX index_user_group_roles_user_roles_on_user_role_id ON user_group_roles_user_roles USING btree (user_role_id);
+
+
+--
+-- TOC entry 2417 (class 1259 OID 30816)
+-- Name: index_user_roles_on_name; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX index_user_roles_on_name ON user_roles USING btree (name);
+
+
+--
+-- TOC entry 2420 (class 1259 OID 30829)
+-- Name: index_users_on_person_authenticated_key; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX index_users_on_person_authenticated_key ON users USING btree (person_authenticated_key);
+
+
+--
+-- TOC entry 2421 (class 1259 OID 30830)
+-- Name: index_users_on_remember_token; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX index_users_on_remember_token ON users USING btree (remember_token);
+
+
+--
+-- TOC entry 2422 (class 1259 OID 30831)
+-- Name: index_users_on_username; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX index_users_on_username ON users USING btree (username);
+
+
+--
+-- TOC entry 2435 (class 2606 OID 30862)
+-- Name: user_group_roles_user_roles fk_rails_2e964899e5; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY user_group_roles_user_roles
+    ADD CONSTRAINT fk_rails_2e964899e5 FOREIGN KEY (user_role_id) REFERENCES user_roles(id);
+
+
+--
+-- TOC entry 2429 (class 2606 OID 30832)
+-- Name: content_profiles fk_rails_5ddd6208a6; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_profiles
+    ADD CONSTRAINT fk_rails_5ddd6208a6 FOREIGN KEY (profile_type_id) REFERENCES profile_types(id);
+
+
+--
+-- TOC entry 2431 (class 2606 OID 30842)
+-- Name: content_profiles_entries fk_rails_609cf11d23; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_profiles_entries
+    ADD CONSTRAINT fk_rails_609cf11d23 FOREIGN KEY (content_profile_id) REFERENCES content_profiles(id);
+
+
+--
+-- TOC entry 2432 (class 2606 OID 30847)
+-- Name: content_type_opts fk_rails_7414f04fa1; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_type_opts
+    ADD CONSTRAINT fk_rails_7414f04fa1 FOREIGN KEY (content_type_id) REFERENCES content_types(id);
+
+
+--
+-- TOC entry 2430 (class 2606 OID 30837)
+-- Name: content_profiles_entries fk_rails_8246790765; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY content_profiles_entries
+    ADD CONSTRAINT fk_rails_8246790765 FOREIGN KEY (content_profile_entry_id) REFERENCES content_profile_entries(id);
+
+
+--
+-- TOC entry 2434 (class 2606 OID 30857)
+-- Name: user_group_roles_user_roles fk_rails_846806fa23; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY user_group_roles_user_roles
+    ADD CONSTRAINT fk_rails_846806fa23 FOREIGN KEY (user_group_role_id) REFERENCES user_group_roles(id);
+
+
+--
+-- TOC entry 2433 (class 2606 OID 30852)
+-- Name: topic_type_opts fk_rails_b4cea7337a; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY topic_type_opts
+    ADD CONSTRAINT fk_rails_b4cea7337a FOREIGN KEY (topic_type_id) REFERENCES topic_types(id);
+
+
+-- Completed on 2018-01-06 16:23:59 EST
+
+--
+-- PostgreSQL database dump complete
+--
+

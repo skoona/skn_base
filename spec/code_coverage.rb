@@ -17,7 +17,7 @@ SimpleCov.start do
   add_filter '/vendor/'
   add_filter '/views/'
 
-  add_group 'Strategy' do |src_file|
+  add_group 'UseCases' do |src_file|
     ['strategy/secure'].any? do |item|
       src_file.filename.include? item
     end

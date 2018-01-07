@@ -12,13 +12,17 @@
         <a class="navbar-brand" href="/">SknBase</a>
       </div>
 
+
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-          <li><a class="<%= menu_active?('/') %>" href="/">Home</a></li>
-          <li><a class="<%= menu_active?('/about') %>" href="/about">About</a></li>
-          <li><a class="<%= menu_active?('/contact') %>" href="/contact">Contact</a></li>
-          <li><a class="<%= menu_active?('/profiles/resources') %>" href="/profiles/resources">Resources</a></li>
-        </ul>
+        <% unless ['signin'].any? {|x| x.eql?(current_page_name) } %>
+          <ul class="nav navbar-nav">
+            <li><a class="<%= menu_active?('/') %>" href="/">Home</a></li>
+            <li><a class="<%= menu_active?('/about') %>" href="/about">About</a></li>
+            <li><a class="<%= menu_active?('/contact') %>" href="/contact">Contact</a></li>
+            <li><a class="<%= menu_active?('/profiles/resources') %>" href="/profiles/resources">Resources</a></li>
+          </ul>
+        <% end %>
+
         <ul class="nav navbar-nav navbar-right">
           <li>
             <% if valid_user? %>
@@ -40,6 +44,7 @@
             </p>
         <% end %>
       </div>
+
     </div>
   </nav>
 

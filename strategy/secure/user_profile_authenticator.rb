@@ -48,6 +48,17 @@ module Secure
       upp
     end
 
+    # ContentProfile will call this
+    def self.page_user(uname)
+      userp = nil
+      value = user_repo.find_by(username: uname)
+      userp = self.new(value) if value
+      userp = nil unless userp
+      debug_log("#{self.name.to_s}.#{__method__}(#{uname}) Returns => #{userp&.name}")
+      userp
+    end
+
+
     def self.user_repo
       Repositories::Users.new(SknSettings.rom)
     end
