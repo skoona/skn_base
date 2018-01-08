@@ -15,6 +15,8 @@ require "rack_session_access/capybara"
 require 'capybara-screenshot/rspec'
 require 'capybara/poltergeist'
 
+require 'pry'
+
 require 'simplecov'
 require 'code_coverage'
 
@@ -58,20 +60,41 @@ RSpec.configure do |config|
   config.include FeatureHelpers  #, type: :feature       # logged_as(user) session injection for cucumber/capybara
   config.include TestUsers
 
+  @_warden = nil
   config.before(:each) do
     Capybara.use_default_driver       # switch back to default driver
     # Capybara.default_host = 'http://test.host'
+
+    Warden.on_next_request do |proxy|
+      proxy.test_mode!
+      proxy.asset_paths= SknSettings.security.asset_paths
+      @_warden = proxy
+    end
   end
 
   config.append_after(:each) do
     Warden.test_reset!
+    warden.asset_paths= SknSettings.security.asset_paths
     # Capybara.current_session.driver.reset!
     Capybara.reset_sessions!
+  end
+
+  def warden
+    return @_warden if instance_variable_defined?(:@_warden)
+    _warden ||= begin
+      manager = app
+      manager = manager.instance_variable_get(:@app) while !manager.is_a?(Warden::Manager)
+      manager
+    end
+    binding.pry
+    # @_warden = Warden::Proxy.new(@request.env, _warden)
+    @_warden = request.env['warden'] = Warden::Proxy.new(request.env, _warden)
   end
 
   def sign_in(user, opts=nil)
     warden.set_user(user,opts)
   end
+
 
   def app
     Skn::SknBase.app

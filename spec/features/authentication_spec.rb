@@ -23,16 +23,16 @@ feature "Authentication process for all users." do
 
   context "Secured Pages cannot be accessed. " do
 
-    scenario "#/profiles/resources Required to sign in when page is secured." do
+    scenario "#/profiles/resources Secured page requires sign in." do
       visit '/profiles/resources'
-      expect(current_path).to eq '/sessions/unauthenticated'
+      expect(current_path).to eq '/profiles/resources'
       expect(page).to have_title("Not Authenticated")
       expect(page).to have_content('You must be signed In to view resources!')
     end
 
-    scenario "#/profiles/users Required to sign in when page is secured." do
+    scenario "#/profiles/users Secured page requires sign in." do
       visit '/profiles/users'
-      expect(current_path).to eq '/sessions/unauthenticated'
+      expect(current_path).to eq '/profiles/users'
       expect(page).to have_title("Not Authenticated")
       expect(page).to have_content('You must be signed In to view users!')
     end

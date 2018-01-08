@@ -192,7 +192,6 @@ Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
     auth.cookies.delete('remember_token')
   end
 
-  # auth.flash_message(:success, opts[:message]) if opts[:message]
   auth.flash_message(:info, auth.message) if auth.message
 
   auth.logger.debug " Warden::Manager.after_set_user(#{user&.name}) AttemptedPage: #{auth.request.session['skn.attempted.page']}"

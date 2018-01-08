@@ -18,9 +18,9 @@ module Skn
     }
     use Rack::MethodOverride
 
-    unless SknSettings.env.test?
+    # unless SknSettings.env.test?
       use Rack::Protection
-    end
+    # end
 
     if SknSettings.env.test?
       use RackSessionAccess::Middleware
@@ -32,7 +32,7 @@ module Skn
 
     plugin :all_verbs
 
-    unless SknSettings.env.test?
+    # unless SknSettings.env.test?
       plugin :csrf, { raise: false,
                       skip_if: lambda { |request|
                         ['HTTP_AUTHORIZATION', 'X-HTTP_AUTHORIZATION',
@@ -40,7 +40,7 @@ module Skn
                           request.env.key?(k) }
                       }
       }
-    end
+    # end
 
     plugin :render, {
         engine: 'html.erb',

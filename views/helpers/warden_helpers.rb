@@ -60,8 +60,7 @@ module Skn
     alias_method :current_user=, :user=
 
     def logout(*list_of_scopes)
-      warden.raw_session.inspect  # Without this inspect here.  The session does not clear :|
-      warden.logout(*list_of_scopes)
+      warden.logout(*list_of_scopes) if warden.authenticated?
     end
 
     # Proxy to the authenticate method on warden
