@@ -74,21 +74,20 @@ RSpec.configure do |config|
 
   config.append_after(:each) do
     Warden.test_reset!
-    warden.asset_paths= SknSettings.security.asset_paths
     # Capybara.current_session.driver.reset!
     Capybara.reset_sessions!
   end
 
   def warden
     return @_warden if instance_variable_defined?(:@_warden)
-    _warden ||= begin
-      manager = app
-      manager = manager.instance_variable_get(:@app) while !manager.is_a?(Warden::Manager)
-      manager
-    end
-    binding.pry
+
+    manager = app
+    manager = manager.instance_variable_get(:@app) while !manager.is_a?(Warden::Manager)
+    manager
+
+    # binding.pry
     # @_warden = Warden::Proxy.new(@request.env, _warden)
-    @_warden = request.env['warden'] = Warden::Proxy.new(request.env, _warden)
+    @_warden = request.env['warden'] = Warden::Proxy.new(request.env, manager)
   end
 
   def sign_in(user, opts=nil)
