@@ -8,8 +8,6 @@ module Skn
 
       set_view_subdir 'profiles'
 
-      warden_messages
-
       r.get "resources" do
         view(:resources)
       end

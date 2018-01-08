@@ -10,28 +10,38 @@ module Skn
 
     use Rack::CommonLogger
 
-    # use Rack::Cookies
+    use Rack::Cookies
     use Rack::Session::Cookie, {
         secret: SknSettings.skn_base.secret,
         key: SknSettings.skn_base.session_key,
         domain: SknSettings.skn_base.session_domain
     }
     use Rack::MethodOverride
-    use Rack::Protection
+
+    unless SknSettings.env.test?
+      use Rack::Protection
+    end
+
+    if SknSettings.env.test?
+      use RackSessionAccess::Middleware
+    end
 
     use Rack::ShowExceptions
     use Rack::NestedParams
     use Rack::Reloader
 
     plugin :all_verbs
-    plugin :public             #:static, %w[/images /fonts]
-    plugin :csrf, { raise: false,
-                    skip_if: lambda { |request|
-                      ['HTTP_AUTHORIZATION', 'X-HTTP_AUTHORIZATION',
-                       'X_HTTP_AUTHORIZATION', 'REDIRECT_X_HTTP_AUTHORIZATION'].any? {|k|
-                        request.env.key?(k) }
-                    }
-    }
+
+    unless SknSettings.env.test?
+      plugin :csrf, { raise: false,
+                      skip_if: lambda { |request|
+                        ['HTTP_AUTHORIZATION', 'X-HTTP_AUTHORIZATION',
+                         'X_HTTP_AUTHORIZATION', 'REDIRECT_X_HTTP_AUTHORIZATION'].any? {|k|
+                          request.env.key?(k) }
+                      }
+      }
+    end
+
     plugin :render, {
         engine: 'html.erb',
         allowed_paths: ['views', 'views/layouts', 'views/profiles', 'views/sessions'],
@@ -49,12 +59,28 @@ module Skn
     plugin :view_options
     plugin :symbol_views
     plugin :content_for
+    plugin :public             #:static, %w[/images /fonts]
     plugin :head
     plugin :flash
 
-    # if SknSettings.env.test?
-    #   use RackSessionAccess::Middleware
-    # end
+    # ##
+    # Placed Here so Flash and Cookie plugins can add instance methods to Roda
+    # ##
+    use Warden::Manager do |config|
+      config.default_scope = :access_profile
+      config.default_strategies [:api_auth, :remember_token, :password, :not_authenticated]
+      config.scope_defaults :access_profile, {
+          store: true,
+          strategies: [:password, :not_authenticated],
+          action: 'sessions/unauthenticated' }
+      config.failure_app = self
+      config[:public_pages] = SknSettings.security.public_pages
+      config[:production] = SknSettings.env.production?
+      config[:asset_paths_ary] = SknSettings.security.asset_paths
+      config[:sys_logger] = (Logging.logger['WAR'] || SknSettings.logger)
+      config[:session_expires] = SknSettings.security.session_expires.to_i
+      config[:remember_for] = SknSettings.security.remembered_for.to_i
+    end
 
     plugin :not_found do
       view :http_404, path: File.expand_path('views/http_404.html.erb', opts[:root])
@@ -65,25 +91,6 @@ module Skn
     end
 
     plugin :multi_route
-
-    # ##
-    # Placed Here so Flash and Cookie plugins can add instance methods to Roda
-    # ##
-    use Warden::Manager do |config|
-      config.default_scope = :access_profile
-      config.default_strategies :api_auth, :remember_token, :password, :not_authenticated
-      config.scope_defaults :access_profile, {
-          store: true,
-          strategies: [:api_auth, :remember_token, :password, :not_authenticated],
-          action: 'sessions/unauthenticated' }
-      config.failure_app = self
-      config[:public_pages] = SknSettings.security.public_pages
-      config[:production] = SknSettings.env.production?
-      config[:asset_paths_ary] = SknSettings.security.asset_paths
-      config[:sys_logger] = (Logging.logger['WAR'] || SknSettings.logger)
-      config[:session_expires] = SknSettings.security.session_expires.to_i
-      config[:remember_for] = SknSettings.security.remembered_for.to_i
-    end
 
     # ##
     # Routing Table
@@ -98,14 +105,12 @@ module Skn
         r.public
       end
 
-      r.multi_route
-
-      # warden_messages
+      warden_messages
 
       r.root do
-        flash.now[:success] = ['Welcome to Home Page!', 'Multiple Messages Are Supported']
-        flash.now[:info] = ['All messages time out!', 'Except for :danger or Error messages!']
-        flash.now[:warning] = "Single messages are also supported!"
+        flash_message(:success, ['Welcome to Home Page!', 'Multiple Messages Are Supported'], true)
+        flash_message(:info, ['All messages time out!', 'Except for :danger or Error messages!'], true)
+        flash_message(:warning, "Single messages are also supported!", true)
         view(:homepage)
       end
 
@@ -117,16 +122,15 @@ module Skn
         view(:contact)
       end
 
-    end
+      r.multi_route
+
+    end # End Routing Tree
 
   end
 end
 
-# Named Routes
-Dir['./routes/*.rb'].each{|f| require f }
-
-# view helpers
-Dir['./views/helpers/*.rb'].each{|f| require f }
+# Named Routes and view helpers
+Dir['./routes/*.rb', './views/helpers/*.rb'].each{|f| require f }
 
 # ##
 #

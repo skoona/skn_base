@@ -43,8 +43,8 @@ feature "Authentication process for all users." do
 
     scenario "Sign in with username and password credentials." do
       visit '/sessions/signin'
-      fill_in 'Username', :with =>  user.username
-      fill_in 'Password', :with =>  "demos"
+      fill_in 'sessions_username', :with =>  user.username
+      fill_in 'sessions_password', :with =>  "demos"
       click_button 'Sign in'
       expect(current_path).to eq '/profiles/resources'
       expect(page).to have_title("Secured Resources")
@@ -56,8 +56,8 @@ feature "Authentication process for all users." do
       expect(current_path).to eq '/sessions/unauthenticated'
       expect(page).to have_content('You must be signed In to view users!')
       visit '/sessions/signin'
-      fill_in 'Username', :with => user.username
-      fill_in 'Password', :with => "demos"
+      fill_in 'sessions_username', :with => user.username
+      fill_in 'sessions_password', :with => "demos"
       click_button 'Sign in'
 
       expect(current_path).to eq '/profiles/users'
@@ -70,8 +70,8 @@ feature "Authentication process for all users." do
       expect(current_path).to eq '/sessions/unauthenticated'
       expect(page).to have_content('You must be signed In to view users!')
       visit '/sessions/signin'
-      fill_in 'Username', :with => user.username
-      fill_in 'Password', :with => "demos"
+      fill_in 'sessions_username', :with => user.username
+      fill_in 'sessions_password', :with => "demos"
       click_button 'Sign in'
 
       expect(current_path).to eq '/profiles/users'
@@ -87,8 +87,8 @@ feature "Authentication process for all users." do
 
     scenario "Cannot sign in with incorrect username." do
       visit '/sessions/signin'
-      fill_in 'Username', :with => "LastNameInitial"
-      fill_in 'Password', :with => "demos"
+      fill_in 'sessions_username', :with => "LastNameInitial"
+      fill_in 'sessions_password', :with => "demos"
       click_button 'Sign in'
       expect(current_path).to eq '/sessions/signin'
       expect(page).to have_alert_message("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
@@ -96,8 +96,8 @@ feature "Authentication process for all users." do
 
     scenario "Cannot sign in with incorrect password." do
       visit '/sessions/signin'
-      fill_in 'Username', :with => user.username
-      fill_in 'Password', :with => "somebody"
+      fill_in 'sessions_username', :with => user.username
+      fill_in 'sessions_password', :with => "somebody"
       click_button 'Sign in'
       expect(current_path).to eq '/sessions/unauthenticated'
       expect(page).to have_alert_message("Your Credentials are invalid or expired. Invalid username or password! FailPassword")

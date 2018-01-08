@@ -21,9 +21,9 @@ describe "Application pages Respond Correctly. " do
 
   it "returns http Unauthorized" do
     get "/profiles/users"
-    expect(last_response.status).to eq 401
+    expect(last_response.status).to eq 203
 
     get "/profiles/resources"
-    expect(last_response.status).to eq 401
+    expect(last_response.status).to eq 203
   end
 end

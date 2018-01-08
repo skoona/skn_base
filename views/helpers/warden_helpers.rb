@@ -10,8 +10,8 @@ module Skn
     end
 
     def warden_messages
-      flash_message(:info, warden.message) unless warden.message.nil? # From Strategies
-      flash_message(:danger, warden.errors.full_messages) unless warden.errors.empty?
+      # flash_message(:info, warden.message) unless warden.message.nil? # From Strategies
+      # flash_message(:danger, warden.errors.full_messages) unless warden.errors.empty?
     end
 
     def valid_user?

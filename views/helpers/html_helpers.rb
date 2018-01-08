@@ -7,14 +7,22 @@ module Skn
       request.path.eql?(item_path) ? 'active' : ''
     end
 
-    def flash_message(rtype, text)
+    def flash_message(rtype, text, now=false)
       type = [:success, :info, :warning, :danger].include?(rtype.to_sym) ? rtype.to_sym : :info
       if flash[type] and flash[type].is_a?(Array)
-        flash[type].push( text )
+        now ? flash.now[type].push( text ) : flash[type].push( text )
       elsif flash[type] and flash[type].is_a?(String)
-        flash[type] = [flash[type], text]
+        if now
+          flash.now[type] = [flash[type], text]
+        else
+          flash[type] = [flash[type], text]
+        end
       else
-        flash[type] = [text]
+        if now
+          flash.now[type] = [text]
+        else
+          flash[type] = [text]
+        end
       end
     end
 

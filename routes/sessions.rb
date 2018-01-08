@@ -7,8 +7,6 @@ module Skn
 
       set_view_subdir 'sessions'
 
-      # raise StandardError, "Looking at Program Stack"
-
       r.on 'signin' do
         r.get do
           view(:signin)
@@ -17,20 +15,18 @@ module Skn
         r.post do
           # request.params[:sessions] => {"username"=>"developer", "password"=>"developer99", "remember_me_token"=>"1"}
           authenticate! # unless authenticated? # double posted
-          warden_messages
           r.redirect(redirect_to_origin)
         end
       end
 
       r.is 'logout' do
         logout
-        warden_messages
+        flash_message(:success, "You have been signed out!")
         r.redirect request.base_url
       end
 
       r.is 'unauthenticated' do
-        response.status = 401
-        warden_messages
+        response.status = 203  # Non-Authoritative Information, note: 401 WILL CAUSE A LOOP
         view('unauthenticated')
       end
 
