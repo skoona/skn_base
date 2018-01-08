@@ -11,7 +11,6 @@ require 'rack/test'
 
 require 'warden/test/helpers'
 require 'warden/test/warden_helpers'
-require "rack_session_access/capybara"
 require 'capybara-screenshot/rspec'
 require 'capybara/poltergeist'
 
