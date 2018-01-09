@@ -3,7 +3,11 @@
 # Ref: http://tutorials.jumpstartlab.com/topics/capybara/capybara_with_rack_test.html
 
 
-describe "Application pages Respond Correctly. " do
+describe Skn::SknBase, "Application pages Respond Correctly. ", type: :feature  do
+
+  # def app
+  #   Rack::Builder.parse_file("../../config.ru").first # Skn::SknBase.app
+  # end
 
   it "returns http success" do
     get "/"

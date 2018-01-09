@@ -66,7 +66,7 @@ group :test do
   gem 'rspec'
   gem 'faker'
   gem 'rack-test'
-  gem 'rack_session_access'
+  gem 'rspec-roda'
   gem 'capybara-screenshot'
   gem 'simplecov'
   gem "rom-factory"
