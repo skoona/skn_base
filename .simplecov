@@ -18,7 +18,7 @@ SimpleCov.start do
   add_filter '/views/'
 
   add_group 'UseCases' do |src_file|
-    ['strategy/secure'].any? do |item|
+    ['strategy/secure', 'stratgey'].any? do |item|
       src_file.filename.include? item
     end
   end
@@ -28,7 +28,8 @@ SimpleCov.start do
     end
   end
   add_group "Persistence" do |src_file|
-    ['persistence/entity',
+    ['persistence',
+     'persistence/entity',
      'persistence/relations',
      'persistence/repositories'].any? do |item|
       src_file.filename.include? item

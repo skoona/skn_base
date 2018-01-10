@@ -25,21 +25,21 @@ feature Skn::SknBase, "Authentication process for all users.", type: :feature  d
 
     scenario "#/profiles/resources Secured page requires sign in." do
       visit '/profiles/resources'
-      expect(current_path).to eq '/profiles/resources'
+      expect(current_path).to eq '/sessions/unauthenticated'
       expect(page).to have_title("Not Authenticated")
       expect(page).to have_content('You must be signed In to view resources!')
     end
 
     scenario "#/profiles/users Secured page requires sign in." do
       visit '/profiles/users'
-      expect(current_path).to eq '/profiles/users'
+      expect(current_path).to eq '/sessions/unauthenticated'
       expect(page).to have_title("Not Authenticated")
       expect(page).to have_content('You must be signed In to view users!')
     end
   end
 
   context "Using good credentials. " do
-    given(:user) { user_estester }
+    given(:user) { user_eptester }
 
     scenario "Sign in with username and password credentials." do
       visit '/sessions/signin'
@@ -51,7 +51,6 @@ feature Skn::SknBase, "Authentication process for all users.", type: :feature  d
     end
 
     scenario "Returned to originally requested page after signing in." do
-      user = page_user_eptester
       visit '/profiles/users'
       expect(current_path).to eq '/sessions/unauthenticated'
       expect(page).to have_content('You must be signed In to view users!')
@@ -64,8 +63,7 @@ feature Skn::SknBase, "Authentication process for all users.", type: :feature  d
       click_link 'Sign out'
     end
 
-    scenario "Returned to Home page after sign out." do 
-      user = page_user_eptester
+    scenario "Returned to Home page after sign out." do
       visit '/profiles/users'
       expect(current_path).to eq '/sessions/unauthenticated'
       expect(page).to have_content('You must be signed In to view users!')
@@ -83,15 +81,15 @@ feature Skn::SknBase, "Authentication process for all users.", type: :feature  d
 
 
   context "Using bad credentials. " do
-    let(:user) { page_user_estester }
+    given(:user) { page_user_eptester }
 
     scenario "Cannot sign in with incorrect username." do
       visit '/sessions/signin'
       fill_in 'sessions_username', :with => "LastNameInitial"
       fill_in 'sessions_password', :with => "demos"
       click_button 'Sign in'
-      expect(current_path).to eq '/sessions/signin'
-      expect(page).to have_alert_message("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
+      expect(current_path).to eq '/sessions/unauthenticated'
+      expect(page).to have_content("You must be signed In to view that page!")
     end
 
     scenario "Cannot sign in with incorrect password." do
@@ -100,15 +98,14 @@ feature Skn::SknBase, "Authentication process for all users.", type: :feature  d
       fill_in 'sessions_password', :with => "somebody"
       click_button 'Sign in'
       expect(current_path).to eq '/sessions/unauthenticated'
-      expect(page).to have_alert_message("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
+      expect(page).to have_content("You must be signed In to view that page!")
     end
 
     scenario "Cannot sign in when no credentials are offered." do
       visit '/sessions/signin'
       click_button 'Sign in'
-      expect(current_path).to eq '/sessions/signin'
-      expect(page).to have_content('InvalidCsrfToken')
-      # expect(page).to have_content("Fill out this field")
+      expect(current_path).to eq '/sessions/unauthenticated'
+      expect(page).to have_content("You must be signed In to view that page!")
     end
 
   end

@@ -18,7 +18,7 @@ module Skn
     }
     use Rack::MethodOverride
 
-    if SknSettings.env.test?
+    unless SknSettings.env.test?
       use Rack::Protection
     end
 
@@ -55,10 +55,19 @@ module Skn
     plugin :view_options
     plugin :symbol_views
     plugin :content_for
-    plugin :public             #:static, %w[/images /fonts]
+    plugin :tag_helpers        # includes :tag plugin, for HTML generation: https://github.com/kematzy/roda-tags/
+
+    plugin :i18n, :locale => ['en']
+    plugin :json
+    plugin :json_parser
+
+    plugin :public             #replaces plugin :static, %w[/images /fonts]
     plugin :head
     plugin :flash
 
+    if SknSettings.env.test?
+      use RackSessionAccess::Middleware
+    end
     # ##
     # Placed Here so Flash and Cookie plugins can add instance methods to Roda
     # ##

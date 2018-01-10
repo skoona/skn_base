@@ -7,7 +7,9 @@
     <div class="container">
     <form class="form-signin" action="/sessions/signin" method="post" role="form">
       <h2 class="form-signin-heading">Please sign in</h2>
-      <%= csrf_tag %>
+      <% unless SknSettings.env.test? %>
+        <%= csrf_tag %>
+      <% end %>
 
         <div class="form-group has-feedback">
           <label for="sessions_username" class="sr-only">Username</label>

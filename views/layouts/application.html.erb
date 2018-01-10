@@ -8,7 +8,9 @@
     <meta name="description" content="<%= content_for(:description) ? yield(:description) : 'SknBase explores Roda and the Dry-Rb Ruby Gems' %>" />
     <meta name="author" content="systems@skoona.net"/>
 
-    <%= csrf_metatag %>
+    <% unless SknSettings.env.test? %>
+      <%= csrf_metatag %>
+    <% end %>
 
     <%= assets(:css, media: :all) %>
     <%= assets(:js) %>

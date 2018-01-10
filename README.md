@@ -40,10 +40,22 @@ class SknBase
     end
 end
 ```
-It re-uses (and I think redefines the app name class).  `SknBase` is also the name of this apps main.  Helper files have the same behavior.
+It re-uses (opens and extends the existing app name class).  `SknBase` is also the name of this apps main.  Helper files have the same behavior.
 
 The assets plugin initially failed (HTTP-404) to send bootstrap.css at Roda V3.3.0.  Switched to 2.29.0 and it worked, tried 3.3.0 again and everything seems to work now!  Making this note in case the trouble shows again.
 Asset Plugin Failure: Sending bottstrap.css with a 'Content-Type' eq 'text/html' 'Content-Length' eq '3045'; verus 'text/css' and 146K.
+
+### Gems of Interest
+* [Roda-i18n](https://github.com/kematzy/roda-i18n)
+* [Roda-Container](https://github.com/AMHOL/roda-container)
+* [Roda-Action](https://github.com/AMHOL/roda-action)
+* [Roda-Flow](https://github.com/AMHOL/roda-flow)
+* [Roda-Tags](https://github.com/kematzy/roda-tags)
+* [FriendlyNumbers](https://github.com/adam12/friendly_numbers)
+* [Roda-Parse-Request](https://github.com/3scale/roda-parse-request)
+* [Roda-MessageBus](https://github.com/jeremyevans/roda-message_bus)
+* [Wisper](https://github.com/krisleech/wisper)
+* [Piperator](https://github.com/lautis/piperator)
 
 ActiveRecord Serialization for Arrays with YAML format was handled, since I can't change the data model, via Dry-Types.
 ```ruby
@@ -151,6 +163,9 @@ Entity
     │   ├── settings.yml        - Default Application Settings
     │   └── version.rb          - Application Version Object
     ├── config.ru               - Rack Initializer
+    ├── coverage                - SimpleCov HTML Reports
+    ├── docs                    - rubocop HTML Reports
+    ├── i18n                    - Message Translation files
     ├── main
     │   ├── skn_base.rb         - Main Roda Web App/Adapter
     │   └── boot.rb             - LoadPath Management and Log file setup
@@ -193,18 +208,6 @@ puts cpes.first.inspect
 puts pts.first.inspect
 
 puts cps.combine(:profile_type).first.inspect
-
-puts cps.where(id: 1).combine(:profile_type).to_a.map(&:inspect)
-
-puts "Combining..."
-p cps.where(id: 1).combine([:profile_type, :content_profile_entries]).to_a
-
-# class ProfileRepo < ROM::Repository[:content_profiles]
-# end
-#
-# cps_repo = ProfileRepo.new(rom)
-#
-# pp cps_repo.aggregate(:content_profile_entry).one.inspect
 
 end
 ```

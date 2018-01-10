@@ -2,24 +2,26 @@ ENV['RACK_ENV'] = 'test'
 
 require File.join(File.dirname(__FILE__), '..', 'main/skn_base')
 
+require 'simplecov'
+
 require 'rspec'
+require 'rack/test'
 
 require 'capybara'
 require 'capybara/rspec'
-# require 'rack/test'
-# require 'rspec-roda'
+require 'capybara/poltergeist'
+require 'capybara-screenshot/rspec'
+require "rack_session_access/capybara"
 
+# require 'rspec-roda'
 # require 'warden/test/helpers'
 # require 'warden/test/warden_helpers'
-require 'capybara-screenshot/rspec'
-require 'capybara/poltergeist'
 
-require 'pry'
+require 'support/test_users'
+require 'support/utilities'
+require 'support/test_data_serializers'
+require 'support/capybara'
 
-require 'simplecov'
-require 'code_coverage'
-
-# See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   Kernel.srand config.seed
 
@@ -32,7 +34,7 @@ RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
 
   # config.disable_monkey_patching!  # -- breaks rspec runtime
-  config.warnings = true
+  config.warnings = false
 
   if config.files_to_run.one?
     config.formatter = :documentation
@@ -50,14 +52,25 @@ RSpec.configure do |config|
   end
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
-end
 
-Dir[ "./spec/support/**/*.rb" ].each { |f| puts f ; require f }
-
-RSpec.configure do |config|
   config.include Rack::Test::Methods
-  # config.include Warden::Test::WardenHelpers          # asset_paths, on_next_request, test_reset!
-  # config.include Warden::Test::Helpers                # login_as(u, opts), logout(scope), CALLS ::Warden.test_mode!
-  # config.include FeatureHelpers  #, type: :feature       # logged_as(user) session injection for cucumber/capybara
   config.include TestUsers
+  config.include TestDataSerializers
+  config.include Utilities
+
+  config.before(:each) do
+    Capybara.use_default_driver       # switch back to default driver
+  end
+
+  config.append_after(:each) do
+    # Warden.test_reset!
+    # Capybara.current_session.driver.reset!
+    Capybara.reset_sessions!
+  end
 end
+
+# Dir[ "./spec/support/**/*.rb" ].each { |f| puts f ; require f }
+
+# config.include Warden::Test::WardenHelpers          # asset_paths, on_next_request, test_reset!
+# config.include Warden::Test::Helpers                # login_as(u, opts), logout(scope), CALLS ::Warden.test_mode!
+# config.include FeatureHelpers  #, type: :feature       # logged_as(user) session injection for cucumber/capybara

@@ -13,6 +13,9 @@ gem "roda"
 # Web framework: Html
 gem "tilt"
 gem "erubis"
+gem 'roda-tags'
+gem "r18n-core"
+gem "roda-i18n"
 
 # Javascript Runtime Support
 gem 'execjs'
@@ -66,10 +69,11 @@ group :test do
   gem 'rspec'
   gem 'faker'
   gem 'rack-test'
-  gem 'rspec-roda'
+  # gem 'rspec-roda'
   gem 'capybara'
   gem 'capybara-screenshot'
-  gem 'simplecov'
+  gem 'rack_session_access'
+  gem 'simplecov', :require => false
   gem "rom-factory"
   gem 'poltergeist'
 end
