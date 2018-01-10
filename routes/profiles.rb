@@ -9,6 +9,7 @@ module Skn
       set_view_subdir 'profiles'
 
       r.get "resources" do
+
         view(:resources)
       end
 

@@ -49,4 +49,31 @@
 # ##
 
 en:
-  hello: "Hello world"
+  errors:
+    unexpected_exception:
+        title: Unexpected exception occurred
+        detail: Your request generated an unexpected exception to be thrown in the service provider, and was cancelled.
+    unprocessable_entity:
+        title: Entity ID invalid
+        detail: Your requests ID param is improperly formatted.
+    routing_error:
+        title: API method not found
+        detail: Your request did not contain a known api method name.
+    bad_request:
+        title: Request failed
+        detail: Something unexpected occured while servicing this request
+    members:
+        title: Agency id not found
+        detail: The requested agency profile could not be found
+    member:
+        title: Member id not found
+        detail: The requested member profile could not be found
+    not_authenticated:
+        title: User authentication failed
+        detail: User credentials were found to be invalid
+    not_authorized:
+        title: User authorization failed
+        detail: User is not authorized to make this request
+    not_implemented:
+      title: This feature has not been implemented
+      detail: The development team has not coded this feature

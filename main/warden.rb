@@ -151,7 +151,7 @@ end
 #
 # UnAuthenticated action may allow another login attempt via a UI, thus we allow it to flow to failure_app
 # ##
-Warden::Manager.before_failure do |env, opts|
+Warden::Manager.before_failure do |env, _opts|
   env['warden'].cookies.delete( 'remember_token')
   env['warden'].flash_message(:info, env['warden'].message) if env['warden'].message
   env['warden'].flash_message(:danger, env['warden'].errors.full_messages) unless env['warden'].errors.empty?
@@ -171,7 +171,7 @@ end
 # are the same as in after_set_user.
 # -- after_authentication --
 # ##
-Warden::Manager.after_set_user except: :fetch do |user,auth,opts|
+Warden::Manager.after_set_user except: :fetch do |user, auth, _opts|
   remember = false
   remember = user&.remember_token  if auth.cookies['remember_token'] || '1'.eql?(auth.params.dig('sessions', 'remember_me_token'))
 
@@ -201,12 +201,8 @@ end
 ##
 # A callback that runs just prior to the logout of each scope.
 # Logout the user object
-Warden::Manager.before_logout do |user,auth,opts|
-  if user
-    user.disable_authentication_controls
-  else
-    auth.logger.debug " Warden::Manager.before_logout(User Missing) Msg: #{msg}"
-  end
+Warden::Manager.before_logout do |user,auth,_opts|
+  user && user.disable_authentication_controls
 
   msg = auth.message
   auth.reset_session!

@@ -1,7 +1,9 @@
 # File: ./strategy/strategy.rb
 
-require_relative 'secure/user_profile_cache'
-require_relative 'secure/user_profile_cache_provider'
-require_relative 'secure/user_profile_key_encrypt'
-require_relative 'secure/user_profile_authenticator'
-require_relative 'secure/user_profile'
+# ##
+# Each Directory has a same named file that handles it's includes
+# ##
+
+require_relative 'utils/utils'
+require_relative 'secure/secure/secure'
+
