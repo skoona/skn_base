@@ -5,5 +5,5 @@
 # ##
 
 require_relative 'utils/utils'
-require_relative 'secure/secure/secure'
+require_relative 'secure/secure'
 
