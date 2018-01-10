@@ -214,6 +214,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt
+  capybara
   capybara-screenshot
   concurrent-ruby
   dry-auto_inject

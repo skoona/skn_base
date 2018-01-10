@@ -1,6 +1,3 @@
-# Capybara.asset_host = 'http://localhost:3000'
-
-
 
 # Tell it to use xpath rather than css selectors
 Capybara.configure do |config|
@@ -13,23 +10,13 @@ def app
   Skn::SknBase.app # Rack::Builder.parse_file("config.ru").first # Skn::SknBase.app
 end
 
-# Capybara.register_server :webrick do |app, port, host|
-#   require 'rack/handler/webrick'
-#   Rack::Handler::WEBrick.run(app)
-# end
-
-# Capybara.register_driver :rack_test do |app|
-#    Capybara::RackTest::Driver.new(app)
-#    # Capybara::RackTest::Driver.new(app, :browser => :safari)
-# end
-
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app, {timeout: 300})
   #Capybara::Poltergeist::Driver.new(app, {timeout: 300, debug: true})
 end
 
-
-# Capybara.server = :webrick
+Capybara.app = Skn::SknBase.app
+Capybara.server = :webrick
 
 
 # Ref: https://github.com/mattheworiordan/capybara-screenshot

@@ -1,4 +1,4 @@
-feature Snn::SknBase, "Authentication process for all users.", type: :feature  do
+feature Skn::SknBase, "Authentication process for all users.", type: :feature  do
 
   context "Public Pages can be accessed. " do
 
