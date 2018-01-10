@@ -202,12 +202,17 @@ end
 # A callback that runs just prior to the logout of each scope.
 # Logout the user object
 Warden::Manager.before_logout do |user,auth,opts|
-  user&.active = true
-  user&.disable_authentication_controls
+  if user
+    user.disable_authentication_controls
+  else
+    auth.logger.debug " Warden::Manager.before_logout(User Missing) Msg: #{msg}"
+  end
+
   msg = auth.message
   auth.reset_session!
   auth.flash_message(:success, msg) if msg
-  auth.logger.debug " Warden::Manager.before_logout(#{user&.name}) Msg: #{msg}"
+
+  auth.logger.debug " Warden::Manager.before_logout(#{user && user.name}) Msg: #{msg}"
   true
 end
 

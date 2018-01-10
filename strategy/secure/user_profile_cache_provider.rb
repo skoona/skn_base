@@ -28,7 +28,7 @@ module Secure
         return false if userp.nil?
         uid = userp.respond_to?(:id) ? userp.id : userp
         user_profile_cache_provider.delete(uid)
-        debug_log "#{self.name}##{__method__}() Acted on: #{userp&.name}"
+        debug_log "#{self.name}##{__method__}() Acted on: #{userp && userp.name}"
         nil
       end
 

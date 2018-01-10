@@ -235,3 +235,11 @@ end
   # }
 
 ```
+
+
+## Installation
+
+This application SknBase will need a database which it does not create, i.e. it shares one with SknServices.  Thus you will first need to clone and execute the `$ bin/setup` for SknServices, which will create the shared database in PostgreSQL.
+
+Then execte this apps `$ bin/setup` to complete it's installation.  I will improve this process later.
+
