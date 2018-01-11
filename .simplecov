@@ -1,4 +1,7 @@
 # Code Coverage
+SimpleCov.configure do
+    root = '.'
+end
 
 SimpleCov.start do
 

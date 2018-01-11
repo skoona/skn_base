@@ -2,7 +2,7 @@
 Capybara.configure do |config|
   config.app = Skn::SknBase.app
   config.server = :puma
-  config.default_driver = :rack_test
+  config.default_driver = :mechanize
   config.javascript_driver = :poltergeist
 end
 
