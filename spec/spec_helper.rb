@@ -1,8 +1,8 @@
 ENV['RACK_ENV'] = 'test'
 
-require File.join(File.dirname(__FILE__), '..', 'main/skn_base')
-
 require 'simplecov'
+
+require File.join(File.dirname(__FILE__), '..', 'main/skn_base')
 
 require 'rspec'
 require 'rack/test'
