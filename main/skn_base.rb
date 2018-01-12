@@ -76,7 +76,7 @@ module Skn
       config.default_strategies [:api_auth, :remember_token, :password, :not_authenticated]
       config.scope_defaults :access_profile, {
           store: true,
-          strategies: [:password, :not_authenticated],
+          strategies: [:api_auth, :remember_token, :password, :not_authenticated],
           action: 'sessions/unauthenticated' }
       config.failure_app = self
       config[:public_pages] = SknSettings.security.public_pages
