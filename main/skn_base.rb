@@ -17,7 +17,7 @@ module Skn
         domain: SknSettings.skn_base.session_domain
     }
 
-    # Seems worthless in this environment
+    # Enables Capybara's Session Access
     use RackSessionAccess::Middleware if SknSettings.env.test?
 
     use Warden::Manager do |config|

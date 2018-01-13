@@ -9,20 +9,12 @@ module Skn
 
     def flash_message(rtype, text, now=false)
       type = [:success, :info, :warning, :danger].include?(rtype.to_sym) ? rtype.to_sym : :info
-      if flash[type] and flash[type].is_a?(Array)
-        now ? flash.now[type].push( text ) : flash[type].push( text )
-      elsif flash[type] and flash[type].is_a?(String)
-        if now
-          flash.now[type] = [flash[type], text]
-        else
-          flash[type] = [flash[type], text]
+      if text.is_a?(Array)
+        text.flatten.each do |val|
+          now ? flash_message_now(type, val) : flash_message_next(type, val)
         end
       else
-        if now
-          flash.now[type] = [text]
-        else
-          flash[type] = [text]
-        end
+        now ? flash_message_now(type, text) : flash_message_next(type, text)
       end
     end
 
@@ -56,6 +48,28 @@ module Skn
     def wrap_json_response(service_response)
       @page_controls = service_response
       render(json: @page_controls.to_hash, status: (@page_controls.package.success ? :accepted : :not_found), layout: false, content_type: :json) and return
+    end
+
+    private
+
+    def flash_message_next(type, text)
+      if flash[type] and flash[type].is_a?(Array)
+        flash[type].push( text )
+      elsif flash[type] and flash[type].is_a?(String)
+        flash[type] = [flash[type], text]
+      else
+        flash[type] = [text]
+      end
+    end
+
+    def flash_message_now(type, text)
+      if flash.now[type] and flash.now[type].is_a?(Array)
+        flash.now[type].push( text )
+      elsif flash.now[type] and flash.now[type].is_a?(String)
+        flash.now[type] = [flash.now[type], text]
+      else
+        flash.now[type] = [text]
+      end
     end
 
 
