@@ -110,7 +110,7 @@ module Skn
       r.root do
         flash_message(:success, ['Welcome to Home Page!', 'Multiple Messages Are Supported'], true)
         flash_message(:info, ['All messages time out!', 'Except for :danger or Error messages!'], true)
-        flash_message(:warning, "Single messages are also supported!", true)
+        flash_message(:danger, "Single messages are also supported!", true)
         view(:homepage)
       end
 
