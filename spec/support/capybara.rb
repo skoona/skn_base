@@ -10,11 +10,6 @@ def app
   Skn::SknBase.app # Rack::Builder.parse_file("config.ru").first # Skn::SknBase.app
 end
 
-Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app)
-  # Capybara::RackTest::Driver.new(app, :browser => :safari)
-end
-
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app, {timeout: 300})
   #Capybara::Poltergeist::Driver.new(app, {timeout: 300, debug: true})
