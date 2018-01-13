@@ -4,14 +4,14 @@ module Skn
   class SknBase
 
     def login_required?
-      session['skn.attempted.page'] = request.path
       return false if public_page?
-      warden.authenticate!(message: 'Sign in Required!')
+      session['skn.attempted.page'] = request.path
+      warden.authenticate!
     end
 
     def warden_messages
       # flash_message(:info, warden.message) unless warden.message.nil? # From Strategies
-      # flash_message(:danger, warden.errors.full_messages) unless warden.errors.empty?
+      flash_message(:danger, warden.errors.full_messages) unless warden.errors.empty?
     end
 
     def valid_user?

@@ -1,4 +1,4 @@
-feature Skn::SknBase, "Authentication process for all users.", type: :feature  do
+feature "Authentication process for all users."  do
 
   context "Public Pages can be accessed. " do
 
@@ -38,8 +38,8 @@ feature Skn::SknBase, "Authentication process for all users.", type: :feature  d
     end
   end
 
-  context "Using good credentials. " do
-    given(:user) { user_eptester }
+  context "Using good PASSWORD credentials. " do
+    given(:user) { page_user_eptester }
 
     scenario "Sign in with username and password credentials." do
       visit '/sessions/signin'
@@ -78,7 +78,6 @@ feature Skn::SknBase, "Authentication process for all users.", type: :feature  d
       expect(page).to have_content("You have been signed out")
     end
   end
-
 
   context "Using bad credentials. " do
     given(:user) { page_user_eptester }

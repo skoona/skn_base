@@ -16,6 +16,28 @@ module Skn
         key: SknSettings.skn_base.session_key,
         domain: SknSettings.skn_base.session_domain
     }
+
+    use RackSessionAccess::Middleware if SknSettings.env.test?
+
+    # ##
+    # Placed Here so Flash and Cookie plugins can add instance methods to Roda
+    # ##
+    use Warden::Manager do |config|
+      config.default_scope = :access_profile
+      config.default_strategies [:api_auth, :remember_token, :password, :not_authenticated]
+      config.scope_defaults :access_profile, {
+          store: true,
+          strategies: [:password, :remember_token, :api_auth, :not_authenticated],
+          action: 'sessions/unauthenticated' }
+      config.failure_app = self
+      config[:public_pages] = SknSettings.security.public_pages
+      config[:production] = SknSettings.env.production?
+      config[:asset_paths_ary] = SknSettings.security.asset_paths
+      config[:sys_logger] = (Logging.logger['WAR'] || SknSettings.logger)
+      config[:session_expires] = SknSettings.security.session_expires.to_i
+      config[:remember_for] = SknSettings.security.remembered_for.to_i
+    end
+
     use Rack::MethodOverride
 
     unless SknSettings.env.test?
@@ -64,29 +86,6 @@ module Skn
     plugin :public             #replaces plugin :static, %w[/images /fonts]
     plugin :head
     plugin :flash
-
-    if SknSettings.env.test?
-      use RackSessionAccess::Middleware
-    end
-    # ##
-    # Placed Here so Flash and Cookie plugins can add instance methods to Roda
-    # ##
-    use Warden::Manager do |config|
-      config.default_scope = :access_profile
-      config.default_strategies [:api_auth, :remember_token, :password, :not_authenticated]
-      config.scope_defaults :access_profile, {
-          store: true,
-          strategies: [:password, :not_authenticated],
-          action: 'sessions/unauthenticated' }
-      config.failure_app = self
-      config[:public_pages] = SknSettings.security.public_pages
-      config[:production] = SknSettings.env.production?
-      config[:asset_paths_ary] = SknSettings.security.asset_paths
-      config[:sys_logger] = (Logging.logger['WAR'] || SknSettings.logger)
-      config[:session_expires] = SknSettings.security.session_expires.to_i
-      config[:remember_for] = SknSettings.security.remembered_for.to_i
-    end
-
     plugin :not_found do
       view :http_404, path: File.expand_path('views/http_404.html.erb', opts[:root])
     end

@@ -28,12 +28,12 @@ end
 # Todo: Create more of these specialty classes to wrap encodings
 Warden::Strategies.add(:api_auth) do
   def auth
-    @auth ||= Rack::Auth::Basic::Request.new(env)  # TODO: how long does this last, or for how many users?
+    @auth ||= Rack::Auth::Basic::Request.new(env)
   end
 
   def valid?
     rc = auth.provided? && auth.basic? && auth.credentials
-    logger.debug " Warden::Strategies.add(:api_auth) [#{rc ? 'Selected' : 'Not Selected'}]"
+    logger.debug " Warden::Strategies.add(:api_auth) [#{rc ? 'Selected' : 'Not Selected'}] -#{request.request_method.upcase}-"
     rc
   end
 
@@ -51,7 +51,7 @@ end
 Warden::Strategies.add(:remember_token) do
   def valid?
     rc = !!cookies["remember_token"]
-    logger.debug " Warden::Strategies.add(:remember_token) [#{rc ? 'Selected' : 'Not Selected'}]"
+    logger.debug " Warden::Strategies.add(:remember_token) [#{rc ? 'Selected' : 'Not Selected'}] -#{request.request_method.upcase}-"
     rc
   end
 
@@ -69,11 +69,11 @@ end
 Warden::Strategies.add(:password) do
   def valid?
     if request.get?
-      logger.debug " Warden::Strategies.add(:password) [Not Selected] -GET-"
+      logger.debug " Warden::Strategies.add(:password) [Not Selected]        -#{request.request_method.upcase}-"
       return false
     end
     rc = !params["sessions"]["username"].empty? && !params["sessions"]["password"].empty?
-    logger.debug " Warden::Strategies.add(:password) [#{rc ? 'Selected' : 'Not Selected'}]"
+    logger.debug " Warden::Strategies.add(:password) [#{rc ? 'Selected' : 'Not Selected'}] -#{request.request_method.upcase}-"
     rc
   end
 
@@ -97,49 +97,6 @@ Warden::Strategies.add(:not_authenticated) do
    logger.debug " Warden::Strategies.add(:not_authenticated) method: [#{request.request_method}]"
     fail!("Authentication is Required to access this page!  Please Sign in.  [NotAuthenticated](FailNotAuthorized)")
   end
-end
-
-# ##
-# A callback that runs on each request, just after the proxy is initialized
-#
-# Parameters:
-# <block> A block to contain logic for the callback
-#   Block Parameters: |proxy|
-#     proxy - The warden proxy object for the request
-# ##
-Warden::Manager.on_request do |proxy|
-  unless proxy.public_page?
-    proxy.logger.debug " Warden::Manager.on_request(ENTER) userId=#{proxy.user().name if proxy.authenticated?}, token=#{!proxy.cookies['remember_token'].nil?}, path_info=#{proxy.env['PATH_INFO']}, session.keys=#{proxy.raw_session.keys}"
-
-    # If session has expired logout the user, unless remember cookie is still valid
-    # Browser deletes cookies that have expired so remembered should be nil or false
-    # #fetch cached user will make it inactive if login timer expires
-    if proxy.authenticated? && !proxy.user.active?
-      proxy.logger.debug " Warden::Manager.on_request(Logout: Session Expired) User => [#{usr.name}]"
-      proxy.errors.add(:general, "Your Session has Expired! [Warden](#on_request)")
-      proxy.logout
-    end
-
-    # see if we can restore a session via API or RememberToken
-    unless proxy.authenticated?
-      proxy.logger.debug " Warden::Manager.on_request(Attempt Remembered)"
-      proxy.authenticate(:api_auth, :remember_token)
-    end
-    proxy.logger.debug " Warden::Manager.on_request(EXIT) PathInfo: #{proxy.env['PATH_INFO']}, AttemptedPage: #{proxy.request.session['skn.attempted.page']}, SessionID=#{proxy.request.session[:session_id]}, Method: #{proxy.env['REQUEST_METHOD']}"
-  end
-
-  true
-end
-
-# ##
-# A callback that runs if no user could be fetched, meaning there is now no user logged in.
-# - All attempts to auth have been tried (i.e. all valid strategies)
-# ##
-Warden::Manager.after_failed_fetch do |user,auth,opts|
-  unless auth.public_page?
-    auth.logger.debug " Warden::Manager.after_failed_fetch(ONLY) PathInfo: #{auth.env['PATH_INFO']}, :remember_token present?(#{!!auth.cookies["remember_token"]}), opts=#{opts}, session_id=#{auth.raw_session[:session_id]}"
-  end
-  true
 end
 
 # ##
@@ -205,7 +162,7 @@ Warden::Manager.before_logout do |user,auth,_opts|
   user && user.disable_authentication_controls
 
   msg = auth.message
-  auth.reset_session!
+  # auth.reset_session!
   auth.flash_message(:success, msg) if msg
 
   auth.logger.debug " Warden::Manager.before_logout(#{user && user.name}) Msg: #{msg}"
@@ -214,13 +171,13 @@ end
 
 ##
 # Warden Overrides related to Roda environment.
-module Warden
-  class << self
-    def asset_paths
-      config[:asset_paths_ary]
-    end
-  end
-end
+# module Warden
+#   class << self
+#     def asset_paths
+#       config[:asset_paths_ary]
+#     end
+#   end
+# end
 
 module Warden::Mixins::Common
 

@@ -25,9 +25,9 @@ postgresql:
 
 security:
   extra_digest_strength: 3
-  session_expires: 480                # 8 hours
-  remembered_for: 2160                # 32 hours
-  verify_login_after_seconds: 14400   # 4 hours
+  session_expires: 480                # 8 hours by minutes
+  remembered_for: 2160                # 32 hours by minutes
+  verify_login_after_seconds: 14400   # 4 hours by seconds
 
   ! public_pages:
     - /assets

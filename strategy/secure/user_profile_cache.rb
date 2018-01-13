@@ -33,6 +33,12 @@ module Secure
       @_user_cache.size
     end
 
+    def clear_cache!
+      @_user_cache.clear
+      nil
+    end
+    alias_method :reset_cache!, :clear_cache!
+
     private
 
     def get(key)

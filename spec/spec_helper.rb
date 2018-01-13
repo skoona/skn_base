@@ -1,8 +1,8 @@
 ENV['RACK_ENV'] = 'test'
 
-require File.join(File.dirname(__FILE__), '..', 'main/skn_base')
-
 require 'simplecov'
+
+require File.join(File.dirname(__FILE__), '..', 'main/skn_base')
 
 require 'rspec'
 require 'rack/test'
@@ -14,13 +14,14 @@ require 'capybara-screenshot/rspec'
 require "rack_session_access/capybara"
 
 # require 'rspec-roda'
-# require 'warden/test/helpers'
+require 'warden/test/helpers'
 # require 'warden/test/warden_helpers'
 
 require 'support/test_users'
 require 'support/utilities'
 require 'support/test_data_serializers'
 require 'support/capybara'
+require 'support/feature_helpers'
 
 RSpec.configure do |config|
   Kernel.srand config.seed
@@ -57,6 +58,11 @@ RSpec.configure do |config|
   config.include TestUsers
   config.include TestDataSerializers
   config.include Utilities
+  config.include Warden::Test::Helpers                # login_as(u, opts), logout(scope), CALLS ::Warden.test_mode!
+  # config.include Warden::Test::WardenHelpers          # asset_paths, on_next_request, test_reset!
+  config.include FeatureHelpers, type: :feature       # logged_as(user) session injection for cucumber/capybara
+
+  Warden.test_mode!
 
   config.before(:each) do
     Capybara.use_default_driver       # switch back to default driver
@@ -64,13 +70,16 @@ RSpec.configure do |config|
 
   config.append_after(:each) do
     # Warden.test_reset!
-    # Capybara.current_session.driver.reset!
+    ::Secure::UserProfileCache.instance.reset_cache!
     Capybara.reset_sessions!
   end
 end
 
-# Dir[ "./spec/support/**/*.rb" ].each { |f| puts f ; require f }
+# ##
+# Discover Warden in App Chain
+# ##
+# x = Skn::SknBase.app
+# x = x.instance_variable_get :@app while x.class.name != 'Warden::Manager'
+#
 
-# config.include Warden::Test::WardenHelpers          # asset_paths, on_next_request, test_reset!
-# config.include Warden::Test::Helpers                # login_as(u, opts), logout(scope), CALLS ::Warden.test_mode!
-# config.include FeatureHelpers  #, type: :feature       # logged_as(user) session injection for cucumber/capybara
+# Dir[ "./spec/support/**/*.rb" ].each { |f| puts f ; require f }

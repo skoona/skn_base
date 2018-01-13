@@ -236,6 +236,12 @@ end
 
 ```
 
+### Discover Warden inside app under Test
+```ruby
+     manager = app -- = Skn::SknBase.app
+     manager = manager.instance_variable_get(:@app) while manager.class.name != 'Warden::Manager'
+
+```
 
 ## Installation
 

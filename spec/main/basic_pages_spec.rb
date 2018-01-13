@@ -5,29 +5,47 @@
 
 describe Skn::SknBase, "Application pages Respond Correctly. " do
 
-  # def app
-  #   Rack::Builder.parse_file("../../config.ru").first # Skn::SknBase.app
-  # end
+  context "Basic Navigation" do
 
-  it "returns http success" do
-    get "/"
-    expect(last_response.status).to eq 200
+    it "returns http success" do
+      get "/"
+      expect(last_response.status).to eq 200
 
-    get "/about"
-    expect(last_response.status).to eq 200
+      get "/about"
+      expect(last_response.status).to eq 200
 
-    get "/contact"
-    expect(last_response.status).to eq 200
+      get "/contact"
+      expect(last_response.status).to eq 200
 
-    get "/sessions/signin"
-    expect(last_response.status).to eq 200
+      get "/sessions/signin"
+      expect(last_response.status).to eq 200
+    end
+
+    it "returns http Unauthorized" do
+      get "/profiles/users"
+      expect(last_response.status).to eq 203
+
+      get "/profiles/resources"
+      expect(last_response.status).to eq 203
+    end
   end
 
-  it "returns http Unauthorized" do
-    get "/profiles/users"
-    expect(last_response.status).to eq 203
+  context "Honors API_AUTH login. " do
 
-    get "/profiles/resources"
-    expect(last_response.status).to eq 203
+    before :each do
+      basic_authorize('emtester', 'demos')
+    end
+
+    it "/profiles/users returns Requested Page" do
+      get "/profiles/users"
+      expect(last_response.status).to eq 200
+    end
+
+    it "/profiles/resources returns Requested Page" do
+      get "/profiles/resources"
+      expect(last_response.status).to eq 200
+    end
+
   end
+
 end

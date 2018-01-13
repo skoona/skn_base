@@ -31,6 +31,7 @@ module Secure
       if userp && !userp.last_login_time_expired?
         userp.last_access = Time.now.getlocal
       else
+        cache_provider_delete_user(userp)
         userp = nil  # force login as time has expired or cache was purged.
       end
       debug_log "#{self.name}##{__method__}() Returns => #{userp&.name}"
