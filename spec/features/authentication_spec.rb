@@ -1,3 +1,10 @@
+
+# ##
+# Have not figured out how to use the Application Session
+# - redirect to original page is not working!
+# ##
+
+
 feature "Authentication process for all users."  do
 
   context "Public Pages can be accessed. " do

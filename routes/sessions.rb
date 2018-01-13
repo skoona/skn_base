@@ -26,7 +26,7 @@ module Skn
       end
 
       r.is 'unauthenticated' do
-        response.status = 203  # Non-Authoritative Information, note: 401 WILL CAUSE A LOOP
+        response.status = 404  # Non-Authoritative Information, note: 401 WILL CAUSE A LOOP
         view('unauthenticated')
       end
 

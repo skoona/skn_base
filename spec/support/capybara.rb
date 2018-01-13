@@ -2,7 +2,7 @@
 Capybara.configure do |config|
   config.app = Skn::SknBase.app
   config.server = :puma
-  config.default_driver = :mechanize
+  config.default_driver = :rack_test
   config.javascript_driver = :poltergeist
 end
 
@@ -30,4 +30,8 @@ Capybara::Screenshot::RSpec::REPORTERS["RSpec::Core::Formatters::HtmlFormatter"]
 
 def click_logout_link
   Capybara.current_session.driver.delete '/sessions/logout'
+end
+
+def session
+  last_request.env['rack.session']
 end

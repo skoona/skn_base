@@ -13,9 +13,6 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (>= 2.0, < 4.0)
-    capybara-mechanize (1.5.0)
-      capybara (~> 2.4, >= 2.4.4)
-      mechanize (~> 2.7.0)
     capybara-screenshot (1.0.18)
       capybara (>= 1.0, < 3)
       launchy
@@ -25,8 +22,6 @@ GEM
     deep_merge (1.2.1)
     diff-lcs (1.3)
     docile (1.1.5)
-    domain_name (0.5.20170404)
-      unf (>= 0.0.5, < 1.0.0)
     dry-auto_inject (0.4.5)
       dry-container (>= 0.3.4)
     dry-configurable (0.7.0)
@@ -64,8 +59,6 @@ GEM
     faker (1.8.7)
       i18n (>= 0.7)
     ffi (1.9.18)
-    http-cookie (1.0.3)
-      domain_name (~> 0.5)
     i18n (0.9.1)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
@@ -78,27 +71,12 @@ GEM
     logging (2.2.2)
       little-plugger (~> 1.1)
       multi_json (~> 1.10)
-    mechanize (2.7.5)
-      domain_name (~> 0.5, >= 0.5.1)
-      http-cookie (~> 1.0)
-      mime-types (>= 1.17.2)
-      net-http-digest_auth (~> 1.1, >= 1.1.1)
-      net-http-persistent (~> 2.5, >= 2.5.2)
-      nokogiri (~> 1.6)
-      ntlm-http (~> 0.1, >= 0.1.1)
-      webrobots (>= 0.0.9, < 0.2)
     method_source (0.9.0)
-    mime-types (3.1)
-      mime-types-data (~> 3.2015)
-    mime-types-data (3.2016.0521)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
     multi_json (1.12.2)
-    net-http-digest_auth (1.4.1)
-    net-http-persistent (2.9.4)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
-    ntlm-http (0.1.1)
     parallel (1.12.1)
     parser (2.4.0.2)
       ast (~> 2.3)
@@ -189,9 +167,18 @@ GEM
     rspec-expectations (3.7.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.7.0)
+    rspec-its (1.2.0)
+      rspec-core (>= 3.0.0)
+      rspec-expectations (>= 3.0.0)
     rspec-mocks (3.7.0)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.7.0)
+    rspec-roda (0.1.1)
+      inflecto
+      rack-test
+      roda
+      rspec (~> 3.0)
+      rspec-its (~> 1.2.0)
     rspec-support (3.7.0)
     rubocop (0.52.1)
       parallel (~> 1.10)
@@ -223,13 +210,9 @@ GEM
     transproc (1.0.2)
     uglifier (4.1.2)
       execjs (>= 0.3.0, < 3)
-    unf (0.1.4)
-      unf_ext
-    unf_ext (0.0.7.4)
     unicode-display_width (1.3.0)
     warden (1.2.7)
       rack (>= 1.0)
-    webrobots (0.1.2)
     websocket-driver (0.7.0)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.3)
@@ -242,7 +225,6 @@ PLATFORMS
 DEPENDENCIES
   bcrypt
   capybara
-  capybara-mechanize
   capybara-screenshot
   concurrent-ruby
   dry-auto_inject
@@ -273,6 +255,7 @@ DEPENDENCIES
   rom-factory
   rom-sql
   rspec
+  rspec-roda
   rubocop
   sass
   simplecov

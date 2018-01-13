@@ -9,14 +9,11 @@ require 'rack/test'
 
 require 'capybara'
 require 'capybara/rspec'
-require 'capybara/mechanize'
 require 'capybara/poltergeist'
 require 'capybara-screenshot/rspec'
-require "rack_session_access/capybara"
+require 'rack_session_access/capybara'
 
 # require 'rspec-roda'
-require 'warden/test/helpers'
-# require 'warden/test/warden_helpers'
 
 require 'support/test_users'
 require 'support/utilities'
@@ -59,18 +56,13 @@ RSpec.configure do |config|
   config.include TestUsers
   config.include TestDataSerializers
   config.include Utilities
-  config.include Warden::Test::Helpers                # login_as(u, opts), logout(scope), CALLS ::Warden.test_mode!
-  # config.include Warden::Test::WardenHelpers          # asset_paths, on_next_request, test_reset!
   config.include FeatureHelpers, type: :feature       # logged_as(user) session injection for cucumber/capybara
-
-  Warden.test_mode!
 
   config.before(:each) do
     Capybara.use_default_driver       # switch back to default driver
   end
 
   config.append_after(:each) do
-    # Warden.test_reset!
     ::Secure::UserProfileCache.instance.reset_cache!
     Capybara.reset_sessions!
   end

@@ -45,3 +45,7 @@ module FeatureHelpers
     # "warden.user.access_profile.key" => [Secure::UserProfile.class.name, user.person_authenticated_key]
   end
 end
+
+# page.set_rack_session('skn.attempted.page' => '/profiles/users')
+# session['skn.attempted.page'] = '/profiles/users'
+#

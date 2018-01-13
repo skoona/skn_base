@@ -72,7 +72,6 @@ group :test do
   # gem 'rspec-roda'
   gem 'capybara'
   gem 'capybara-screenshot'
-  gem 'capybara-mechanize'
   gem 'rack_session_access'
   gem 'simplecov', :require => false
   gem "rom-factory"

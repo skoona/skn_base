@@ -3,6 +3,7 @@
 # Ref: http://tutorials.jumpstartlab.com/topics/capybara/capybara_with_rack_test.html
 
 
+# describe Skn::SknBase, "Application pages Respond Correctly. ", roda: :app do
 describe "Application pages Respond Correctly. " do
 
   context "Basic Navigation" do
@@ -23,10 +24,10 @@ describe "Application pages Respond Correctly. " do
 
     it "returns http Unauthorized" do
       get "/profiles/users"
-      expect(last_response.status).to eq 203
+      expect(last_response.status).to eq 404
 
       get "/profiles/resources"
-      expect(last_response.status).to eq 203
+      expect(last_response.status).to eq 404
     end
   end
 

@@ -17,6 +17,7 @@ module Skn
         domain: SknSettings.skn_base.session_domain
     }
 
+    # Seems worthless in this environment
     use RackSessionAccess::Middleware if SknSettings.env.test?
 
     use Warden::Manager do |config|
@@ -37,9 +38,7 @@ module Skn
 
     use Rack::MethodOverride
 
-    unless SknSettings.env.test?
-      use Rack::Protection
-    end
+    use Rack::Protection unless SknSettings.env.test?
 
     use Rack::ShowExceptions
     use Rack::NestedParams

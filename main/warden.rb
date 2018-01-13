@@ -171,13 +171,13 @@ end
 
 ##
 # Warden Overrides related to Roda environment.
-# module Warden
-#   class << self
-#     def asset_paths
-#       config[:asset_paths_ary]
-#     end
-#   end
-# end
+module Warden
+  class << self
+    def asset_paths
+      self.config[:asset_paths_ary]
+    end
+  end
+end
 
 module Warden::Mixins::Common
 

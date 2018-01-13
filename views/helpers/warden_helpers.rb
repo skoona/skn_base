@@ -6,7 +6,7 @@ module Skn
     def login_required?
       return false if public_page?
       session['skn.attempted.page'] = request.path
-      warden.authenticate!
+      warden.authenticate! unless !!user
     end
 
     def warden_messages
