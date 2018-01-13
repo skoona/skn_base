@@ -24,7 +24,9 @@ chdir APP_ROOT do
   puts "\n== Creating Content Paths  =="
   FileUtils.mkpath( [
     "./tmp",
-    "./log"
+    "./tmp/pids",
+    "./log",
+    "./coverage"
   ], verbose: true)
 
   # system!('cp -v controlled/downloads/pdf/SknServices*.pdf controlled/projects/Partner/0099/Activity/')

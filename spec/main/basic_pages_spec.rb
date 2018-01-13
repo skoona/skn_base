@@ -3,7 +3,7 @@
 # Ref: http://tutorials.jumpstartlab.com/topics/capybara/capybara_with_rack_test.html
 
 
-describe Skn::SknBase, "Application pages Respond Correctly. " do
+describe "Application pages Respond Correctly. " do
 
   context "Basic Navigation" do
 

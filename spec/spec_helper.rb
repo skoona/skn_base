@@ -9,6 +9,7 @@ require 'rack/test'
 
 require 'capybara'
 require 'capybara/rspec'
+require 'capybara/mechanize'
 require 'capybara/poltergeist'
 require 'capybara-screenshot/rspec'
 require "rack_session_access/capybara"

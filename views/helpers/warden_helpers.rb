@@ -43,6 +43,12 @@ module Skn
     # Proxy to the authenticated? method on warden
     # :api: public
     def authenticated?(*args)
+      defaults = {}
+      if args.last.is_a? Hash
+        args[-1] = defaults.merge(args.last)
+      else
+        args << defaults
+      end
       warden.authenticated?(*args)
     end
     alias_method :logged_in?, :authenticated?
@@ -73,6 +79,15 @@ module Skn
         args << defaults
       end
       warden.authenticate!(*args)
+    end
+    def authenticate?(*args)
+      defaults = {}
+      if args.last.is_a? Hash
+        args[-1] = defaults.merge(args.last)
+      else
+        args << defaults
+      end
+      warden.authenticate?(*args)
     end
 
   end

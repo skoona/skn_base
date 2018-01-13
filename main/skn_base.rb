@@ -19,9 +19,6 @@ module Skn
 
     use RackSessionAccess::Middleware if SknSettings.env.test?
 
-    # ##
-    # Placed Here so Flash and Cookie plugins can add instance methods to Roda
-    # ##
     use Warden::Manager do |config|
       config.default_scope = :access_profile
       config.default_strategies [:api_auth, :remember_token, :password, :not_authenticated]

@@ -2,17 +2,12 @@
 Capybara.configure do |config|
   config.app = Skn::SknBase.app
   config.server = :puma
-  config.default_driver = :rack_test
+  config.default_driver = :mechanize
   config.javascript_driver = :poltergeist
 end
 
 def app
   Skn::SknBase.app # Rack::Builder.parse_file("config.ru").first # Skn::SknBase.app
-end
-
-Capybara.register_driver :rack_test do |app|
-  Capybara::RackTest::Driver.new(app)
-  # Capybara::RackTest::Driver.new(app, :browser => :safari)
 end
 
 Capybara.register_driver :poltergeist do |app|
