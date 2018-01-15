@@ -77,3 +77,6 @@ en:
     not_implemented:
       title: This feature has not been implemented
       detail: The development team has not coded this feature
+    not_found:
+      title: Not Found
+      detail: The item you requested is not available at this time

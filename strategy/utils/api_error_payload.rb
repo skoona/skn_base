@@ -23,6 +23,8 @@
 #   def unknown_api_request
 #     render( json: APIErrorPayload.call(:routing_error, :forbidden, request.env['REQUEST_URI']), status: :forbidden)
 #   end
+#
+# APIErrorPayload.call(:not_found, :not_found, request.env['REQUEST_URI'])
 # ##
 # ref: https://medium.com/@stevenpetryk/providing-useful-error-responses-in-a-rails-api-24c004b31a2e#.m1ofyq22b
 # ref: http://guides.rubyonrails.org/i18n.html#passing-variables-to-translations
@@ -44,13 +46,15 @@ module Utils
           status: Rack::Utils.status_code(status),
           code: identifier,
           additional_detail: additional_detail,
-          title: translated_payload[:title],
-          detail: translated_payload[:detail]
+          title: translated_payload(identifier)[:title],
+          detail: translated_payload(identifier)[:detail]
       }
     end
 
-    def translated_payload
-      I18n.translate("errors.#{identifier}")
+    def translated_payload(identifier)
+      # R18n.send("errors.#{identifier.to_s}")
+      # R18n.translation("errors.#{identifier}")
+      "TODO"
     end
 
   end

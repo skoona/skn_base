@@ -77,7 +77,6 @@ module Skn
     plugin :content_for
     plugin :tag_helpers        # includes :tag plugin, for HTML generation: https://github.com/kematzy/roda-tags/
     plugin :json
-    plugin :json_parser
     plugin :i18n, :locale => ['en']
 
     plugin :public             #replaces plugin :static, %w[/images /fonts]
