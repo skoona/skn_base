@@ -35,8 +35,8 @@ module Secure
       protected
 
       def debug_log(msg)
-        @_debug_logger ||= (Logging.logger['UPR'] || ::SknSettings.logger.debug)
-        @_debug_logger.debug(msg)
+        @_debug_logger ||= (Logging.logger['UPR'] || ::SknSettings.logger)
+        @_debug_logger.info(msg)
       end
 
       private

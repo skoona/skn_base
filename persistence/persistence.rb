@@ -12,11 +12,6 @@ module Types
   SerializedArrayRead = Types.Constructor(Types.Array(Types::Strict::String)) { |yaml_str| yaml_str.nil? ? [] : Psych.load(yaml_str).compact }
   SerializedArrayWrite = Types.Constructor(Types::Strict::String) { |ary_of_str| ary_of_str.nil? ? Psych.dump([])  : Psych.dump(ary_of_str.compact) }
 
-  # SerializedArrayRead = Types.Constructor(Types.Array(Types::Strict::String)) { |yaml_str| Psych.load(yaml_str) }
-  # SerializedArrayWrite = Types.Constructor(Types::Strict::String) { |ary_of_str| Psych.dump(ary_of_str) }
-  # SerialPrimaryKey = Types.Constructor(Types::Strict::Int.meta(primary_key: true))
-  # SerialPrimaryKey = Int.constrained(gt: 0).meta(primary_key: true)
-
 end
 
 require_relative 'entity/user'

@@ -28,11 +28,11 @@ module Services
         model = @commands.key?(cmd.class) && cmd.valid? ? @commands[cmd.class].call(cmd) : @unknown
         model = Services::Content::Models::Failure.new( model ) unless model[:success]
         duration = "%3.1f seconds" % (Time.now.getlocal.to_f - @_start_time.to_f)
-        logger.debug "#{self.class.name}##{__method__} Command: #{cmd.class.name.split('::').last}, Returned: #{model.class.name.split('::').last}, Status: #{model.success}, Duration: #{duration}"
+        logger.info "#{self.class.name}##{__method__} Command: #{cmd.class.name.split('::').last}, Returned: #{model.class.name.split('::').last}, Status: #{model.success}, Duration: #{duration}"
         model
       rescue StandardError => e
         duration = "%3.1f seconds" % (Time.now.getlocal.to_f - @_start_time.to_f)
-        logger.debug "#{self.class.name}##{__method__} Failure Request: Provider: #{@description}, klass=#{e.class.name}, cause=#{e.message}, , Duration: #{duration}, Backtrace=#{e.backtrace[0..4]}"
+        logger.warn "#{self.class.name}##{__method__} Failure Request: Provider: #{@description}, klass=#{e.class.name}, cause=#{e.message}, , Duration: #{duration}, Backtrace=#{e.backtrace[0..4]}"
         Services::Content::Models::Failure.new({success: false, message: "#{e.class.name} => #{e.message}", payload: []})
       end
 
@@ -65,7 +65,7 @@ module Services
 
       def do_content_request(cmd)
         resp = request_content(cmd.uri)
-        logger.debug "#{__method__}: Returns => #{resp[:filename]} as: #{resp[:payload]}, with #{resp[:message]}"
+        logger.info "#{__method__}: Returns => #{resp[:filename]} as: #{resp[:payload]}, with #{resp[:message]}"
         Object.const_get(cmd.model).new( resp )
       end
 
@@ -109,6 +109,8 @@ module Services
 
       end
 
+      # ##
+      # Need to find a cleanup method for these tmp files
       def process_file_response(response)
         # content-type => application/pdf
         # content-disposition => inline; filename="Commission-WestBranch-0040.pdf"
