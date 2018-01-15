@@ -19,11 +19,8 @@ module Types
 
 end
 
-require_relative 'entity/profile'
 require_relative 'entity/user'
-require_relative 'relations/profiles'
 require_relative 'relations/users'
-require_relative 'repositories/profiles'
 require_relative 'repositories/users'
 
 module Skn
@@ -41,10 +38,6 @@ module Skn
 
     config.gateways[:default].use_logger(Logging.logger['ROM'])
 
-    config.register_relation Relations::ProfileTypes
-    config.register_relation Relations::ContentProfilesEntries
-    config.register_relation Relations::ContentProfileEntries
-    config.register_relation Relations::ContentProfiles
     config.register_relation Relations::Users
   end
 

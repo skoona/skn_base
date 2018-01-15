@@ -70,6 +70,8 @@ module Skn
              'jquery.dataTables.js', 'dataTables.bootstrap.js', 'skn-base.custom.js'],
         dependencies: {'_bootstrap.scss' => Dir['assets/stylesheets/**/*.scss', 'assets/stylesheets/*.scss'] }
     }
+    compile_assets if SknSettings.env.production?
+    
     plugin :view_options
     plugin :symbol_views
     plugin :content_for
@@ -108,9 +110,13 @@ module Skn
       warden_messages
 
       r.root do
-        flash_message(:success, ['Welcome to Home Page!', 'Multiple Messages Are Supported'], true)
-        flash_message(:info, ['All messages time out!', 'Except for :danger or Error messages!'], true)
-        flash_message(:danger, "Single messages are also supported!", true)
+        if SknSettings.env.production?
+          flash_message(:success, ['Welcome to SknBase! A client UI for SknServices'], true)
+        else
+          flash_message(:success, ['Welcome to SknBase!', 'Client UI for SknServices'], true)
+          flash_message(:info, ['All messages time out!', 'Except for :danger or Error messages!'], true)
+          flash_message(:danger, "Single messages are also supported!", true)
+        end
         view(:homepage)
       end
 

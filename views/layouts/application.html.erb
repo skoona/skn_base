@@ -35,7 +35,7 @@
 
       <%= yield %>
 
-      <% unless ['resources', 'signin'].any? {|x| x.eql?(current_page_name) } %>
+      <% unless ['resources', 'signin'].any? {|x| x.eql?(current_page_name) || SknSettings.env.production? } %>
         <%= render 'layouts/_debug_status' %>
       <% end %>
 

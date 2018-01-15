@@ -20,7 +20,7 @@ skn_base:
 
 content_service:
   description: SknServices Member APIs
-  url: 'http://imac.skoona.net:8080'
+  url: 'http://vserv.skoona.net:8080'
   username: developer
   password: developer99
   read_timeout_seconds: 15
@@ -30,7 +30,7 @@ content_service:
   content_path: '/profiles/api_get_demo_content_object?id=#ID#;username=#USERNAME#;content_type=#CONTENT_TYPE#;'
 
 postgresql:
-  url: postgres://localhost/SknServices_development
+  url: postgres://vserv.skoona.net/SknServices_development
   user: postgres
   password: postgres
 

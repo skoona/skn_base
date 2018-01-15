@@ -26,6 +26,7 @@ module Skn
         if content.success
           request.send_file(content.payload, disposition: :inline, filename: content.filename, type: content.content_type)
         else
+          response.status = 404
           {message: content.message}.merge(r.params)
         end
       end
