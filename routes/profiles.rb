@@ -9,20 +9,12 @@ module Skn
       set_view_subdir 'profiles'
 
       r.get "resources" do
-        resources = Services::Content::CommandHandler.call(
-            Services::Content::Commands::RetrieveAvailableResources.new(username: current_user.username)
-        )
+        resources = registry_service.resources
         view(:resources, locals: {resources: resources})
       end
 
       r.get "api_get_demo_content_object" do
-        content = Services::Content::CommandHandler.call(
-            Services::Content::Commands::RetrieveResourceContent.new( {
-                                                                          id: r.params['id'],
-                                                                          username: current_user.username,
-                                                                          content_type: r.params['content_type']
-                                                                      })
-        )
+        content = registry_service.get_content_object
         if content.success
           request.send_file(content.payload, disposition: :inline, filename: content.filename, type: content.content_type)
         else

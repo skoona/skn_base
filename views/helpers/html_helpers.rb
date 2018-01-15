@@ -3,6 +3,10 @@
 module Skn
   class SknBase
 
+    def registry_service
+      Services::ServicesRegistry.new(roda_context: self)
+    end
+
     def menu_active?(item_path)
       request.path.eql?(item_path) ? 'active' : ''
     end
