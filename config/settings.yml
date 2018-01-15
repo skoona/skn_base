@@ -23,7 +23,7 @@ content_service:
   url: 'http://imac.skoona.net:8080'
   username: developer
   password: developer99
-  read_timeout_seconds: 8
+  read_timeout_seconds: 15
   open_timeout_seconds: 8
   mime: 'application/json; charset=utf-8;'
   resources_path: '/profiles/api_in_action?username=#USERNAME#'

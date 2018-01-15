@@ -65,7 +65,7 @@ module Services
 
       def do_content_request(cmd)
         resp = request_content(cmd.uri)
-        logger.debug "#{__method__}: Returns => #{resp[:payload].class.eql?(String) ? resp[:payload] : resp.keys}, Msg: #{resp[:message]}"
+        logger.debug "#{__method__}: Returns => #{resp[:filename]} as: #{resp[:payload]}, with #{resp[:message]}"
         Object.const_get(cmd.model).new( resp )
       end
 
@@ -118,7 +118,7 @@ module Services
         IO.binwrite(tmp_filename, response.body)
         {
             success: true,
-            message: "source duration: #{response['x-runtime']} seconds",
+            message: "Source Duration: #{response['x-runtime']} seconds",
             content_type: response['content-type'],
             request_id: response['x-request-id'],
             filename: real_filename,
