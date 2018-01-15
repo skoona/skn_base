@@ -38,7 +38,8 @@ module Utils
     end
 
     def initialize
-      # nothing to do here: i.e. State Less
+      # R18n.default_places = './i18n/'
+      # R18n.set('en')
     end
 
     def call(identifier, status, additional_detail=nil)
@@ -46,15 +47,13 @@ module Utils
           status: Rack::Utils.status_code(status),
           code: identifier,
           additional_detail: additional_detail,
-          title: translated_payload(identifier)[:title],
-          detail: translated_payload(identifier)[:detail]
+          title: translated_payload(identifier, :title),
+          detail: translated_payload(identifier,:detail)
       }
     end
 
-    def translated_payload(identifier)
-      # R18n.send("errors.#{identifier.to_s}")
-      # R18n.translation("errors.#{identifier}")
-      "TODO"
+    def translated_payload(identifier, element)
+      R18n.t[:en][:errors][identifier][element]
     end
 
   end

@@ -27,8 +27,7 @@ module Skn
           request.send_file(content.payload, disposition: :inline, filename: content.filename, type: content.content_type)
         else
           response.status = 404
-          # Utils::APIErrorPayload.call(:not_found, :not_found, "Request: #{request.env['REQUEST_URI']}, Message: #{content.message}")
-          {message: content.message}.merge(r.params)
+          Utils::APIErrorPayload.call(:not_found, :not_found, "Request: #{request.env['REQUEST_URI']}, Message: #{content.message}")
         end
       end
 
