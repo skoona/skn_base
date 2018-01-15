@@ -65,7 +65,7 @@ module Services
 
       def do_content_request(cmd)
         resp = request_content(cmd.uri)
-        logger.debug "#{__method__}: Returns => #{resp[:payload].class.eql?(String) ? resp[:payload] : resp.keys}"
+        logger.debug "#{__method__}: Returns => #{resp[:payload].class.eql?(String) ? resp[:payload] : resp.keys}, Msg: #{resp[:message]}"
         Object.const_get(cmd.model).new( resp )
       end
 
@@ -101,14 +101,22 @@ module Services
           raise ContentRequestFailed, "#{response.code}: #{response.message}"
         end
 
-        if content
-          # content-type => application/pdf
-          # content-disposition => inline; filename="Commission-WestBranch-0040.pdf"
-          # x-request-id => f599bc98-4f8b-4e32-b296-9c8307ff4eaf
-          real_filename = response['content-disposition'].scan(/filename=\"(.+)\"/).flatten.first
-          tmp_filename = './tmp/' + response['x-request-id'] + '.' + (real_filename.split('.').last || response['content-type'].split('/').last)
-          IO.binwrite(tmp_filename, response.body)
-          {
+        if content && response['content-disposition'].include?('filename=')
+          process_file_response(response)
+        else
+          response.body
+        end
+
+      end
+
+      def process_file_response(response)
+        # content-type => application/pdf
+        # content-disposition => inline; filename="Commission-WestBranch-0040.pdf"
+        # x-request-id => f599bc98-4f8b-4e32-b296-9c8307ff4eaf
+        real_filename = response['content-disposition'].scan(/filename=\"(.+)\"/).flatten.first
+        tmp_filename = './tmp/' + response['x-request-id'] + '.' + (real_filename.split('.').last || response['content-type'].split('/').last)
+        IO.binwrite(tmp_filename, response.body)
+        {
             success: true,
             message: "source duration: #{response['x-runtime']} seconds",
             content_type: response['content-type'],
@@ -116,11 +124,7 @@ module Services
             filename: real_filename,
             content_disposition: response['content-disposition'],
             payload: tmp_filename
-          }
-        else
-          response.body
-        end
-
+        }
       end
 
     end # end class
