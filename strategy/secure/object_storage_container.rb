@@ -1,4 +1,4 @@
-# File: ./strategy/secure/user_profile_cache.rb
+# File: ./strategy/secure/object_storage_container.rb
 #
 # Add/Fetch/Delete UserProfile objects from ThreadSafe Cache
 # Uses ThreadSafe::Hash from Concurrent-Ruby Gem
@@ -7,7 +7,7 @@
 # require 'concurrent'
 
 module Secure
-  class UserProfileCache
+  class ObjectStorageContainer
     include Singleton
 
     def initialize

@@ -1,9 +1,9 @@
-# File: ./strategy/secure/user_profile_cache_provider.rb
+# File: ./strategy/secure/cache_provider.rb
 #
-# Interface to UserProfileCache, assume auto expiration of cached items
+# Interface to ObjectStorageContainer, assume auto expiration of cached items
 
 module Secure
-  module UserProfileCacheProvider
+  module CacheProvider
 
     def self.included(klass)
       klass.extend CacheClassMethods
@@ -42,7 +42,7 @@ module Secure
       private
 
       def user_profile_cache_provider
-        ::Secure::UserProfileCache.instance
+        ::Secure::ObjectStorageContainer.instance
       end
     end
 
@@ -57,6 +57,14 @@ module Secure
 
     def cache_provider_delete_user(userp)
       self.class.cache_provider_delete_user(userp)
+    end
+
+    def cache_object(key, package)
+      ::Secure::ObjectStorageContainer.instance.add(key, package)
+    end
+
+    def fetch_object(key)
+      ::Secure::ObjectStorageContainer.instance.fetch(key)
     end
 
   end

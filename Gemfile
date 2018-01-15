@@ -45,6 +45,7 @@ gem 'dry-auto_inject'
 gem 'skn_utils'
 gem 'concurrent-ruby', require: 'concurrent'
 gem 'time_math2', require: 'time_math'
+gem 'mime-types'
 gem 'rake'
 
 # Persistence

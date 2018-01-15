@@ -1,0 +1,130 @@
+# ##
+# File: ./strategy/services/content/command_handler.rb
+# ##
+
+# ##
+# SknServices APIs
+# ##
+# resources :profiles, only: :none do
+#   collection do
+#     get :api_in_action           :username
+#     get :api_get_demo_content_object
+#   end
+# end
+
+
+
+module Services
+  module Content
+
+    class CommandHandler
+      include Secure::CacheProvider
+
+      def self.call(command)
+        self.new().call(command)
+      end
+
+      def call(cmd)
+        model = @commands.key?(cmd.class) && cmd.valid? ? @commands[cmd.class].call(cmd) : @unknown
+        model = Services::Content::Models::Failure.new( model ) unless model[:success]
+        duration = "%3.1f seconds" % (Time.now.getlocal.to_f - @_start_time.to_f)
+        logger.debug "#{self.class.name}##{__method__} Command: #{cmd.class.name.split('::').last}, Returned: #{model.class.name.split('::').last}, Status: #{model.success}, Duration: #{duration}"
+        model
+      rescue StandardError => e
+        duration = "%3.1f seconds" % (Time.now.getlocal.to_f - @_start_time.to_f)
+        logger.debug "#{self.class.name}##{__method__} Failure Request: Provider: #{@description}, klass=#{e.class.name}, cause=#{e.message}, , Duration: #{duration}, Backtrace=#{e.backtrace[0..4]}"
+        Services::Content::Models::Failure.new({success: false, message: "#{e.class.name} => #{e.message}", payload: []})
+      end
+
+    protected
+
+      def initialize
+        @_start_time = Time.now.getlocal
+        @host_and_port = SknSettings.content_service.url
+        @api_username  = SknSettings.content_service.username
+        @api_password  = SknSettings.content_service.password
+        @description   = SknSettings.content_service.description
+        @content_read_timeout = SknSettings.content_service.read_timeout_seconds
+        @content_open_wait_timeout = SknSettings.content_service.open_timeout_seconds
+        @commands = {
+            Services::Content::Commands::RetrieveAvailableResources  => method(:do_metadata_request),
+            Services::Content::Commands::RetrieveResourceContent  => method(:do_content_request)
+        }
+        @unknown = {success: false, message: "Unknown Request type", payload: []}
+      end
+
+      def do_metadata_request(cmd)
+        # :username is only param
+        resp = fetch_object(cmd.storage_key)
+        if resp.nil?
+          resp = request_metadata(cmd.uri)
+          cache_object(cmd.storage_key, resp)
+        end
+        Object.const_get(cmd.model).new( resp['package'] )
+      end
+
+      def do_content_request(cmd)
+        resp = request_content(cmd.uri)
+        logger.debug "#{__method__}: Returns => #{resp[:payload].class.eql?(String) ? resp[:payload] : resp.keys}"
+        Object.const_get(cmd.model).new( resp )
+      end
+
+    private
+
+      def logger
+        @_logger ||= (Logging.logger['CMD'] || SknSettings.logger)
+      end
+
+      def request_metadata(uri)
+        JSON.parse( do_request(uri) )
+      end
+
+      # send_file(@page_controls.package.package.source, filename: @page_controls.package.package.filename, type: @page_controls.package.package.mime, disposition: :inline)
+      def request_content(uri)
+        do_request(uri, true)
+      end
+
+      def do_request(uri, content=false)
+        request = Net::HTTP::Get.new(uri.request_uri)
+        request.basic_auth(@api_username, @api_password)
+
+        # Execute the request object and get response
+        # - HTTP's *_timeout methods will THROW a Timeout:Error exception
+        # - HTTP's internal HTTP<Error> will be returned Inline for all other errors without raising it
+        response = Net::HTTP.start(uri.host, uri.port) do |http|
+          http.open_timeout = @content_open_wait_timeout          # in seconds, for internal http timeouts
+          http.read_timeout = @content_read_timeout                    # in seconds
+          http.request(request)
+        end
+
+        if ( response.kind_of?(Net::HTTPClientError) or response.kind_of?(Net::HTTPServerError) )
+          raise ContentRequestFailed, "#{response.code}: #{response.message}"
+        end
+
+        if content
+          # content-type => application/pdf
+          # content-disposition => inline; filename="Commission-WestBranch-0040.pdf"
+          # x-request-id => f599bc98-4f8b-4e32-b296-9c8307ff4eaf
+          real_filename = response['content-disposition'].scan(/filename=\"(.+)\"/).flatten.first
+          tmp_filename = './tmp/' + response['x-request-id'] + '.' + (real_filename.split('.').last || response['content-type'].split('/').last)
+          IO.binwrite(tmp_filename, response.body)
+          {
+            success: true,
+            message: "source duration: #{response['x-runtime']} seconds",
+            content_type: response['content-type'],
+            request_id: response['x-request-id'],
+            filename: real_filename,
+            content_disposition: response['content-disposition'],
+            payload: tmp_filename
+          }
+        else
+          response.body
+        end
+
+      end
+
+    end # end class
+
+  end
+end
+

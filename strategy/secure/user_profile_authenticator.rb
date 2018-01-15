@@ -6,7 +6,7 @@
 module Secure
   class UserProfileAuthenticator
 
-    include Secure::UserProfileCacheProvider
+    include Secure::CacheProvider
     include Secure::UserProfileKeyEncrypt
 
     def self.authenticate(username, password)

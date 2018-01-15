@@ -236,6 +236,60 @@ end
 
 ```
 
+```ruby
+##
+# Multi-Step HTTP
+begin
+  connection = Net::HTTP.new("localhost", 2500)
+  connection.open_timeout = CONTENT_OPEN_WAIT_TIMEOUT          # in seconds, for internal http timeouts
+  connection.read_timeout = CONTENT_TIMEOUT                    # in seconds
+  http = connection.start                                    # User Persistent Session
+
+  request = Net::HTTP::Post.new("/users.hash")                      # Generate HTTPRequest object
+  request.set_form_data({"username" => CONTENT_MSG})
+  response = http.request(request)
+  puts "POST A  code=#{response.code}, response=#{response.body}"
+  response.each {|k,v| puts "\t#{k} => #{v}"}
+
+  request = Net::HTTP::Post.new("/users.str")
+  request.body = CONTENT_MSG
+  response = http.request(request)
+  puts "POST B  code=#{response.code}, response=#{response.body}"
+  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
+
+  request = Net::HTTP::Post.new("/users.xml")
+  response = http.request(request, CONTENT_MSG)
+  puts "POST C  code=#{response.code}, response=#{response.body}"
+  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
+
+  request = Net::HTTP::Get.new("/users/1?username='James'&description='some named person'")
+  response = http.request(request)
+  puts "GET     code=#{response.code}, response=#{response.body}"
+  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
+
+  request = Net::HTTP::Put.new("/users/1")
+  request.set_form_data({"username" => CONTENT_MSG})
+  response = http.request(request)
+  puts "PUT A   code=#{response.code}, response=#{response.body}"
+  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
+
+  request = Net::HTTP::Put.new("/users/1")
+  response = http.request(request, CONTENT_MSG)
+  puts "PUT B   code=#{response.code}, response=#{response.body}"
+  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
+
+  request = Net::HTTP::Delete.new("/users/1")
+  response = http.request(request)
+  puts "DELETE  code=#{response.code}, response=#{response.body}"
+  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
+
+  http.finish if http.started?
+
+rescue Exception => e
+  puts "CONTENTRequest Long Session:  klass=#{e.class.name}, cause=#{e.message} line=#{e.backtrace.last}"
+end
+```
+
 ### Discover Warden inside app under Test
 ```ruby
      manager = app -- = Skn::SknBase.app
@@ -247,5 +301,10 @@ end
 
 This application SknBase will need a database which it does not create, i.e. it shares one with SknServices.  Thus you will first need to clone and execute the `$ bin/setup` for SknServices, which will create the shared database in PostgreSQL.
 
-Then execte this apps `$ bin/setup` to complete it's installation.  I will improve this process later.
+Then execute this apps `$ bin/setup` to complete it's installation.  I will improve this process later.
 
+The PostgreSQL gem gave me trouble when brew updated to Version 10 of PostgreSQL, this solve the install problem.
+
+```bash
+$ bundle config build.pg --with-pg-config=/usr/local/Cellar/postgresql/10.1/bin/pg_config
+```

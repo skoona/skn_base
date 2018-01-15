@@ -98,9 +98,10 @@ SknBaseUtil.prototype = {
 };
 
 /* ********************************************************
- * ContentProfileDemo Page: :in_action_admin
+ * ContentProfileDemo Page: :api_in_action_admin
  * ********************************************************
  */
+
 
 /*
  * For Runtime Demo Page Selections */
@@ -115,10 +116,10 @@ function runtimeDemoGetObject(ev) {
         window.open(objectUrl, dataPackage.filename);
         consoleLog("runtimeDemoGetObject(" + dataPackage.username + ":" + dataPackage.id + ") Tab opened for file: " + dataPackage.filename);
     } else {
-        consoleLog("runtimeDemoGetObject() Not a file based request - skipped");
+        consoleLog("runtimeDemoGetObject() Not a file based request - skipped -, DataPackage: " + JSON.stringify(dataPackage) );
     }
 
-    consoleLog("runtimeDemoGetObject(completed) ");
+    consoleLog("runtimeDemoGetObject(completed) DataPackage: " + JSON.stringify(dataPackage) );
 
     return false;
 }
@@ -136,6 +137,7 @@ function handle_in_action() {
         $.fn.matchHeight._update();
     });
 
+    consoleLog("handle_in_action(completed) ");
     return true;
 }
 
@@ -153,7 +155,7 @@ $(function() {
 
     switch (SknBase.action) {
 
-        case 'in_action':
+        case 'resources':
             handle_in_action();
             break;
 

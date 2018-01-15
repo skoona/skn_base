@@ -74,10 +74,9 @@ module Skn
     plugin :symbol_views
     plugin :content_for
     plugin :tag_helpers        # includes :tag plugin, for HTML generation: https://github.com/kematzy/roda-tags/
-
-    plugin :i18n, :locale => ['en']
     plugin :json
     plugin :json_parser
+    plugin :i18n, :locale => ['en']
 
     plugin :public             #replaces plugin :static, %w[/images /fonts]
     plugin :head
@@ -89,6 +88,7 @@ module Skn
       # response.status = 404
       view :unknown, locals: {exception: uncaught_exception }, path: File.expand_path('views/unknown.html.erb', opts[:root])
     end
+    plugin :sinatra_helpers, delegate: false
 
     plugin :multi_route
 
