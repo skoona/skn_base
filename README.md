@@ -45,6 +45,13 @@ It re-uses (opens and extends the existing app name class).  `SknBase` is also t
 The assets plugin initially failed (HTTP-404) to send bootstrap.css at Roda V3.3.0.  Switched to 2.29.0 and it worked, tried 3.3.0 again and everything seems to work now!  Making this note in case the trouble shows again.
 Asset Plugin Failure: Sending bottstrap.css with a 'Content-Type' eq 'text/html' 'Content-Length' eq '3045'; verus 'text/css' and 146K.
 
+The PostgreSQL gem gave me trouble when brew updated to Version 10 of PostgreSQL, this solve the install problem.
+
+```bash
+$ bundle config build.pg --with-pg-config=/usr/local/Cellar/postgresql/10.1/bin/pg_config
+```
+
+
 ### Gems of Interest
 * [Roda-i18n](https://github.com/kematzy/roda-i18n)
 * [Roda-Container](https://github.com/AMHOL/roda-container)
@@ -303,8 +310,3 @@ This application SknBase will need a database which it does not create, i.e. it 
 
 Then execute this apps `$ bin/setup` to complete it's installation.  I will improve this process later.
 
-The PostgreSQL gem gave me trouble when brew updated to Version 10 of PostgreSQL, this solve the install problem.
-
-```bash
-$ bundle config build.pg --with-pg-config=/usr/local/Cellar/postgresql/10.1/bin/pg_config
-```
