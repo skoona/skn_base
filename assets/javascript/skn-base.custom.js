@@ -9,15 +9,7 @@
 
 var logEnabled = true,
     SknService,
-    accessibleUrl,
-    userTable,
-    accessTable,
-    contentTable,
-    accessibleTable,
-    mcUserTable,
-    mcEntriesTable,
-    siStorageTable,
-    membersTable;
+    accessibleUrl;
 
 /**
  * Prevents debuging messages from going to console none development mode
@@ -164,8 +156,9 @@ $(function() {
     }
 
 
-    /* Timeout non-Error Flash messages
-     * { alert: :alert, notice: :success, info: :info, secondary: :secondary, success: :success, error: :alert, warning: :warning, primary: :primary }
+    /* **
+     * Timeout non-Error Flash messages
+     *    { alert: :alert, notice: :success, info: :info, secondary: :secondary, success: :success, error: :alert, warning: :warning, primary: :primary }
      */
     setTimeout(function() { // all except alert
         var elems = $('div.alert.alert-success,.alert.alert-notice,.alert.alert-info,.alert.alert-warning');

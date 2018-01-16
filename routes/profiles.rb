@@ -14,13 +14,7 @@ module Skn
       end
 
       r.get "api_get_demo_content_object" do
-        content = registry_service.get_content_object
-        if content.success
-          request.send_file(content.payload, disposition: :inline, filename: content.filename, type: content.content_type)
-        else
-          response.status = 404
-          Utils::APIErrorPayload.call(:not_found, :not_found, "Request: #{request.env['REQUEST_URI']}, Message: #{content.message}")
-        end
+        wrap_send_file_response(registry_service.get_content_object, :not_found, :not_found)
       end
 
       r.get "users" do

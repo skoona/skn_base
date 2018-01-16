@@ -32,7 +32,7 @@ module Services
         model
       rescue StandardError => e
         duration = "%3.1f seconds" % (Time.now.getlocal.to_f - @_start_time.to_f)
-        logger.warn "#{self.class.name}##{__method__} Failure Request: Provider: #{@description}, klass=#{e.class.name}, cause=#{e.message}, , Duration: #{duration}, Backtrace=#{e.backtrace[0..4]}"
+        logger.warn "#{self.class.name}##{__method__} Failure Request: Provider: #{@description}, klass=#{e.class.name}, cause=#{e.message}, Duration: #{duration}, Backtrace=#{e.backtrace[0..1]}"
         Services::Content::Models::Failure.new({success: false, message: "#{e.class.name} => #{e.message}", payload: []})
       end
 

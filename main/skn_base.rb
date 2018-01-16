@@ -56,6 +56,11 @@ module Skn
       }
     end
 
+    #
+    # Tilt.pipeline('scss.erb')
+    # Tilt.pipeline('js.erb')
+
+
     plugin :render, {
         engine: 'html.erb',
         allowed_paths: ['views', 'views/layouts', 'views/profiles', 'views/sessions'],
@@ -71,7 +76,8 @@ module Skn
         dependencies: {'_bootstrap.scss' => Dir['assets/stylesheets/**/*.scss', 'assets/stylesheets/*.scss'] }
     }
     compile_assets if SknSettings.env.production?
-    
+
+
     plugin :view_options
     plugin :symbol_views
     plugin :content_for
@@ -81,15 +87,14 @@ module Skn
 
     plugin :public             #replaces plugin :static, %w[/images /fonts]
     plugin :head
+    plugin :halt
     plugin :flash
     plugin :not_found do
       view :http_404, path: File.expand_path('views/http_404.html.erb', opts[:root])
     end
     plugin :error_handler do |uncaught_exception|
-      # response.status = 404
       view :unknown, locals: {exception: uncaught_exception }, path: File.expand_path('views/unknown.html.erb', opts[:root])
     end
-    plugin :sinatra_helpers, delegate: false
 
     plugin :multi_route
 
@@ -137,10 +142,4 @@ end
 # Named Routes and view helpers
 Dir['./routes/*.rb', './views/helpers/*.rb'].each{|f| require f }
 
-# ##
-#
-# Load Business Logic after this mark.
-# - Loadpath has been established and all gems have been required.
-#
-# ##
 

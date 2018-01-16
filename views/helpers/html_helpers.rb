@@ -11,6 +11,19 @@ module Skn
       request.path.eql?(item_path) ? 'active' : ''
     end
 
+    def wrap_send_file_response(service_response, status, error_status=:not_found)
+      # Generate content for Response
+      if service_response.success
+        response['Content-Type'] = service_response.content_type
+        response['content-disposition'] = service_response.content_disposition
+        request.halt response.finish_with_body(IO.binread(service_response.payload))
+      else
+        http_response = Utils::APIErrorPayload.call( status, error_status, "Request: #{env['REQUEST_URI']}, Message: #{service_response.message}")
+        response.status = http_response[:status]
+        http_response
+      end
+    end
+
     def wrap_html_response(service_response, redirect_path=root_path)
       @page_controls = service_response
       flash[:notice] = @page_controls.message unless @page_controls.message.nil?

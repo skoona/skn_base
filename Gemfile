@@ -35,10 +35,10 @@ gem 'sass'
 
 # Core Components
 gem 'dry-types'
-gem 'dry-struct'
 gem 'dry-monads'
-gem 'dry-container'
-gem 'dry-auto_inject'
+# gem 'dry-struct'
+# gem 'dry-container'
+# gem 'dry-auto_inject'
 
 
 # General Utilities
