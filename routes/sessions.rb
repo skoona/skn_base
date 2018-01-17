@@ -13,7 +13,11 @@ module Skn
         end
 
         r.post do
-          # request.params[:sessions] => {"username"=>"developer", "password"=>"developer99", "remember_me_token"=>"1"}
+          # request.params[:sessions] => {
+          #   "username"=>"developer",
+          #   "password"=>"developer99",
+          #   "remember_me_token"=>"1"
+          # }
           authenticate! # unless authenticated? # double posted
           r.redirect(redirect_to_origin)
         end
@@ -26,7 +30,7 @@ module Skn
       end
 
       r.is 'unauthenticated' do
-        response.status = 409  # The request could not be completed due to a conflict with the current state of the resource. This code is only allowed in situations where it is expected that the user might be able to resolve the conflict and resubmit the request
+        response.status = 409  # The request could not be completed due to a conflict with the current state of the resource.
         view('unauthenticated')
       end
 

@@ -18,12 +18,18 @@ SimpleCov.start do
   add_filter '/views/'
 
   add_group 'UseCases' do |src_file|
-    ['strategy/secure', 'stratgey'].any? do |item|
+    ['strategy/services'].any? do |item|
+      src_file.filename.include? item
+    end
+  end
+  add_group 'Security' do |src_file|
+    ['strategy/secure', 'strategy/strategy.rb'].any? do |item|
       src_file.filename.include? item
     end
   end
   add_group 'Main' do |src_file|
-    ['main', 'routes'].any? do |item|
+    ['main', 'routes', 'views/helpers',
+    'strategy/utils'].any? do |item|
       src_file.filename.include? item
     end
   end

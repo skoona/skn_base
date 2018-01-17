@@ -4,6 +4,7 @@ module Skn
   class SknBase
 
     def login_required?
+      puts "DEBUG POST HELPERS"
       return false if public_page?
       session['skn.attempted.page'] = request.path
       warden.authenticate! unless !!user

@@ -198,6 +198,8 @@ GEM
       libv8 (~> 3.16.14.15)
       ref
     tilt (2.0.8)
+    tilt-pipeline (1.0.0)
+      tilt (>= 2)
     time_math2 (0.1.0)
     transproc (1.0.2)
     uglifier (4.1.2)
@@ -251,6 +253,7 @@ DEPENDENCIES
   skn_utils
   therubyracer
   tilt
+  tilt-pipeline
   time_math2
   uglifier
   warden
