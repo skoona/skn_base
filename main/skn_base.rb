@@ -45,6 +45,8 @@ module Skn
     use Rack::Reloader
 
     plugin :all_verbs
+    plugin :head
+    plugin :halt
 
     unless SknSettings.env.test?
       plugin :csrf, { raise: false,
@@ -82,11 +84,8 @@ module Skn
     plugin :tag_helpers        # includes :tag plugin, for HTML generation: https://github.com/kematzy/roda-tags/
     plugin :json
     plugin :i18n, :locale => ['en']
-
-    plugin :public             #replaces plugin :static, %w[/images /fonts]
-    plugin :head
-    plugin :halt
     plugin :flash
+    plugin :public             #replaces plugin :static, %w[/images /fonts]
 
     plugin :not_found do
       view :http_404, path: File.expand_path('views/http_404.html.erb', opts[:root])
@@ -104,11 +103,13 @@ module Skn
 
       r.assets unless SknSettings.env.production?
 
-      r.on(['fonts', 'images']) do
+      # r.on(['fonts', 'images']) do
         r.public
-      end
+      # end
 
       warden_messages
+
+      r.multi_route
 
       r.root do
         if SknSettings.env.production?
@@ -128,8 +129,6 @@ module Skn
       r.get "contact" do
         view(:contact)
       end
-
-      r.multi_route
 
     end # End Routing Tree
 

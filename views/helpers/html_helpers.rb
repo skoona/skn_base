@@ -56,7 +56,7 @@ module Skn
       attempted_page&.empty? ? '' : attempted_page.split('/').last
     end
     def attempted_page
-      session['skn.attempted.page'] || ""
+      session['skn.attempted.page'] || env.dig('warden.options',:attempted_path) || ""
     end
 
     def current_page_name

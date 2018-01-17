@@ -8,9 +8,6 @@ module Skn
       set_view_subdir 'sessions'
 
       r.on 'signin' do
-        r.get do
-          view(:signin)
-        end
 
         r.post do
           # request.params[:sessions] => {
@@ -18,8 +15,14 @@ module Skn
           #   "password"=>"developer99",
           #   "remember_me_token"=>"1"
           # }
-          authenticate! # unless authenticated? # double posted
+          authenticate!(:password, :not_authenticated) # unless authenticated? # double posted
+          response.status = 201
           r.redirect(redirect_to_origin)
+        end
+
+        r.get do
+          response.status = 200
+          view(:signin)
         end
       end
 
@@ -30,7 +33,7 @@ module Skn
       end
 
       r.is 'unauthenticated' do
-        response.status = 409  # The request could not be completed due to a conflict with the current state of the resource.
+        response.status = 202  # The request could not be completed due to a conflict with the current state of the resource.
         view('unauthenticated')
       end
 

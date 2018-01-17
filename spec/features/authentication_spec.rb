@@ -66,23 +66,23 @@ feature "Authentication process for all users."  do
       fill_in 'sessions_password', :with => "demos"
       click_button 'Sign in'
 
-      expect(current_path).to eq '/profiles/users'
+      expect(current_path).to eq '/profiles/resources'
       click_link 'Sign out'
     end
 
     scenario "Returned to Home page after sign out." do
       visit '/profiles/users'
       expect(current_path).to eq '/sessions/unauthenticated'
-      expect(page).to have_content('You must be signed In to view users!')
+      expect(page).to have_content('You must be signed In to view ')
       visit '/sessions/signin'
       fill_in 'sessions_username', :with => user.username
       fill_in 'sessions_password', :with => "demos"
       click_button 'Sign in'
 
-      expect(current_path).to eq '/profiles/users'
+      expect(current_path).to eq '/profiles/resources'
       click_link 'Sign out'
       expect(current_path).to eq '/'
-      expect(page).to have_content("You have been signed out")
+      expect(page).to have_title("Home")
     end
   end
 
@@ -95,7 +95,7 @@ feature "Authentication process for all users."  do
       fill_in 'sessions_password', :with => "demos"
       click_button 'Sign in'
       expect(current_path).to eq '/sessions/unauthenticated'
-      expect(page).to have_content("You must be signed In to view that page!")
+      expect(page).to have_title("Not Authenticated")
     end
 
     scenario "Cannot sign in with incorrect password." do
@@ -104,14 +104,14 @@ feature "Authentication process for all users."  do
       fill_in 'sessions_password', :with => "somebody"
       click_button 'Sign in'
       expect(current_path).to eq '/sessions/unauthenticated'
-      expect(page).to have_content("You must be signed In to view that page!")
+      expect(page).to have_title("Not Authenticated")
     end
 
     scenario "Cannot sign in when no credentials are offered." do
       visit '/sessions/signin'
       click_button 'Sign in'
       expect(current_path).to eq '/sessions/unauthenticated'
-      expect(page).to have_content("You must be signed In to view that page!")
+      expect(page).to have_title("Not Authenticated")
     end
 
   end
