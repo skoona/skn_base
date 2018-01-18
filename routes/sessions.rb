@@ -15,7 +15,7 @@ module Skn
           #   "password"=>"developer99",
           #   "remember_me_token"=>"1"
           # }
-          authenticate!(:password, :not_authenticated) # unless authenticated? # double posted
+          authenticate!(:password)
           r.redirect(redirect_to_origin)
         end
 

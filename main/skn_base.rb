@@ -3,12 +3,17 @@
 
 require_relative "boot"
 
+require_relative "exception_handling"
+
 module Skn
   class SknBase < Roda
 
     opts[:root] = Pathname(__FILE__).join("..").realpath.dirname.freeze
 
     use Rack::CommonLogger
+    use Rack::Reloader
+
+    use ExceptionHandling
 
     use Rack::Cookies
     use Rack::Session::Cookie, {
@@ -22,10 +27,10 @@ module Skn
 
     use Warden::Manager do |config|
       config.default_scope = :access_profile
-      config.default_strategies [:api_auth, :remember_token, :password, :not_authenticated]
+      config.default_strategies [:api_auth, :remember_token, :password]
       config.scope_defaults :access_profile, {
           store: true,
-          strategies: [:password, :remember_token, :api_auth, :not_authenticated],
+          strategies: [:password, :remember_token, :api_auth],
           action: 'sessions/unauthenticated' }
       config.failure_app = self
       config[:public_pages] = SknSettings.security.public_pages
@@ -42,13 +47,8 @@ module Skn
 
     use Rack::ShowExceptions
     use Rack::NestedParams
-    use Rack::Reloader
 
     plugin :all_verbs
-    plugin :head
-    plugin :halt
-    plugin :drop_body
-
     unless SknSettings.env.test?
       plugin :csrf, { raise: false,
                       skip_if: lambda { |request|
@@ -89,11 +89,14 @@ module Skn
     plugin :i18n, :locale => ['en']
     plugin :flash
     plugin :public             #replaces plugin :static, %w[/images /fonts]
+    plugin :head
+    plugin :halt
+    plugin :drop_body
 
-    plugin :not_found do
+    plugin :not_found do # Path Not Found Handle
       view :http_404, path: File.expand_path('views/http_404.html.erb', opts[:root])
     end
-    plugin :error_handler do |uncaught_exception|
+    plugin :error_handler do |uncaught_exception|  # Uncaught Exception Handler
       view :unknown, locals: {exception: uncaught_exception }, path: File.expand_path('views/unknown.html.erb', opts[:root])
     end
 

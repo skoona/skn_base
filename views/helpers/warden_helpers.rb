@@ -4,12 +4,13 @@ module Skn
   class SknBase
 
     def login_required?
-      return false if public_page?
-      session['skn.attempted.page'] = request.path
-      env.dig('warden.options') ?
-          (env['warden.options'][:attempted_path] = request.path) :
-          (env['warden.options'] = {attempted_path: request.path})
-      warden.authenticate!(:api_auth, :remember_token, :not_authenticated, {attempted_path: request.path}) unless valid_user?
+      unless public_page? || logged_in?
+        session['skn.attempted.page'] = request.path
+        env.dig('warden.options') ?
+            (env['warden.options'][:attempted_path] = request.path) :
+              (env['warden.options'] = {attempted_path: request.path})
+        authenticate!({attempted_path: request.path})
+      end
     end
 
     def warden_messages
@@ -17,8 +18,8 @@ module Skn
       flash_message(:danger, warden.errors.full_messages) unless warden.errors.empty?
     end
 
-    def valid_user?
-      warden.authenticated?
+    def logged_in?
+      !!warden.user
     end
 
     def redirect_to_origin
@@ -43,54 +44,28 @@ module Skn
       env['warden']
     end
 
-    # Proxy to the authenticated? method on warden
+    # Proxy to the authenticate method on warden
+    # - Run strategies
+    # - halt on failure
+    # - returns user
     # :api: public
-    def authenticated?(*args)
-      defaults = {}
-      if args.last.is_a? Hash
-        args[-1] = defaults.merge(args.last)
-      else
-        args << defaults
-      end
-      warden.authenticated?(*args)
+    def authenticate!(*args)
+      warden.clear_strategies_cache!
+      warden.authenticate!(*args)
     end
-    alias_method :logged_in?, :authenticated?
 
     # Access the currently logged in user
     # :api: public
-    def user(*args)
+    def current_user(*args)
       warden.user(*args)
     end
-    alias_method :current_user, :user
-
-    def user=(user)
+    def current_user=(user)
       warden.set_user user
     end
-    alias_method :current_user=, :user=
 
     def logout(*list_of_scopes)
-      warden.logout(*list_of_scopes) if warden.authenticated?
-    end
-
-    # Proxy to the authenticate method on warden
-    # :api: public
-    def authenticate!(*args)
-      defaults = {}
-      if args.last.is_a? Hash
-        args[-1] = defaults.merge(args.last)
-      else
-        args << defaults
-      end
-      warden.authenticate!(*args)
-    end
-    def authenticate?(*args)
-      defaults = {}
-      if args.last.is_a? Hash
-        args[-1] = defaults.merge(args.last)
-      else
-        args << defaults
-      end
-      warden.authenticate?(*args)
+      warden.raw_session.inspect
+      warden.logout(*list_of_scopes)
     end
 
   end

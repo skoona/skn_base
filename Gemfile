@@ -65,7 +65,6 @@ gem 'warden'
 group :development do
   gem 'pry'
   gem "racksh"
-  gem 'rubocop', require: false
 end
 
 group :test do

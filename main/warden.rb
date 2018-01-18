@@ -40,7 +40,7 @@ Warden::Strategies.add(:api_auth) do
   def authenticate!
     user = UserProfile.find_and_authenticate(auth.credentials[0],auth.credentials[1])
     logger.debug " Warden::Strategies.add(:api_auth) User: [#{user&.name}]"
-      (user and user.active) ? success!(user, "Signed in successfully.  Basic") : fail("Your Credentials are invalid or expired. Invalid username or password!  Fail Basic")
+      (user and user.active) ? success!(user, "Signed in successfully.  Basic") : fail!("Your Credentials are invalid or expired. Invalid username or password!  Fail Basic")
   rescue => e
     fail("Your Credentials are invalid or expired.  Not Authorized! [ApiAuth](#{e.message})")
   end
@@ -83,19 +83,6 @@ Warden::Strategies.add(:password) do
       (user and user.active?) ? success!(user, "Signed in successfully. Password") : fail!("Your Credentials are invalid or expired. Invalid username or password! FailPassword")
   rescue => e
     fail("Your Credentials are invalid or expired. [Password](#{e.message})")
-  end
-end
-
-##
-# This will always fail, and is used as the last option should prior options fail
-Warden::Strategies.add(:not_authenticated) do
-  def valid?
-    true
-  end
-
-  def authenticate!
-   logger.debug " Warden::Strategies.add(:not_authenticated) method: [#{request.request_method}]"
-    fail!("Authentication is Required to access this page!  Please Sign in.  [NotAuthenticated](FailNotAuthorized)")
   end
 end
 

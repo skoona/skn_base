@@ -10,6 +10,6 @@
     </p>
   </div>
 
-  <h3 class="text-center">Welcome <%= valid_user? ? current_user.name : 'UserName' %><br/><small>Landing Page</small></h3>
+  <h3 class="text-center">Welcome <%= logged_in? ? current_user.name : 'UserName' %><br/><small>Landing Page</small></h3>
 
 </article>

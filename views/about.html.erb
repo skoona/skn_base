@@ -12,7 +12,7 @@
     </p>
   </div>
 
-  <h3 class="text-center">Welcome <%= valid_user? ? current_user.name : 'UserName' %><br/><small>About Page</small></h3>
+  <h3 class="text-center">Welcome <%= logged_in? ? current_user.name : 'UserName' %><br/><small>About Page</small></h3>
 
   <section>
     <p class="lead">

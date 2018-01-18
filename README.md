@@ -296,6 +296,9 @@ end
 
 ```
 
+```ruby
+    File.join(Dir.pwd, "views")
+```
 
 ### Discover Warden inside app under Test
 ```ruby
