@@ -16,12 +16,11 @@ module Skn
           #   "remember_me_token"=>"1"
           # }
           authenticate!(:password, :not_authenticated) # unless authenticated? # double posted
-          response.status = 201
           r.redirect(redirect_to_origin)
         end
 
         r.get do
-          response.status = 200
+          response.status = :accepted
           view(:signin)
         end
       end
@@ -33,7 +32,7 @@ module Skn
       end
 
       r.is 'unauthenticated' do
-        response.status = 202  # The request could not be completed due to a conflict with the current state of the resource.
+        response.status = :not_acceptable
         view('unauthenticated')
       end
 

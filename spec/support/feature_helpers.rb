@@ -40,7 +40,7 @@
 
 module FeatureHelpers
   def logged_as(user)
-    ::Secure::ObjectStorageContainer.instance.add(user.id, user)
+    ::Authentication::ObjectStorageContainer.instance.add(user.id, user)
     page.set_rack_session('warden.user.access_profile.key' => [UserProfile.class.name, user.id])
     # "warden.user.access_profile.key" => [Secure::UserProfile.class.name, user.person_authenticated_key]
   end

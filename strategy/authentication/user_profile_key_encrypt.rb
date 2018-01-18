@@ -1,10 +1,10 @@
-# File: ./strategy/secure/user_profile_key_encrypt.rb
+# File: ./strategy/authentication/user_profile_key_encrypt.rb
 #
 # Handles: Encrypting and Decrypting Tokens and digested passwords
 #
 # Depends on #attributes and ROM #user_repo methods from UserProfile
 #
-module Secure
+module Authentication
   module UserProfileKeyEncrypt
 
     def self.included(klass)

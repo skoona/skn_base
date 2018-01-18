@@ -80,3 +80,6 @@ en:
     not_found:
       title: Not Found
       detail: The item you requested is not available at this time
+    not_acceptable:
+      title: Not Acceptable
+      detail: Your request was not accepted.  Please contact an administrator to verify your permission,

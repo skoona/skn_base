@@ -1,4 +1,4 @@
-# File: ./strategy/secure/secure.rb
+# File: ./strategy/authentication/authentication.rb
 
 require_relative 'object_storage_container'
 require_relative 'cache_provider'

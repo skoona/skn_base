@@ -47,6 +47,7 @@ module Skn
     plugin :all_verbs
     plugin :head
     plugin :halt
+    plugin :drop_body
 
     unless SknSettings.env.test?
       plugin :csrf, { raise: false,
@@ -80,7 +81,9 @@ module Skn
 
     plugin :view_options
     plugin :symbol_views
+    plugin :symbol_status
     plugin :content_for
+    plugin :forme
     plugin :tag_helpers        # includes :tag plugin, for HTML generation: https://github.com/kematzy/roda-tags/
     plugin :json
     plugin :i18n, :locale => ['en']

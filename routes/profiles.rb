@@ -9,8 +9,7 @@ module Skn
       set_view_subdir 'profiles'
 
       r.get "resources" do
-        resources = registry_service.resources
-        view(:resources, locals: {resources: resources})
+        wrap_html_response(registry_service.resources, 'resources')
       end
 
       r.get "api_get_demo_content_object" do

@@ -1,9 +1,9 @@
-# File: ./strategy/secure/user_profile.rb
+# File: ./strategy/authentication/user_profile.rb
 #
 # Primary User Object and/or contents of CurrentUser
 # ##
 
-class UserProfile < Secure::UserProfileAuthenticator
+class UserProfile < Authentication::UserProfileAuthenticator
 
   attr_accessor :last_access
 

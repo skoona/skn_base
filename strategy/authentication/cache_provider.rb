@@ -1,8 +1,8 @@
-# File: ./strategy/secure/cache_provider.rb
+# File: ./strategy/authentication/cache_provider.rb
 #
 # Interface to ObjectStorageContainer, assume auto expiration of cached items
 
-module Secure
+module Authentication
   module CacheProvider
 
     def self.included(klass)
@@ -42,7 +42,7 @@ module Secure
       private
 
       def user_profile_cache_provider
-        ::Secure::ObjectStorageContainer.instance
+        ::Authentication::ObjectStorageContainer.instance
       end
     end
 
@@ -60,11 +60,11 @@ module Secure
     end
 
     def cache_object(key, package)
-      ::Secure::ObjectStorageContainer.instance.add(key, package)
+      ::Authentication::ObjectStorageContainer.instance.add(key, package)
     end
 
     def fetch_object(key)
-      ::Secure::ObjectStorageContainer.instance.fetch(key)
+      ::Authentication::ObjectStorageContainer.instance.fetch(key)
     end
 
   end

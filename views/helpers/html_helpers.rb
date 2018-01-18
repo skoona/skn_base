@@ -34,21 +34,26 @@ module Skn
       end
     end
 
-    def wrap_html_response(service_response, redirect_path=root_path)
-      @page_controls = service_response
-      flash[:notice] = @page_controls.message unless @page_controls.message.nil?
-      redirect redirect_path, notice: @page_controls.message and return unless @page_controls.success
+    def wrap_html_response(service_response, show_path, redirect_path='/')
+      flash_message(:warning, service_response.message, true) unless service_response.message.nil? || service_response.success
+      # request.redirect(redirect_path) unless service_response.success
+      view(show_path, locals: {resources: service_response})
     end
 
-    def wrap_html_and_redirect_response(service_response, redirect_path=root_path)
-      @page_controls = service_response
-      flash[:notice] = @page_controls.message unless @page_controls.message.nil?
-      redirect redirect_path, notice: @page_controls.message and return
+    def wrap_html_and_redirect_response(service_response, redirect_path='/')
+      flash_message(:warning, service_response.message, true) unless service_response.message.nil?
+      redirect(redirect_path)
     end
 
     def wrap_json_response(service_response)
-      @page_controls = service_response
-      render(json: @page_controls.to_hash, status: (@page_controls.package.success ? :accepted : :not_found), layout: false, content_type: :json) and return
+      response.status = (service_response.package.success ? :accepted : :not_acceptable)
+      if service_response.success
+        service_response.to_hash
+      else
+        generate_standard_json_error_message( response.status,
+                                              :not_acceptable,
+                                              "Request: #{env['REQUEST_URI']}, Message: #{service_response.message}")
+      end
     end
 
     def flash_message(rtype, text, now=false)

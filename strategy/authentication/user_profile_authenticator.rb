@@ -1,13 +1,13 @@
-# File: ./strategy/secure/user_profile_authenticator.rb
+# File: ./strategy/authentication/user_profile_authenticator.rb
 #
 # Authentication methods used primarily by Warden to establish and maintain a sessions
 # - Depends on #last_access method from UserProfile
 # ##
-module Secure
+module Authentication
   class UserProfileAuthenticator
 
-    include Secure::CacheProvider
-    include Secure::UserProfileKeyEncrypt
+    include CacheProvider
+    include UserProfileKeyEncrypt
 
     def self.authenticate(username, password)
       find_and_authenticate(username, password)

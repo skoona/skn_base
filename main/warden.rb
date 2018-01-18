@@ -162,7 +162,7 @@ Warden::Manager.before_logout do |user,auth,_opts|
   user && user.disable_authentication_controls
 
   msg = auth.message
-  # auth.reset_session!
+  auth.reset_session!
   auth.flash_message(:success, msg) if msg
 
   auth.logger.debug " Warden::Manager.before_logout(#{user && user.name}) Msg: #{msg}"
@@ -171,13 +171,6 @@ end
 
 ##
 # Warden Overrides related to Roda environment.
-module Warden
-  class << self
-    def asset_paths
-      self.config[:asset_paths_ary]
-    end
-  end
-end
 
 module Warden::Mixins::Common
 
@@ -198,10 +191,6 @@ module Warden::Mixins::Common
 
   def cookies
     env['rack.cookies'] # request.cookies
-  end
-
-  def public_page?
-    ((config[:public_pages].any? {|p| env['PATH_INFO'].start_with?(p) }) || (env['PATH_INFO'].eql?('/')))
   end
 
   def logger

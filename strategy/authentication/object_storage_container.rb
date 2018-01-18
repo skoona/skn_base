@@ -1,4 +1,4 @@
-# File: ./strategy/secure/object_storage_container.rb
+# File: ./strategy/authentication/object_storage_container.rb
 #
 # Add/Fetch/Delete UserProfile objects from ThreadSafe Cache
 # Uses ThreadSafe::Hash from Concurrent-Ruby Gem
@@ -6,7 +6,7 @@
 
 # require 'concurrent'
 
-module Secure
+module Authentication
   class ObjectStorageContainer
     include Singleton
 

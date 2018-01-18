@@ -18,7 +18,7 @@ module Services
   module Content
 
     class CommandHandler
-      include Secure::CacheProvider
+      include Authentication::CacheProvider
 
       def self.call(command)
         self.new().call(command)
@@ -96,7 +96,7 @@ module Services
         end
 
         if ( response.kind_of?(Net::HTTPClientError) or response.kind_of?(Net::HTTPServerError) )
-          raise ContentRequestFailed, "#{response.code}: #{response.message}"
+          raise ContentRequestFailed, "#{response.code}:#{response.message}"
         end
 
         if content && response['content-disposition'].include?('filename=')

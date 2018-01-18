@@ -63,7 +63,7 @@ RSpec.configure do |config|
   end
 
   config.append_after(:each) do
-    ::Secure::ObjectStorageContainer.instance.reset_cache!
+    ::Authentication::ObjectStorageContainer.instance.reset_cache!
     Capybara.reset_sessions!
   end
 end

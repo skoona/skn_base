@@ -19,15 +19,15 @@ describe "Application pages Respond Correctly. " do
       expect(last_response.status).to eq 200
 
       get "/sessions/signin"
-      expect(last_response.status).to eq 200
+      expect(last_response.status).to eq 202
     end
 
     it "returns http Unauthorized" do
       get "/profiles/users"
-      expect(last_response.status).to eq 409
+      expect(last_response.status).to eq 406
 
       get "/profiles/resources"
-      expect(last_response.status).to eq 409
+      expect(last_response.status).to eq 406
     end
   end
 
@@ -47,9 +47,9 @@ describe "Application pages Respond Correctly. " do
       expect(last_response.status).to eq 200
     end
 
-    it "/sessions/signin returns Requested Page" do
-      post "/sessions/signin"
-      expect(last_response.status).to eq 200
+    it "/sessions/signin returns redirect to home Page" do
+      post "/sessions/signin", {'sessions' => {'username' => 'eptester', 'password' => 'demos', 'remember_me_token' => '1'}}
+      expect(last_response.status).to eq 302
     end
 
   end
