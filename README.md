@@ -221,7 +221,7 @@ end
 
 
 ### File Tree
-```bash
+```
 [SknBase]
     .
     ├── assets
@@ -238,6 +238,7 @@ end
     ├── i18n                    - Message Translation files
     ├── main
     │   ├── skn_base.rb         - Main Roda Web App/Adapter
+    │   ├── warden.rb           - Extended Warden Configuration
     │   └── boot.rb             - LoadPath Management and Log file setup
     ├── persistence
     │   ├── entity              - Entity Structs for User and Profile entities
