@@ -46,7 +46,9 @@ module Skn
 
     plugin :all_verbs
     unless SknSettings.env.test?
-      plugin :csrf, { raise: false,
+      # TODO: Revisit these configuration options: https://github.com/baldowl/rack_csrf#options
+      plugin :csrf, { raise: true,
+                      check_only: ['POST /sessions/signin'],
                       skip_if: lambda { |request|
                         ['HTTP_AUTHORIZATION', 'X-HTTP_AUTHORIZATION',
                          'X_HTTP_AUTHORIZATION', 'REDIRECT_X_HTTP_AUTHORIZATION'].any? {|k|
