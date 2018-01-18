@@ -3,8 +3,6 @@
 
 require_relative "boot"
 
-require_relative "exception_handling"
-
 module Skn
   class SknBase < Roda
 
@@ -12,8 +10,6 @@ module Skn
 
     use Rack::CommonLogger
     use Rack::Reloader
-
-    use ExceptionHandling
 
     use Rack::Cookies
     use Rack::Session::Cookie, {
@@ -68,6 +64,15 @@ module Skn
         layout: '/application',
         layout_opts: {views: 'views/layouts'}
     }
+
+    plugin :not_found do # Path Not Found Handle
+      view :http_404, path: File.expand_path('views/http_404.html.erb', opts[:root])
+    end
+
+    plugin :error_handler do |uncaught_exception|  # Uncaught Exception Handler
+      view :unknown, locals: {exception: uncaught_exception }, path: File.expand_path('views/unknown.html.erb', opts[:root])
+    end
+
     plugin :assets, {
         css_dir: 'stylesheets',
         js_dir: 'javascript',
@@ -92,13 +97,6 @@ module Skn
     plugin :head
     plugin :halt
     plugin :drop_body
-
-    plugin :not_found do # Path Not Found Handle
-      view :http_404, path: File.expand_path('views/http_404.html.erb', opts[:root])
-    end
-    plugin :error_handler do |uncaught_exception|  # Uncaught Exception Handler
-      view :unknown, locals: {exception: uncaught_exception }, path: File.expand_path('views/unknown.html.erb', opts[:root])
-    end
 
     plugin :multi_route
 
