@@ -40,7 +40,7 @@ class SknBase
     end
 end
 ```
-It re-uses (opens and extends the existing app name class).  `SknBase` is also the name of this apps main.  Helper files have the same behavior.
+It opens and extends the existing app name class.  `SknBase` is also the name of this apps main.  Helper files have the same behavior.
 
 The assets plugin initially failed (HTTP-404) to send bootstrap.css at Roda V3.3.0.  Switched to 2.29.0 and it worked, tried 3.3.0 again and everything seems to work now!  Making this note in case the trouble shows again.
 Asset Plugin Failure: Sending bottstrap.css with a 'Content-Type' eq 'text/html' 'Content-Length' eq '3045'; verus 'text/css' and 146K.
@@ -98,42 +98,70 @@ end
 # Entity
 ##
 
-    class ContentProfileEntry < Dry::Struct
-      # attribute :id, Types::Strict::Int
-      attribute :topic_value, Types::Strict::Array.meta(desc: :yaml_array)
-      attribute :topic_type, Types::Strict::String
-      attribute :topic_type_description, Types::Strict::String
-      attribute :content_value, Types::Strict::Array.meta(desc: :yaml_array)
-      attribute :content_type, Types::Strict::String
-      attribute :content_type_description, Types::Strict::String
-      attribute :description, Types::Strict::String
-      attribute :created_at, Types::Strict::Time
-      attribute :updated_at, Types::Strict::Time
+  class User < ROM::Struct
+    attribute :id, Types::Strict::Int
+    attribute :username, Types::Strict::String
+    attribute :name, Types::Strict::String
+    attribute :email, ::Types::Email
+    attribute :password_digest, Types::Strict::String
+    attribute :remember_token, Types::Strict::String.optional
+    attribute :password_reset_token, Types::Strict::String.optional
+    attribute :password_reset_date, Types::Strict::Time.optional
+    attribute :assigned_groups, Types::Strict::Array.meta(desc: :yaml_array)
+    attribute :roles, Types::Strict::Array.meta(desc: :yaml_array)
+    attribute :active, Types::Strict::Bool
+    attribute :file_access_token, Types::Strict::String.optional
+    attribute :created_at, Types::Strict::Time
+    attribute :updated_at, Types::Strict::Time
+    attribute :person_authenticated_key, Types::Strict::String
+    attribute :assigned_roles, Types::Strict::Array.meta(desc: :yaml_array)
+    attribute :remember_token_digest , Types::Strict::String.optional
+    attribute :user_options, Types::Strict::Array.meta(desc: :yaml_array)
+
+    def pak
+      person_authenticated_key
     end
+  end
+
 
 ##
 # ROM
 ##
 
-    config.relation(:content_profile_entries) do
-      schema(infer: false) do
-        attribute :id, Types::Strict::Int.meta(primary_key: true)
-        attribute :topic_value, ::Types::SerializedArrayWrite.meta(desc: :yaml_array), read: ::Types::SerializedArrayRead.meta(desc: :yaml_array)
-        attribute :topic_type, Types::Strict::String
-        attribute :topic_type_description, Types::Strict::String
-        attribute :content_value, ::Types::SerializedArrayWrite.meta(desc: :yaml_array), read: ::Types::SerializedArrayRead.meta(desc: :yaml_array)
-        attribute :content_type, Types::Strict::String
-        attribute :content_type_description, Types::Strict::String
-        attribute :description, Types::Strict::String
-        attribute :created_at, Types::Strict::Time
-        attribute :updated_at, Types::Strict::Time
+  class Users < ROM::Relation[:sql]
+    schema(:users, infer: false) do
 
-        primary_key :id
-      end
+      attribute :id, Types::Serial
+      attribute :username, Types::Strict::String
+      attribute :name, Types::Strict::String
+      attribute :email, ::Types::Email
+      attribute :password_digest, Types::Strict::String
+      attribute :remember_token, Types::Strict::String.optional
+      attribute :password_reset_token, Types::Strict::String.optional
+      attribute :password_reset_date, Types::Strict::Time.optional
+      attribute :assigned_groups, ::Types::SerializedArrayWrite.meta(desc: :yaml_array), read: ::Types::SerializedArrayRead.meta(desc: :yaml_array)
+      attribute :roles, ::Types::SerializedArrayWrite.meta(desc: :yaml_array), read: ::Types::SerializedArrayRead.meta(desc: :yaml_array)
+      attribute :active, Types::Strict::Bool
+      attribute :file_access_token, Types::Strict::String.optional
+      attribute :created_at, Types::Strict::Time
+      attribute :updated_at, Types::Strict::Time
+      attribute :person_authenticated_key, Types::Strict::String
+      attribute :assigned_roles, ::Types::SerializedArrayWrite.meta(desc: :yaml_array), read: ::Types::SerializedArrayRead.meta(desc: :yaml_array)
+      attribute :remember_token_digest , Types::Strict::String.optional
+      attribute :user_options, ::Types::SerializedArrayWrite.meta(desc: :yaml_array), read: ::Types::SerializedArrayRead.meta(desc: :yaml_array)
 
-      struct_namespace Entity
-      auto_struct true
+      primary_key :id
+
     end
+
+    auto_struct true
+
+    # Define some composable, reusable query methods to return filtered
+    # results from our database table. We'll use them in a moment.
+    def by_id(id)
+      where(id: id)
+    end
+  end
 
 ```
 
@@ -147,15 +175,33 @@ end
 * Repositories can be named anything since they specify the relation name in their constructor
 
 ```ruby
-Relations
-    class ProfileTypes < ROM::Relation[:sql]
-        schema(:profile_types, ...
+  class Users < ROM::Repository[:users]
+    struct_namespace Entity
+
+    def all
+      users.map_to(Entity::User).to_a
     end
 
-Entity
-    class ProfileType < Dry::Struct
-        attribute :content_profiles, Types.Constructor(ContentProfile)
+    def query(conditions)
+      users.where(conditions).map_to(Entity::User).to_a
     end
+
+    def by_pak(pak)
+      find_by(person_authenticated_key: pak)
+    end
+
+    def [](id)
+      users.by_id(id).map_to(Entity::User).one
+    end
+
+    def by_id(id)
+      users.by_id(id).one
+    end
+
+    def find_by(col_val_hash)
+      users.where(col_val_hash).one
+    end
+  end
 ```
 
 
@@ -204,7 +250,10 @@ Entity
     ├── routes
     │   ├── profiles.rb         - Profile Routes
     │   └── users.rb            - User Routes
-    ├── strategy                - Business UseCases
+    ├── strategy                - Business UseCases and Integrations
+    │   ├── authentication      - User Management
+    │   ├── services            - API services
+    │   └── utils               - Application Utilities
     └── views
         ├── helpers/            - View HTML Helpers
         ├── layouts/            - Site Layout
@@ -221,20 +270,6 @@ Entity
 
 
 ### Code Cache
-```ruby
-
-cps   = rom.relations[:content_profiles]
-cpes  = rom.relations[:content_profile_entries]
-pts   = rom.relations[:profile_types]
-
-puts cps.first.inspect
-puts cpes.first.inspect
-puts pts.first.inspect
-
-puts cps.combine(:profile_type).first.inspect
-
-end
-```
 
 ```html
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -260,59 +295,6 @@ end
 
 ```
 
-```ruby
-##
-# Multi-Step HTTP
-begin
-  connection = Net::HTTP.new("localhost", 2500)
-  connection.open_timeout = CONTENT_OPEN_WAIT_TIMEOUT          # in seconds, for internal http timeouts
-  connection.read_timeout = CONTENT_TIMEOUT                    # in seconds
-  http = connection.start                                    # User Persistent Session
-
-  request = Net::HTTP::Post.new("/users.hash")                      # Generate HTTPRequest object
-  request.set_form_data({"username" => CONTENT_MSG})
-  response = http.request(request)
-  puts "POST A  code=#{response.code}, response=#{response.body}"
-  response.each {|k,v| puts "\t#{k} => #{v}"}
-
-  request = Net::HTTP::Post.new("/users.str")
-  request.body = CONTENT_MSG
-  response = http.request(request)
-  puts "POST B  code=#{response.code}, response=#{response.body}"
-  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
-
-  request = Net::HTTP::Post.new("/users.xml")
-  response = http.request(request, CONTENT_MSG)
-  puts "POST C  code=#{response.code}, response=#{response.body}"
-  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
-
-  request = Net::HTTP::Get.new("/users/1?username='James'&description='some named person'")
-  response = http.request(request)
-  puts "GET     code=#{response.code}, response=#{response.body}"
-  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
-
-  request = Net::HTTP::Put.new("/users/1")
-  request.set_form_data({"username" => CONTENT_MSG})
-  response = http.request(request)
-  puts "PUT A   code=#{response.code}, response=#{response.body}"
-  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
-
-  request = Net::HTTP::Put.new("/users/1")
-  response = http.request(request, CONTENT_MSG)
-  puts "PUT B   code=#{response.code}, response=#{response.body}"
-  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
-
-  request = Net::HTTP::Delete.new("/users/1")
-  response = http.request(request)
-  puts "DELETE  code=#{response.code}, response=#{response.body}"
-  response.each_header {|h| puts "\t#{h} => #{response[h]}"}
-
-  http.finish if http.started?
-
-rescue Exception => e
-  puts "CONTENTRequest Long Session:  klass=#{e.class.name}, cause=#{e.message} line=#{e.backtrace.last}"
-end
-```
 
 ### Discover Warden inside app under Test
 ```ruby
