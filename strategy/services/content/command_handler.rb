@@ -36,7 +36,7 @@ module Services
         Services::Content::Models::Failure.new({success: false, message: "#{e.class.name} => #{e.message}", payload: []})
       end
 
-    protected
+    private
 
       def initialize
         @_start_time = Time.now.getlocal
@@ -47,13 +47,13 @@ module Services
         @content_read_timeout = SknSettings.content_service.read_timeout_seconds
         @content_open_wait_timeout = SknSettings.content_service.open_timeout_seconds
         @commands = {
-            Services::Content::Commands::RetrieveAvailableResources  => method(:do_metadata_request),
-            Services::Content::Commands::RetrieveResourceContent  => method(:do_content_request)
+            Services::Content::Commands::RetrieveAvailableResources  => method(:resources_metadata),
+            Services::Content::Commands::RetrieveResourceContent  => method(:resource_content)
         }
         @unknown = {success: false, message: "Unknown Request type", payload: []}
       end
 
-      def do_metadata_request(cmd)
+      def resources_metadata(cmd)
         # :username is only param
         resp = fetch_object(cmd.storage_key)
         if resp.nil?
@@ -63,13 +63,11 @@ module Services
         Object.const_get(cmd.model).new( resp['package'] )
       end
 
-      def do_content_request(cmd)
+      def resource_content(cmd)
         resp = request_content(cmd.uri)
         logger.info "#{__method__}: Returns => #{resp[:filename]} as: #{resp[:payload]}, with #{resp[:message]}"
         Object.const_get(cmd.model).new( resp )
       end
-
-    private
 
       def logger
         @_logger ||= (Logging.logger['CMD'] || SknSettings.logger)

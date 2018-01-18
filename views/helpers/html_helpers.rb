@@ -11,14 +11,24 @@ module Skn
       request.path.eql?(item_path) ? 'active' : ''
     end
 
-    def wrap_send_file_response(service_response, status, error_status=:not_found)
+    def generate_standard_json_error_message(identifier, status, additional_detail=nil)
+      {
+          status: Rack::Utils.status_code(status),
+          code: identifier,
+          additional_detail: additional_detail,
+          title: t[:en][:errors][identifier][:title],
+          detail: t[:en][:errors][identifier][:detail]
+      }
+    end
+
+    def wrap_send_file_response(service_response, response_status, error_status=:not_found)
       # Generate content for Response
       if service_response.success
         response['Content-Type'] = service_response.content_type
         response['content-disposition'] = service_response.content_disposition
         request.halt response.finish_with_body(IO.binread(service_response.payload))
       else
-        http_response = Utils::APIErrorPayload.call( status, error_status, "Request: #{env['REQUEST_URI']}, Message: #{service_response.message}")
+        http_response = generate_standard_json_error_message( response_status, error_status, "Request: #{env['REQUEST_URI']}, Message: #{service_response.message}")
         response.status = http_response[:status]
         http_response
       end

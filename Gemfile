@@ -30,7 +30,7 @@ gem 'sass'
 # gem 'roda-sprocket_assets'
 
 # Todo: Can't figure out how to use these yet!
-# gem 'tilt-pipeline'
+gem 'tilt-pipeline'
 # gem 'tilt-indirect'
 
 # Core Components
