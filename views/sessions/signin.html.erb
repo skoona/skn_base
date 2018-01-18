@@ -9,6 +9,7 @@
       <h2 class="form-signin-heading">Please sign in</h2>
       <% unless SknSettings.env.test? %>
         <%= csrf_tag %>
+        <%# Rack::Csrf.tag(env) %>
       <% end %>
 
         <div class="form-group has-feedback">
