@@ -7,9 +7,8 @@
  */
 
 
-var logEnabled = true,
-    SknService,
-    accessibleUrl;
+var logEnabled = <%= SknSettings.env.development? %>;
+var SknService;
 
 /**
  * Prevents debuging messages from going to console none development mode
@@ -90,13 +89,10 @@ SknBaseUtil.prototype = {
 };
 
 /* ********************************************************
- * ContentProfileDemo Page: :api_in_action_admin
+ * Resources Page: :api_in_action_admin
  * ********************************************************
  */
 
-
-/*
- * For Runtime Demo Page Selections */
 function runtimeDemoGetObject(ev) {
     var dataPackage = $(ev.currentTarget).data().package,
         dataResponse,

@@ -6,7 +6,10 @@ module Skn
     def login_required?
       return false if public_page?
       session['skn.attempted.page'] = request.path
-      warden.authenticate! unless !!user
+      env.dig('warden.options') ?
+          (env['warden.options'][:attempted_path] = request.path) :
+          (env['warden.options'] = {attempted_path: request.path})
+      warden.authenticate!(:api_auth, :remember_token, :not_authenticated, {attempted_path: request.path}) unless valid_user?
     end
 
     def warden_messages
@@ -19,7 +22,7 @@ module Skn
     end
 
     def redirect_to_origin
-      orig = session['skn.attempted.page']
+      orig = (env.dig('warden.options',:attempted_path) || session['skn.attempted.page'])
       if orig.nil? || orig.empty? || orig.start_with?('/sessions') || orig.eql?('/signin')
         orig = '/profiles/resources'
       end

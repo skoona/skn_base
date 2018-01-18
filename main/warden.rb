@@ -112,7 +112,7 @@ Warden::Manager.before_failure do |env, _opts|
   env['warden'].cookies.delete( 'remember_token')
   env['warden'].flash_message(:info, env['warden'].message) if env['warden'].message
   env['warden'].flash_message(:danger, env['warden'].errors.full_messages) unless env['warden'].errors.empty?
-  env['warden'].logger.debug " Warden::Manager.before_failure(#{env['warden'].request.object_id}) path:#{env['PATH_INFO']}, AttemptedPage: #{env['warden'].request.session['skn.attempted.page']}, session.id=#{env['warden'].request.session[:session_id]}, Msg: #{env['warden'].message}"
+  env['warden'].logger.debug " Warden::Manager.before_failure(#{env['warden'].request.object_id}) path:#{env['PATH_INFO']}, AttemptedPage: #{env.dig('warden.options',:attempted_path)}, session.id=#{env['warden'].request.session[:session_id]}, Msg: #{env['warden'].message}"
   true
 end
 
@@ -151,7 +151,7 @@ Warden::Manager.after_set_user except: :fetch do |user, auth, _opts|
 
   auth.flash_message(:info, auth.message) if auth.message
 
-  auth.logger.debug " Warden::Manager.after_set_user(#{user&.name}) AttemptedPage: #{auth.request.session['skn.attempted.page']}"
+  auth.logger.debug " Warden::Manager.after_set_user(#{user&.name}) AttemptedPage: #{auth.env.dig('warden.options',:attempted_path)}"
   true
 end
 

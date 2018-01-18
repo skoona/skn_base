@@ -14,7 +14,7 @@ module Skn
       end
 
       r.get "api_get_demo_content_object" do
-        wrap_send_file_response(registry_service.get_content_object, :not_found, :not_found)
+        wrap_send_file_response( registry_service.get_content_object, :not_found, :not_found )
       end
 
       r.get "users" do

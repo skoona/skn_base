@@ -34,7 +34,7 @@ describe "Application pages Respond Correctly. " do
   context "Honors API_AUTH login. " do
 
     before :each do
-      basic_authorize('emtester', 'demos')
+      authorize('emtester', 'demos')
     end
 
     it "/profiles/users returns Requested Page" do
@@ -44,6 +44,11 @@ describe "Application pages Respond Correctly. " do
 
     it "/profiles/resources returns Requested Page" do
       get "/profiles/resources"
+      expect(last_response.status).to eq 200
+    end
+
+    it "/sessions/signin returns Requested Page" do
+      post "/sessions/signin"
       expect(last_response.status).to eq 200
     end
 

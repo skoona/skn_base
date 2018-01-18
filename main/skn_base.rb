@@ -45,6 +45,8 @@ module Skn
     use Rack::Reloader
 
     plugin :all_verbs
+    plugin :head
+    plugin :halt
 
     unless SknSettings.env.test?
       plugin :csrf, { raise: false,
@@ -56,10 +58,8 @@ module Skn
       }
     end
 
-    #
-    # Tilt.pipeline('scss.erb')
-    # Tilt.pipeline('js.erb')
-
+    # ERB support in SCSS, already present for JS
+    Tilt.pipeline('scss.erb')
 
     plugin :render, {
         engine: 'html.erb',
@@ -70,9 +70,9 @@ module Skn
     plugin :assets, {
         css_dir: 'stylesheets',
         js_dir: 'javascript',
-        css: ['skn_base.css.scss' ] ,
+        css: ['skn-base.scss.erb' ],
         js: ['jquery-3.2.1.js', 'bootstrap-3.3.7.js', 'jquery.matchHeight.js', 'bootstrap-select.js',
-             'jquery.dataTables.js', 'dataTables.bootstrap.js', 'skn-base.custom.js'],
+             'jquery.dataTables.js', 'dataTables.bootstrap.js', 'skn-base.custom.js.erb'],
         dependencies: {'_bootstrap.scss' => Dir['assets/stylesheets/**/*.scss', 'assets/stylesheets/*.scss'] }
     }
     compile_assets if SknSettings.env.production?
@@ -84,11 +84,9 @@ module Skn
     plugin :tag_helpers        # includes :tag plugin, for HTML generation: https://github.com/kematzy/roda-tags/
     plugin :json
     plugin :i18n, :locale => ['en']
-
-    plugin :public             #replaces plugin :static, %w[/images /fonts]
-    plugin :head
-    plugin :halt
     plugin :flash
+    plugin :public             #replaces plugin :static, %w[/images /fonts]
+
     plugin :not_found do
       view :http_404, path: File.expand_path('views/http_404.html.erb', opts[:root])
     end
@@ -105,13 +103,13 @@ module Skn
 
       r.assets unless SknSettings.env.production?
 
-      r.public
-
-      r.on(['fonts', 'images']) do
+      # r.on(['fonts', 'images']) do
         r.public
-      end
+      # end
 
       warden_messages
+
+      r.multi_route
 
       r.root do
         if SknSettings.env.production?
@@ -132,12 +130,10 @@ module Skn
         view(:contact)
       end
 
-      r.multi_route
-
     end # End Routing Tree
 
-  end
-end
+  end # end class
+end # end module
 
 # Named Routes and view helpers
 Dir['./routes/*.rb', './views/helpers/*.rb'].each{|f| require f }
