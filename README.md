@@ -1,28 +1,28 @@
 # SknBase
-An exploration into [Dry-Rb](http://dry-rb.org), [ROM-Rb](http://rom-rb.org), and [Roda](https://github.com/jeremyevans/roda) tooling for Ruby Web Applications.
+An exploration into [Dry-RB](http://dry-rb.org), [Rom-DB](http://Rom-DB.org), and [Roda](https://github.com/jeremyevans/roda) tooling for Ruby Web Applications.
 
-In concept, I plan to create a `runtime` for [SknServices](https://github.com/skoona/SknServices) content security application.  Where SknServices provides Admin features, this application would become the runtime consumer of those features and access content from SknServices using the API it provides for that purpose.
+In concept, I plan to create a `runtime` for [SknServices](https://skoona.github.io/SknServices/) content security application.  SknServices provides Admin features which enables this application to be a runtime consumer, and access content from SknServices using the API it provides for that purpose.
 
 I'm looking for an alternative way to build enterprise ruby web applications.  I've tried Rails and salute it for it's Web Interface and Web framework.  However, I've never been comfortable with it's MVC development model for enterprise applications.
 
 I'm finding that most ruby web tools are as opinionated as Rails.  The difference being tools like Roda, as web interface, allow you to override its conventions through configuration; the reversal is not lost on me!
 
-For now I will keep notes and comments here, until I get to a workable baseline.
+For now I will keep notes and comments here, until I get to a workable baseline.  *Baseline is now Complete*
 
 ## Progress
-Before engaging the advanced `Dry-RB` gems and `Gems of Interest`, I thought to code the basic app with minimal assistance from add-ins.  The overall structure of RODA is very flexible, so other than the normal scss/js struggle there were no surprises in the web-component portion; and more importantly, no imposition on business logic structure.
+Before engaging the advanced `Dry-RB` gems and other `Gems of Interest`.  I thought to code the basic app with minimal assistance from add-ins.  The overall structure of Roda is very flexible, so other than the normal scss/js struggle there were no surprises in the web-component portion; and more importantly, no imposition on business logic structure.
 
-User information is the only database requirement I have right now.  `Rom-Rb` handled that task well even though I've not invested in creating a DB migration needed to create the database and table.  I'm using a copy of a table for an existing demo application: `SknServices`.  As a result `ROM-Rb` is overkill for this task, `Sequel` would be the correct level technology, if I have no further needs for Database services.
+User information is the only database requirement I have right now.  `Rom-DB` handled the task well even though I've not invested in creating a DB migration needed to create the database and table.  I'm using a PGSQL Dump backup of the Users table and Database from an existing demo application: `SknServices`.  As a result, `Rom-DB` is overkill for this task, `Sequel` would be the correct level technology, if I have no further needs for Database services.  But I have an interest in Rom-DB so it stays.
 
 `SknService` also offers and ContentAPI which I am using on the `Resources` page.
 
-Instead of using an advanced container and DI gem, I've started out using my `SknUtils` gem; since I was already using it for application settings.  This gem is a thread-safe wrapper over Ruby's Hash, with dot-notation, presence(?) testing, and deep-merge capabilities.  Since a hash can use any object/value as it's Key or Value variables, it works well as a global container for environment based application settings, caching, central/critical application-class instances.
+Instead of using an advanced container and DI gem, I've started out using my `SknUtils` gem; since I was already using it for application settings.  This gem is a thread-safe wrapper over Ruby's Hash, with dot-notation, presence(?) testing, and nested deep-merge capabilities.  Since a hash can use any object/value as it's Key or Value variables, it works well as a global container for environment based application settings, caching, central/critical application-class instances.
 
 I have adopted the Command and CommandHandler pattern to contain the HTPP Request service used to call the ContentAPI of SknServices.  Commands encapsulate the request params, in a validateable command class, as input to the command handler which will invoke the related service.
 
-To link the the Roda Routes to the appropriate services, I've create a `ServiceRegistry` and File or HTTP wrappers to make the link between the Application Classes and the Web Interface.  The basically moves the lines of code that would have been in the Routes into the ServiceRegistry; which i can mock out as needed for testing later.
+To link the the Roda Routes to the appropriate services, I've created a `ServicesRegistry` and HTTP/SendFile wrappers to make the link between the Application Classes and the Web Interface.  The basically moves the lines of code that would have been in the Routes into the ServicesRegistry; which I can mock out as needed for testing later.
 
-Aside from DB migrations, RSPec test coverage, and adding an ERB asset pre-processor, I'm done with this example and very impressed with its structure.
+Aside from DB migrations and increasing RSPec test coverage, I'm done with this example and very impressed with its structure.
 
 
 ### Gems of Interest
@@ -42,7 +42,7 @@ Aside from DB migrations, RSPec test coverage, and adding an ERB asset pre-proce
 
 ### Under Consideration
 1. What directory structure is required, and what options are there to override those requirements?
-    * Seems Roda and Dry-Rb both impose a filesystem structure.
+    * Seems Roda and Dry-RB both impose a filesystem structure.
     * Would a Ruby Gem filesystem model be suitable?
     * `Partial` answer is GEM and Roda.Plugin file layouts.
 2. How does activities per-request factor into things like singletons, or Object lifecycles?
@@ -89,7 +89,7 @@ Aside from DB migrations, RSPec test coverage, and adding an ERB asset pre-proce
     │   ├── entity              - Entity Struct for User
     │   ├── relations           - Users definition
     │   ├── repositories        - User repo
-    │   └── persistence.rb      - ROM-RB setup
+    │   └── persistence.rb      - Rom-DB setup
     ├── public
     │   ├── images/             - View Images
     │   └── fonts/              - View Fonts
