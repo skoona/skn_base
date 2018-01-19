@@ -29,6 +29,11 @@ content_service:
   resources_path: '/profiles/api_in_action?username=#USERNAME#'
   content_path: '/profiles/api_get_demo_content_object?id=#ID#;username=#USERNAME#;content_type=#CONTENT_TYPE#;'
 
+##
+# - SknServices True Database Names
+# SknServices_production
+# SknServices_development
+# SknServices_test
 postgresql:
   url: postgres://localhost/SknBase_development
   user: postgres

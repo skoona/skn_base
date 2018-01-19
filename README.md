@@ -44,25 +44,25 @@ Aside from DB migrations and increasing RSPec test coverage, I'm done with this 
 1. What directory structure is required, and what options are there to override those requirements?
     * Seems Roda and Dry-RB both impose a filesystem structure.
     * Would a Ruby Gem filesystem model be suitable?
-    * `Partial` answer is GEM and Roda.Plugin file layouts.
+    * `Partial` answer is: `RubyGem` and `Roda.Plugin` file layouts.
 2. How does activities per-request factor into things like singletons, or Object lifecycles?
     * No Impact
 3. What survives each request, must there be singletons to hold AccessRegistry, Persistence, etc?
     * DI Containers
 4. Ruby $LoadPath vs Bundler vs Application Source AutoLoad seem to be at odds, in some ways.
     * Autoload is of little interest at this scale. Each Dir has a same-named rbfile that requires all its components
-    * Bundler.seup and Bundler.require handle loading all gem for now; may change as I dig into RSpec testing.
-5. While the notion of Sub-Apps is valid for large applications, it also serves to segment application source into domains.
+    * Bundler.setup and Bundler.require handle loading all gem for now; may change as I dig into RSpec testing.
+5. While the notion of (Roda) Sub-Apps is valid for large applications, it also serves to segment application source into domains.
     * A sub-app filesystem structure is relevant for the web interface, it becomes clumsy for Domains.
-    * For now, I will use one single app with multiple routes tohandle the web interface segmentation.
+    * For now, I will use one single app with multiple routes to handle the web interface segmentation.
 6. Several plugin automatically require and instantiate other plugins on their own.  Each plugin has to be reviewed to understand its side effects or dependancies.
     * This is a pain to be experienced one time.  Middleware and Plugin order DOES MATTER.
-7. Require vs AutoLoad? `Autoload` would prevent loading the whole app when it's not needed during test or CLI operations.  However, `Require` does allow me to control what's loaded and any dependancies with greater clarity.
-    * Don't really care yet!
+7. Require vs AutoLoad? `Autoload` would prevent loading the whole app when it's not needed during test or CLI operations.  However, `Require` does allow me to control what's loaded and any dependencies with greater clarity.
+    * Don't really care yet!  Using the Ruby Require and Require_Relative methods.
 8. Not sure about the lifecycle of critical objects in Roda yet.  How to create something that will survive the request/response cycle; like the database component.
     * Again, DI Container maybe helpful.  I'm current using SknUtils::NestedResult class adapted to be a Global Container for regular yaml settings and holding application resources.
 9. Planning to switch from Bootstrap to Semantic-UI after a bit.
-    * Nope, not doing that.  Bootstrap is fine for the collection of Apps
+    * Nope, not doing that.  Bootstrap is fine for this collection of Apps
 
 
 ### File Tree
@@ -116,8 +116,10 @@ Aside from DB migrations and increasing RSPec test coverage, I'm done with this 
 
 
 ## Installation
-SknBase will need a database of users which should be a shared copy of the table used by SknServices.  This may not be practical, so a pgsql dump file has been includes in the config directory and the following script will install it.
+SknBase needs a database of users, which should be a shared copy of the table used by SknServices.  This may not be practical, so a pgsql dump file has been includes in the config directory and the following script will install it.
 <dl>
+    <dt>Setup Application and Create Database Tables:</dt>
+        <dd><code>$ bin/setup</code></dd>
     <dt>Start Server with Puma, Port 3000:</dt>
         <dd><code>$ bundle exec puma config.ru -v</code></dd>
     <dt>Start Server with RackUp, Port 9292:</dt>
@@ -126,8 +128,6 @@ SknBase will need a database of users which should be a shared copy of the table
         <dd><code>$ bin/console</code></dd>
     <dt>Start Console with RackSh:</dt>
         <dd><code>$ bundle exec racksh</code></dd>
-    <dt>Setup Application and Create Database Tables:</dt>
-        <dd><code>$ bin/setup</code></dd>
 </dl>
 
 
