@@ -30,7 +30,7 @@ content_service:
   content_path: '/profiles/api_get_demo_content_object?id=#ID#;username=#USERNAME#;content_type=#CONTENT_TYPE#;'
 
 postgresql:
-  url: postgres://localhost/SknServices_development
+  url: postgres://localhost/SknBase_development
   user: postgres
   password: postgres
 

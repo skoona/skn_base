@@ -2,6 +2,9 @@
 -- PostgreSQL database dump
 --
 
+-- DROP DATABASE name;
+-- CREATE DATABASE dbname TEMPLATE template0;
+
 -- Dumped from database version 9.4.1
 -- Dumped by pg_dump version 9.4.0
 -- Started on 2018-01-17 16:05:46 EST

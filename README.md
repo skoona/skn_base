@@ -1,69 +1,13 @@
 # SknBase
-An exploration into [Dry-Rb](http://dry-rb.org), [ROM-Rb](http://rom-rb.org), [Roda](https://github.com/jeremyevans/roda), and [Ruby-Event-Store](https://github.com/RailsEventStore/rails_event_store) tooling for Ruby Web Applications.
+An exploration into [Dry-Rb](http://dry-rb.org), [ROM-Rb](http://rom-rb.org), and [Roda](https://github.com/jeremyevans/roda) tooling for Ruby Web Applications.
 
-In concept, I plan to create a `runtime` for [SknServices](https://github.com/skoona/SknServices) content security application.  Where SknServices provides Admin features, this application would become the runtime consumer of those features.
+In concept, I plan to create a `runtime` for [SknServices](https://github.com/skoona/SknServices) content security application.  Where SknServices provides Admin features, this application would become the runtime consumer of those features and access content from SknServices using the API it provides for that purpose.
 
 I'm looking for an alternative way to build enterprise ruby web applications.  I've tried Rails and salute it for it's Web Interface and Web framework.  However, I've never been comfortable with it's MVC development model for enterprise applications.
 
 I'm finding that most ruby web tools are as opinionated as Rails.  The difference being tools like Roda, as web interface, allow you to override its conventions through configuration; the reversal is not lost on me!
 
 For now I will keep notes and comments here, until I get to a workable baseline.
-
-### Notes
-<dl>
-    <dt>Start Server with Puma, Port 3000:</dt>
-        <dd><code>$ bundle exec puma config.ru -v</code></dd>
-    <dt>Start Server with RackUp, Port 9292:</dt>
-        <dd><code>$ rackup</code></dd>
-    <dt>Start Console with Pry:</dt>
-        <dd><code>$ bin/console</code></dd>
-    <dt>Start Console with RackSh:</dt>
-        <dd><code>$ bundle exec racksh</code></dd>
-    <dt>Setup Application:</dt>
-        <dd><code>$ bin/setup</code></dd>
-</dl>
-
-
-`puma` or `rackup` commands alone will start the server. But wont read puma's config which means the default port maybe 9292 vs 3000.
-`Roda's` RodaApp.freeze.app uses RackBuilder to create an Rack App, which confuses the more deliberate `Rack::Handler::Puma.reun(app)` method.
-
-`racksh` is a console for Rack based applications, see docs at [Gem RackSh](https://github.com/sickill/racksh)
-In racksh console: `$ $rack.get "/", {}, { 'REMOTE_ADDR' => '127.0.0.1' }`
-
-`plugin: multi_route` has a very strange structure for associated route files.
-```Ruby
-# File: ./routes/prefix.rb
-
-class SknBase
-    route('prefix') do
-      ...
-    end
-end
-```
-It opens and extends the existing app name class.  `SknBase` is also the name of this apps main.  Helper files have the same behavior.
-
-The assets plugin initially failed (HTTP-404) to send bootstrap.css at Roda V3.3.0.  Switched to 2.29.0 and it worked, tried 3.3.0 again and everything seems to work now!  Making this note in case the trouble shows again.
-Asset Plugin Failure: Sending bottstrap.css with a 'Content-Type' eq 'text/html' 'Content-Length' eq '3045'; verus 'text/css' and 146K.
-
-The PostgreSQL gem gave me trouble when brew updated to Version 10 of PostgreSQL, this solve the install problem.
-
-```bash
-$ bundle config build.pg --with-pg-config=/usr/local/Cellar/postgresql/10.1/bin/pg_config
-```
-
-
-### Gems of Interest
-* [SknUtils](https://skoona.github.io/skn_utils/)
-* [Roda-i18n](https://github.com/kematzy/roda-i18n)
-* [Roda-Container](https://github.com/AMHOL/roda-container)
-* [Roda-Action](https://github.com/AMHOL/roda-action)
-* [Roda-Flow](https://github.com/AMHOL/roda-flow)
-* [Roda-Tags](https://github.com/kematzy/roda-tags)
-* [FriendlyNumbers](https://github.com/adam12/friendly_numbers)
-* [Roda-Parse-Request](https://github.com/3scale/roda-parse-request)
-* [Roda-MessageBus](https://github.com/jeremyevans/roda-message_bus)
-* [Wisper](https://github.com/krisleech/wisper)
-* [Piperator](https://github.com/lautis/piperator)
 
 ## Progress
 Before engaging the advanced `Dry-RB` gems and `Gems of Interest`, I thought to code the basic app with minimal assistance from add-ins.  The overall structure of RODA is very flexible, so other than the normal scss/js struggle there were no surprises in the web-component portion; and more importantly, no imposition on business logic structure.
@@ -80,8 +24,115 @@ To link the the Roda Routes to the appropriate services, I've create a `ServiceR
 
 Aside from DB migrations, RSPec test coverage, and adding an ERB asset pre-processor, I'm done with this example and very impressed with its structure.
 
+
+### Gems of Interest
+* [SknUtils](https://skoona.github.io/skn_utils/)
+* [Roda-i18n](https://github.com/kematzy/roda-i18n)
+* [Roda-Container](https://github.com/AMHOL/roda-container)
+* [Roda-Action](https://github.com/AMHOL/roda-action)
+* [Roda-Flow](https://github.com/AMHOL/roda-flow)
+* [Roda-Tags](https://github.com/kematzy/roda-tags)
+* [FriendlyNumbers](https://github.com/adam12/friendly_numbers)
+* [Roda-Parse-Request](https://github.com/3scale/roda-parse-request)
+* [Roda-MessageBus](https://github.com/jeremyevans/roda-message_bus)
+* [Ruby-Event-Store](https://github.com/RailsEventStore/rails_event_store)
+* [Wisper](https://github.com/krisleech/wisper)
+* [Piperator](https://github.com/lautis/piperator)
+
+
+### Under Consideration
+1. What directory structure is required, and what options are there to override those requirements?
+    * Seems Roda and Dry-Rb both impose a filesystem structure.
+    * Would a Ruby Gem filesystem model be suitable?
+    * `Partial` answer is GEM and Roda.Plugin file layouts.
+2. How does activities per-request factor into things like singletons, or Object lifecycles?
+    * No Impact
+3. What survives each request, must there be singletons to hold AccessRegistry, Persistence, etc?
+    * DI Containers
+4. Ruby $LoadPath vs Bundler vs Application Source AutoLoad seem to be at odds, in some ways.
+    * Autoload is of little interest at this scale. Each Dir has a same-named rbfile that requires all its components
+    * Bundler.seup and Bundler.require handle loading all gem for now; may change as I dig into RSpec testing.
+5. While the notion of Sub-Apps is valid for large applications, it also serves to segment application source into domains.
+    * A sub-app filesystem structure is relevant for the web interface, it becomes clumsy for Domains.
+    * For now, I will use one single app with multiple routes tohandle the web interface segmentation.
+6. Several plugin automatically require and instantiate other plugins on their own.  Each plugin has to be reviewed to understand its side effects or dependancies.
+    * This is a pain to be experienced one time.  Middleware and Plugin order DOES MATTER.
+7. Require vs AutoLoad? `Autoload` would prevent loading the whole app when it's not needed during test or CLI operations.  However, `Require` does allow me to control what's loaded and any dependancies with greater clarity.
+    * Don't really care yet!
+8. Not sure about the lifecycle of critical objects in Roda yet.  How to create something that will survive the request/response cycle; like the database component.
+    * Again, DI Container maybe helpful.  I'm current using SknUtils::NestedResult class adapted to be a Global Container for regular yaml settings and holding application resources.
+9. Planning to switch from Bootstrap to Semantic-UI after a bit.
+    * Nope, not doing that.  Bootstrap is fine for the collection of Apps
+
+
+### File Tree
+```bash
+[SknBase]
+    .
+    ├── assets
+    │   ├── stylesheets/        - Sass based CSS
+    │   └── javascript/         - JQuery, BootStrap, and general Javascript
+    ├── config
+    │   ├── settings/           - SknSettings Environment-biased Application Settings
+    │   ├── puma.rb
+    │   ├── settings.yml        - Default Application Settings
+    │   └── version.rb          - Application Version Object
+    ├── config.ru               - Rack Initializer
+    ├── coverage                - SimpleCov HTML Reports
+    ├── docs                    - rubocop HTML Reports
+    ├── i18n                    - Message Translation files
+    ├── main
+    │   ├── skn_base.rb         - Main Roda Web App/Adapter
+    │   ├── warden.rb           - Extended Warden Configuration
+    │   └── boot.rb             - LoadPath Management and Log file setup
+    ├── persistence
+    │   ├── entity              - Entity Struct for User
+    │   ├── relations           - Users definition
+    │   ├── repositories        - User repo
+    │   └── persistence.rb      - ROM-RB setup
+    ├── public
+    │   ├── images/             - View Images
+    │   └── fonts/              - View Fonts
+    ├── routes
+    │   ├── profiles.rb         - Profile Routes
+    │   └── users.rb            - User Routes
+    ├── strategy                - Business UseCases and Integrations
+    │   ├── authentication      - User Management
+    │   ├── services            - API services and ServicesRegistry
+    │   └── utils               - Application Utilities
+    └── views
+        ├── helpers/            - View HTML Helpers
+        ├── layouts/            - Site Layout
+        ├── profiles/           - Profile Pages
+        ├── sessions/           - Signin Pages
+        ├── about.html.erb      - Root Pages...
+        ├── contact.html.erb
+        ├── homepage.html.erb
+        ├── http_404.html.erb
+        ├── http_500.html.erb
+        └── unknown.html.erb
+
+```
+
+
+## Installation
+SknBase will need a database of users which should be a shared copy of the table used by SknServices.  This may not be practical, so a pgsql dump file has been includes in the config directory and the following script will install it.
+<dl>
+    <dt>Start Server with Puma, Port 3000:</dt>
+        <dd><code>$ bundle exec puma config.ru -v</code></dd>
+    <dt>Start Server with RackUp, Port 9292:</dt>
+        <dd><code>$ rackup</code></dd>
+    <dt>Start Console with Pry:</dt>
+        <dd><code>$ bin/console</code></dd>
+    <dt>Start Console with RackSh:</dt>
+        <dd><code>$ bundle exec racksh</code></dd>
+    <dt>Setup Application and Create Database Tables:</dt>
+        <dd><code>$ bin/setup</code></dd>
+</dl>
+
+
 ### Problems Sovled
-ActiveRecord Serialization for Arrays with YAML format was handled, since I can't change the data model, via Dry-Types.
+ActiveRecord Serialization for Arrays with YAML format was handled nicely by Dry-Types, since I can't easily change the data model.
 ```ruby
 ##
 # added to Types:
@@ -205,68 +256,32 @@ end
 ```
 
 
-### Under Consideration
-1. What directory structure is required, and what options are there to override those requirements?
-    * Seems Roda and Dry-Rb both impose a filesystem structure.
-    * Would a Ruby Gem filesystem model be suitable?
-2. How does activities per-request factor into things like singletons, or Object lifecycles?
-3. What survives each request, must there be singletons to hold AccessRegistry, Persistence, etc?
-4. Ruby $LoadPath vs Bundler vs Application Source AutoLoad seem to be at odds, in some ways.
-5. While the notion of Sub-Apps is valid for large applications, it also serves to segment application source into domains.
-    * A sub-app filesystem structure is relevant for the web interface, it becomes clumsy for Domains.
-6. Several plugin automatically require and instantiate other plugins on their own.  Each plugin has to be reviewed to understand its side effects or dependancies.
-7. Require vs AutoLoad? `Autoload` would prevent loading the whole app when it's not needed during test or CLI operations.  However, `Require` does allow me to control what's loaded and any dependancies with greater clarity.
-8. Not sure about the lifecycle of critical objects in Roda yet.  How to create something that will survive the request/response cycle; like the database component.
-9. Planning to switch from Bootstrap to Semantic-UI after a bit.
+### Notes
+`puma` or `rackup` commands alone will start the server. But wont read puma's config which means the default port maybe 9292 vs 3000.
+`Roda's` RodaApp.freeze.app uses RackBuilder to create an Rack App, which confuses the more deliberate `Rack::Handler::Puma.reun(app)` method.
 
+`racksh` is a console for Rack based applications, see docs at [Gem RackSh](https://github.com/sickill/racksh)
+In racksh console: `$ $rack.get "/", {}, { 'REMOTE_ADDR' => '127.0.0.1' }`
 
-### File Tree
+`plugin: multi_route` has a very strange structure for associated route files.
+```Ruby
+# File: ./routes/prefix.rb
+
+class SknBase
+    route('prefix') do
+      ...
+    end
+end
 ```
-[SknBase]
-    .
-    ├── assets
-    │   ├── stylesheets/        - Sass based CSS
-    │   └── javascript/         - JQuery, BootStrap, and general Javascript
-    ├── config
-    │   ├── settings/           - SknSettings Environment-biased Application Settings
-    │   ├── puma.rb
-    │   ├── settings.yml        - Default Application Settings
-    │   └── version.rb          - Application Version Object
-    ├── config.ru               - Rack Initializer
-    ├── coverage                - SimpleCov HTML Reports
-    ├── docs                    - rubocop HTML Reports
-    ├── i18n                    - Message Translation files
-    ├── main
-    │   ├── skn_base.rb         - Main Roda Web App/Adapter
-    │   ├── warden.rb           - Extended Warden Configuration
-    │   └── boot.rb             - LoadPath Management and Log file setup
-    ├── persistence
-    │   ├── entity              - Entity Structs for User and Profile entities
-    │   ├── relations           - Users and Profiles definitions
-    │   ├── repositories        - User and Profile repos
-    │   └── persistence.rb      - ROM-RB setup
-    ├── public
-    │   ├── images/             - View Images
-    │   └── fonts/              - View Fonts
-    ├── routes
-    │   ├── profiles.rb         - Profile Routes
-    │   └── users.rb            - User Routes
-    ├── strategy                - Business UseCases and Integrations
-    │   ├── authentication      - User Management
-    │   ├── services            - API services
-    │   └── utils               - Application Utilities
-    └── views
-        ├── helpers/            - View HTML Helpers
-        ├── layouts/            - Site Layout
-        ├── profiles/           - Profile Pages
-        ├── users/              - User Pages
-        ├── about.html.erb      - Root Pages...
-        ├── contact.html.erb
-        ├── homepage.html.erb
-        ├── http_404.html.erb
-        ├── http_500.html.erb
-        └── unknown.html.erb
+It opens and extends the existing app name class.  `SknBase` is also the name of this apps main.  Helper files have the same behavior.
 
+The assets plugin initially failed (HTTP-404) to send bootstrap.css at Roda V3.3.0.  Switched to 2.29.0 and it worked, tried 3.3.0 again and everything seems to work now!  Making this note in case the trouble shows again.
+Asset Plugin Failure: Sending bottstrap.css with a 'Content-Type' eq 'text/html' 'Content-Length' eq '3045'; verus 'text/css' and 146K.
+
+The PostgreSQL gem gave me trouble when brew updated to Version 10 of PostgreSQL, this solve the install problem.
+
+```bash
+$ bundle config build.pg --with-pg-config=/usr/local/Cellar/postgresql/10.1/bin/pg_config
 ```
 
 
@@ -300,16 +315,23 @@ end
     File.join(Dir.pwd, "views")
 ```
 
-### Discover Warden inside app under Test
+#### Discover Warden inside app under Test
 ```ruby
      manager = app -- = Skn::SknBase.app
      manager = manager.instance_variable_get(:@app) while manager.class.name != 'Warden::Manager'
 
 ```
 
-## Installation
 
-This application SknBase will need a database which it does not create, i.e. it shares one with SknServices.  Thus you will first need to clone and execute the `$ bin/setup` for SknServices, which will create the shared database in PostgreSQL.
+## Contributing
 
-Then execute this apps `$ bin/setup` to complete it's installation.  I will improve this process later.
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Add some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create a new Pull Request
 
+
+## License
+
+The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
