@@ -50,7 +50,7 @@ module Services
             Services::Content::Commands::RetrieveAvailableResources  => method(:resources_metadata),
             Services::Content::Commands::RetrieveResourceContent  => method(:resource_content)
         }
-        @unknown = {success: false, message: "Unknown Request type", payload: []}
+        @unknown = {success: false, message: "#{@description}: Unknown Request type", payload: []}
       end
 
       def resources_metadata(cmd)
@@ -77,7 +77,6 @@ module Services
         JSON.parse( do_request(uri) )
       end
 
-      # send_file(@page_controls.package.package.source, filename: @page_controls.package.package.filename, type: @page_controls.package.package.mime, disposition: :inline)
       def request_content(uri)
         do_request(uri, true)
       end

@@ -7,7 +7,7 @@
 # The `threads` method setting takes two numbers a minimum and maximum.
 # Any libraries that use thread pools should be configured to match
 # the maximum value specified for Puma. Default is set to 5 threads for minimum
-# and maximum, this matches the default thread size of Active Record.
+# and maximum
 #
 
 threads_count = 5
@@ -22,7 +22,7 @@ pidfile 'tmp/pids/puma.pid'
 state_path 'tmp/pids/puma.state'
 
 # Specifies the `port` that Puma will listen on to receive requests, default is 3000.
-port        ENV.fetch("RACK_PORT") { 3000 }
+port        ENV.fetch("RACK_PORT") { 8585 }
 
 # Specifies the `environment` that Puma will run in.
 environment ENV.fetch("RACK_ENV") { "development" }
