@@ -4,7 +4,7 @@
 <article>
 
   <section>
-    <div class="container">
+
     <form class="form-signin" action="/sessions/signin" method="post" role="form">
       <h2 class="form-signin-heading">Please sign in</h2>
       <% unless SknSettings.env.test? %>
@@ -14,14 +14,14 @@
 
         <div class="form-group has-feedback">
           <label for="sessions_username" class="sr-only">Username</label>
-          <input autofocus="autofocus" placeholder="Your Username" type="text" name="sessions[username]" id="sessions_username" class="form-control" required>
-          <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+          <input type="text" placeholder="Your Username" name="sessions[username]" id="sessions_username" class="form-control" required autofocus>
+          <span class="glyphicon glyphicon-user form-control-feedback" aria-hidden="true"></span>
         </div>
 
         <div class="form-group has-feedback">
           <label for="sessions_password" class="sr-only">Password</label>
           <input type="password" class="form-control" name="sessions[password]" id="sessions_password" placeholder="Your Password" required>
-          <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+          <span class="glyphicon glyphicon-lock form-control-feedback" aria-hidden="true"></span>
         </div>
 
         <div class="checkbox">
@@ -33,7 +33,7 @@
         </div>
         <button type="submit" name="commit" value="login" class="submit btn-primary btn-block">Sign in</button>
     </form>
-    </div>
+
   </section>
 
 </article>
