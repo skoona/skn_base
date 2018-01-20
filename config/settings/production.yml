@@ -10,4 +10,4 @@ postgresql:
   url: postgres://localhost/SknServices_production
 
 content_service:
-  url: 'http://localhost:8080'
+  url: 'http://vserv.skoona.net:8080'
