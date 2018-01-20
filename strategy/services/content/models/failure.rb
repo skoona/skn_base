@@ -1,7 +1,7 @@
 # ##
 # File: ./strategy/services/content/models/failure.rb
 #
-# Requires at a minimum:
+# Expected Key/Values:
 #  {
 #   success: false,
 #   message: "Unknown Request type",
