@@ -9,6 +9,16 @@ I'm finding that most ruby web tools are as opinionated as Rails.  The differenc
 
 For now I will keep notes and comments here, until I get to a workable baseline.  *Baseline is now Complete*
 
+
+### Online Demo
+* [SknBase Live!](http://vserv.skoona.net:8585)
+* [SknServices Live!](http://vserv.skoona.net:8080)
+
+    *Demo Credentials*
+    username: `emtester`,
+    password: `demos`
+
+
 ## Progress
 Before engaging the advanced `Dry-RB` gems and other `Gems of Interest`.  I thought to code the basic app with minimal assistance from add-ins.  The overall structure of Roda is very flexible, so other than the normal scss/js struggle there were no surprises in the web-component portion; and more importantly, no imposition on business logic structure.
 
