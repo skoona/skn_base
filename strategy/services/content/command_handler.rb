@@ -26,14 +26,14 @@ module Services
 
       def call(cmd)
         model = @commands.key?(cmd.class) && cmd.valid? ? @commands[cmd.class].call(cmd) : @unknown
-        model = Services::Content::Models::Failure.new( model ) unless model[:success]
+        model = Models::Failure.new( model ) unless model[:success]
         duration = "%3.1f seconds" % (Time.now.getlocal.to_f - @_start_time.to_f)
         logger.info "#{self.class.name}##{__method__} Command: #{cmd.class.name.split('::').last}, Returned: #{model.class.name.split('::').last}, Status: #{model.success}, Duration: #{duration}"
         model
       rescue StandardError => e
         duration = "%3.1f seconds" % (Time.now.getlocal.to_f - @_start_time.to_f)
         logger.warn "#{self.class.name}##{__method__} Failure Request: Provider: #{@description}, klass=#{e.class.name}, cause=#{e.message}, Duration: #{duration}, Backtrace=#{e.backtrace[0..1]}"
-        Services::Content::Models::Failure.new({success: false, message: "#{e.class.name} => #{e.message}", payload: []})
+        Models::Failure.new({success: false, message: "#{e.class.name} => #{e.message}", payload: []})
       end
 
     private
