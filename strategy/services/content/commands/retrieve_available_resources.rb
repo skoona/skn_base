@@ -18,7 +18,7 @@ module Services
           @username = args.fetch(:username, nil)
           # '/profiles/api_in_action'
           host = SknSettings.content_service.url
-          api_path = SknSettings.content_service.resources_path.gsub(/#USERNAME#/, username)
+          api_path = SknSettings.content_service.resources_path.gsub(/#USERNAME#/, @username)
           @_url = URI.parse("#{host}#{api_path}")
         end
 
@@ -36,7 +36,7 @@ module Services
         end
 
         def storage_key
-          "AvailableResources.#{username}"
+          "#{self.class.name}.#{username}"
         end
 
       end

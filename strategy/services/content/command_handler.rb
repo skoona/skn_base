@@ -7,8 +7,8 @@
 # ##
 # resources :profiles, only: :none do
 #   collection do
-#     get :api_in_action           :username
-#     get :api_get_demo_content_object
+#     get :api_in_action                   :username
+#     get :api_get_demo_content_object     :id, :username, :content_type
 #   end
 # end
 

@@ -42,7 +42,7 @@ module Services
         end
 
         def storage_key
-          "ResourceContent.#{username}"
+          "#{self.class.name}.#{username}"
         end
 
       end
