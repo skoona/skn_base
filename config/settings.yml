@@ -5,7 +5,7 @@ Packaging:
   isDevelopment: false
   isStaging: false
   isProduction: false
-  configName: base
+  configName: development
   short_name: skn
 
 # Create a EnvStringHandler to support: SknSettings.env.development?
@@ -34,10 +34,32 @@ content_service:
 # SknServices_production
 # SknServices_development
 # SknServices_test
+#
+# ##  JNDI
+# jdbc:jndi:java:comp/env/sknBaseDatasource
+# ##
+
+pg_local_defaults: &pg_local_defaults
+  url: jdbc:postgresql://localhost/SknBase_development
+  username: <%= ENV.fetch('SKNBASE_DB_USERNAME','postgres') %>
+  password: <%= ENV.fetch('SKNBASE_DB_PASSWORD','postgres') %>
+
+pg_jndi_defaults: &pg_jndi_defaults
+  url: jdbc:jndi:java:comp/env/sknBaseDatasource
+  username: <%= ENV.fetch('SKNBASE_DB_USERNAME','postgres') %>
+  password: <%= ENV.fetch('SKNBASE_DB_PASSWORD','postgres') %>
+
+<% if defined?($servlet_context) %>
+
 postgresql:
-  url: postgres://localhost/SknBase_development
-  user: postgres
-  password: postgres
+  <<: *pg_jndi_defaults
+
+<% else %>
+
+postgresql:
+  <<: *pg_local_defaults
+
+<% end %>
 
 security:
   extra_digest_strength: 3
@@ -60,4 +82,12 @@ security:
     - /fonts
     - /public
 
+mountedPaths:
+# Directory paths only (server + dirpath = full_path)
+  path:
+    applicationAttachmentRootPath: /app/
+
+# Server component only
+  platform:
+    communicationAttachmentRootPath: /mnt/pas
 

@@ -2,7 +2,9 @@
 
 source "https://rubygems.org"
 
-ruby "2.5.0"
+# ruby "2.5.0"
+gem 'jruby-jars', '9.1.15.0'
+gem 'jruby-rack'
 
 gem 'logging'
 
@@ -51,7 +53,10 @@ gem 'mime-types'
 gem 'rake'
 
 # Persistence
-gem 'pg'
+platform :mri do
+  gem 'pg'
+end
+
 gem 'rom'
 gem 'rom-sql'
 
@@ -65,6 +70,10 @@ gem 'warden'
 group :development do
   gem 'pry'
   gem "racksh"
+
+  gem 'warbler', '>= 2.0', require: false
+  gem 'yard'
+  gem 'rdoc'
 end
 
 group :test do

@@ -13,7 +13,16 @@ begin
   require "securerandom"                            # Augments User Security
 
   Bundler.require(:default, ENV['RACK_ENV'].to_sym) # Require all the gems for this environment
-  SknSettings.load_config_basename!(ENV['RACK_ENV'] || 'development')
+
+  require 'java'
+  Dir['./lib/java/postgresql*.jar'].each do |jarfile|
+    require File.expand_path(jarfile, File.dirname(".."))
+  end
+
+  # Load application settings & JNDI Support
+  require_relative 'mounted_paths'
+  runtime_config = MountedPaths.get_protected_resource('Packaging.configName')
+  SknSettings.load_config_basename!(runtime_config)
 
   flist =  Dir['./tmp/content/*'] # remove prior downloads
   unless flist.empty?
@@ -52,7 +61,7 @@ begin
 
   # app.env[RACK_LOGGER] = SknSettings.logger
 
-  SknSettings.logger.info "SknSettings Logger Setup Complete! loaded: #{SknSettings.env}"
+  SknSettings.logger.info "SknSettings Logger Setup Complete! loaded: #{SknSettings.env} DB-URL: #{SknSettings.postgresql.url}"
 rescue StandardError => e
   SknSettings.logger = Logger.new($stdout)
   SknSettings.logger.error "SknSettings Logger Setup Failed: loaded: #{SknSettings.env}, EMsg: #{e.message}"

@@ -28,7 +28,7 @@ module Skn
 # ##
 
   db_config = ROM::Configuration.new(:sql, SknSettings.postgresql.url,
-                       user: SknSettings.postgresql.user,
+                       user: SknSettings.postgresql.username,
                        password: SknSettings.postgresql.password) do |config|
 
     config.gateways[:default].use_logger(Logging.logger['ROM'])

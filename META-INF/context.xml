@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+    path = /
+-->
+
+<Context
+    override="true"
+    crossContext="true"
+    reloadable="true"
+    privileged="true"
+    cookies="true"
+    fireRequestListenersOnForwards="true"
+    cachingAllowed="true"
+    workDir="work">
+
+    <!-- Platform Role Configuration jndi reference -->
+    <ResourceLink name="Packaging.configName"
+                  global="platform.role.config"
+                  type="java.lang.String" />
+
+    <!-- Database jndi reference -->
+    <ResourceLink
+            name="jdbc/sknBaseDatasource"
+            global="jdbc/sknBaseDB"
+            type="javax.sql.DataSource" />
+
+    <!-- API Service jndi reference -->
+    <ResourceLink
+            name="content_service.url"
+            global="platform.content_service.url"
+            type="java.lang.String" />
+
+</Context>
