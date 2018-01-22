@@ -32,7 +32,8 @@ chdir APP_ROOT do
     "./tmp/content",
     "./docs",
     "./log",
-    "./coverage"
+    "./coverage",
+    "./target"
   ], verbose: true)
 
   puts "\n== Preparing databases =="

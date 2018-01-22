@@ -15,7 +15,7 @@
 
     <!-- Platform Role Configuration jndi reference -->
     <ResourceLink name="Packaging.configName"
-                  global="platform.role.config"
+                  global="platform.roda.config"
                   type="java.lang.String" />
 
     <!-- Database jndi reference -->

@@ -1,14 +1,14 @@
 #!/usr/bin/env rake
 
 # require_relative 'main/skn_base'
-
-require 'rspec/core'
-require 'rspec/core/rake_task'
-
-task default: :spec
-
-desc 'Run all specs in spec directory'
-RSpec::Core::RakeTask.new(:spec)
+#
+# require 'rspec/core'
+# require 'rspec/core/rake_task'
+#
+# task default: :spec
+#
+# desc 'Run all specs in spec directory'
+# RSpec::Core::RakeTask.new(:spec)
 
 namespace :assets do
   desc "Precompile the assets"

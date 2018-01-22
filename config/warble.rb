@@ -18,18 +18,18 @@ Warbler::Config.new do |config|
   config.features = %w(runnable)
 
   # Application directories to be included in the webapp.
-  config.dirs = %w(app config db lib log vendor tmp engines classes bin)
+  config.dirs = %w(assets config i18n main persistence routes strategy views vendor tmp lib log bin)
 
   # Additional files/directories to exclude
   config.excludes = FileList["vendor/cache/*"]
 
   # Additional file/directories to include
-  config.includes = FileList["Rakefile"]
+  config.includes = FileList["config.ru"]
 
   config.java_libs += %w(lib/java/postgresql-9.4-1206-jdbc4.jar)
 
   # An array of Bundler groups to avoid including in the war file.
-  config.bundle_without = %w(development test) if Rails.env.production?
+  config.bundle_without = %w(development test) if ENV['RACK_ENV'].eql?('production')
 
   # Pathmaps for controlling how application files are copied into the archive
   config.pathmaps.application = ["WEB-INF/%p"]
@@ -43,18 +43,17 @@ Warbler::Config.new do |config|
   config.gem_excludes = [/^(jruby-openssl)\//]
 
   # any key begining with webxml. will be added as a context param
-  config.webxml.application.config.filename = Rails.env
+  config.webxml.application.config.filename = ENV['RACK_ENV']
 
   # Files to be included in the root of the webapp.
   # Application booter to use, one of :rack, :rails, or :merb (autodetected by default)
-  config.webxml.booter = :rails
+  config.webxml.booter = :rack
   config.public_html += FileList["META-INF/context.xml","public/**/*"]
 
   # Pathmaps for controlling how public HTML files are copied into the .war
   config.pathmaps.public_html = ["%{public/,}p"]
 
   # Value of RAILS_ENV for the webapp -- default as shown below
-  config.webxml.rails.env = ENV['RAILS_ENV'] || 'production'
   config.webxml.rack.env  = ENV['RACK_ENV']  || 'production'
 
   config.webxml.jruby.min.runtimes = 1
