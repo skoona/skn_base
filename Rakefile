@@ -10,6 +10,9 @@
 # desc 'Run all specs in spec directory'
 # RSpec::Core::RakeTask.new(:spec)
 
+require 'warbler'
+Warbler::Task.new
+
 namespace :assets do
   desc "Precompile the assets"
   task :precompile do

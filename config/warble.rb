@@ -47,7 +47,7 @@ Warbler::Config.new do |config|
 
   # Files to be included in the root of the webapp.
   # Application booter to use, one of :rack, :rails, or :merb (autodetected by default)
-  config.webxml.booter = :rack
+  # config.webxml.booter = :rack
   config.public_html += FileList["META-INF/context.xml","public/**/*"]
 
   # Pathmaps for controlling how public HTML files are copied into the .war
