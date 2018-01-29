@@ -9,14 +9,24 @@ I'm finding that most ruby web tools are as opinionated as Rails.  The differenc
 
 For now I will keep notes and comments here, until I get to a workable baseline.  *Baseline is now Complete*
 
+
+### Online Demo
+* [SknBase Live!](http://vserv.skoona.net:4000)
+* [SknServices Live!](http://vserv.skoona.net:8080)
+
+    *Demo Credentials*
+    username: `emtester`,
+    password: `demos`
+
+
 ## Progress
 Before engaging the advanced `Dry-RB` gems and other `Gems of Interest`.  I thought to code the basic app with minimal assistance from add-ins.  The overall structure of Roda is very flexible, so other than the normal scss/js struggle there were no surprises in the web-component portion; and more importantly, no imposition on business logic structure.
 
 User information is the only database requirement I have right now.  `Rom-DB` handled the task well even though I've not invested in creating a DB migration needed to create the database and table.  I'm using a PGSQL Dump backup of the Users table and Database from an existing demo application: `SknServices`.  As a result, `Rom-DB` is overkill for this task, `Sequel` would be the correct level technology, if I have no further needs for Database services.  But I have an interest in Rom-DB so it stays.
 
-`SknService` also offers and ContentAPI which I am using on the `Resources` page.
+`SknService` also offers a ContentAPI which I am using on the `Resources` page.
 
-Instead of using an advanced container and DI gem, I've started out using my `SknUtils` gem; since I was already using it for application settings.  This gem is a thread-safe wrapper over Ruby's Hash, with dot-notation, presence(?) testing, and nested deep-merge capabilities.  Since a hash can use any object/value as it's Key or Value variables, it works well as a global container for environment based application settings, caching, central/critical application-class instances.
+Instead of using an advanced container and DI gem, I've started out using my [SknUtils](https://skoona.github.io/skn_utils/) gem; since I was already using it for application settings.  This gem is a thread-safe wrapper over Ruby's Hash, with dot-notation, presence(?) testing, and nested deep-merge capabilities.  Since a hash can use any object/value as it's Key or Value variables, it works well as a global container for environment based application settings, caching, central/critical application-class instances.
 
 I have adopted the Command and CommandHandler pattern to contain the HTPP Request service used to call the ContentAPI of SknServices.  Commands encapsulate the request params, in a validateable command class, as input to the command handler which will invoke the related service.
 
@@ -26,6 +36,7 @@ Aside from DB migrations and increasing RSPec test coverage, I'm done with this 
 
 
 ### Gems of Interest
+* [SknServices](https://skoona.github.io/SknServices/)
 * [SknUtils](https://skoona.github.io/skn_utils/)
 * [Roda-i18n](https://github.com/kematzy/roda-i18n)
 * [Roda-Container](https://github.com/AMHOL/roda-container)
@@ -47,22 +58,18 @@ Aside from DB migrations and increasing RSPec test coverage, I'm done with this 
     * `Partial` answer is: `RubyGem` and `Roda.Plugin` file layouts.
 2. How does activities per-request factor into things like singletons, or Object lifecycles?
     * No Impact
-3. What survives each request, must there be singletons to hold AccessRegistry, Persistence, etc?
-    * DI Containers
-4. Ruby $LoadPath vs Bundler vs Application Source AutoLoad seem to be at odds, in some ways.
+3. Ruby $LoadPath vs Bundler vs Application Source AutoLoad seem to be at odds, in some ways.
     * Autoload is of little interest at this scale. Each Dir has a same-named rbfile that requires all its components
     * Bundler.setup and Bundler.require handle loading all gem for now; may change as I dig into RSpec testing.
-5. While the notion of (Roda) Sub-Apps is valid for large applications, it also serves to segment application source into domains.
+4. While the notion of (Roda) Sub-Apps is valid for large applications, it also serves to segment application source into domains.
     * A sub-app filesystem structure is relevant for the web interface, it becomes clumsy for Domains.
     * For now, I will use one single app with multiple routes to handle the web interface segmentation.
-6. Several plugin automatically require and instantiate other plugins on their own.  Each plugin has to be reviewed to understand its side effects or dependancies.
+5. Several plugin automatically require and instantiate other plugins on their own.  Each plugin has to be reviewed to understand its side effects or dependancies.
     * This is a pain to be experienced one time.  Middleware and Plugin order DOES MATTER.
-7. Require vs AutoLoad? `Autoload` would prevent loading the whole app when it's not needed during test or CLI operations.  However, `Require` does allow me to control what's loaded and any dependencies with greater clarity.
+6. Require vs AutoLoad? `Autoload` would prevent loading the whole app when it's not needed during test or CLI operations.  However, `Require` does allow me to control what's loaded and any dependencies with greater clarity.
     * Don't really care yet!  Using the Ruby Require and Require_Relative methods.
-8. Not sure about the lifecycle of critical objects in Roda yet.  How to create something that will survive the request/response cycle; like the database component.
+7. Not sure about the lifecycle of critical objects in Roda yet.  How to create something that will survive the request/response cycle; like the database component.
     * Again, DI Container maybe helpful.  I'm current using SknUtils::NestedResult class adapted to be a Global Container for regular yaml settings and holding application resources.
-9. Planning to switch from Bootstrap to Semantic-UI after a bit.
-    * Nope, not doing that.  Bootstrap is fine for this collection of Apps
 
 
 ### File Tree

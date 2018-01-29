@@ -7,8 +7,8 @@
 # ##
 # resources :profiles, only: :none do
 #   collection do
-#     get :api_in_action           :username
-#     get :api_get_demo_content_object
+#     get :api_in_action                   :username
+#     get :api_get_demo_content_object     :id, :username, :content_type
 #   end
 # end
 
@@ -26,14 +26,14 @@ module Services
 
       def call(cmd)
         model = @commands.key?(cmd.class) && cmd.valid? ? @commands[cmd.class].call(cmd) : @unknown
-        model = Services::Content::Models::Failure.new( model ) unless model[:success]
+        model = Models::Failure.new( model ) unless model[:success]
         duration = "%3.1f seconds" % (Time.now.getlocal.to_f - @_start_time.to_f)
         logger.info "#{self.class.name}##{__method__} Command: #{cmd.class.name.split('::').last}, Returned: #{model.class.name.split('::').last}, Status: #{model.success}, Duration: #{duration}"
         model
       rescue StandardError => e
         duration = "%3.1f seconds" % (Time.now.getlocal.to_f - @_start_time.to_f)
         logger.warn "#{self.class.name}##{__method__} Failure Request: Provider: #{@description}, klass=#{e.class.name}, cause=#{e.message}, Duration: #{duration}, Backtrace=#{e.backtrace[0..1]}"
-        Services::Content::Models::Failure.new({success: false, message: "#{e.class.name} => #{e.message}", payload: []})
+        Models::Failure.new({success: false, message: "#{e.message}, Duration: #{duration}", payload: []})
       end
 
     private
@@ -61,12 +61,18 @@ module Services
           cache_object(cmd.storage_key, resp)
         end
         Object.const_get(cmd.model).new( resp['package'] )
+      rescue StandardError => e
+        logger.warn "#{self.class.name}##{__method__} Failure Request: Provider: #{@description}, klass=#{e.class.name}, cause=#{e.message}, Backtrace=#{e.backtrace[0..1]}"
+        raise MetaDataRequestFailed, "#{@description}, #{e.class.name}:#{e.message}"
       end
 
       def resource_content(cmd)
         resp = request_content(cmd.uri)
         logger.info "#{__method__}: Returns => #{resp[:filename]} as: #{resp[:payload]}, with #{resp[:message]}"
         Object.const_get(cmd.model).new( resp )
+      rescue StandardError => e
+        logger.warn "#{self.class.name}##{__method__} Failure Request: Provider: #{@description}, klass=#{e.class.name}, cause=#{e.message}, Backtrace=#{e.backtrace[0..1]}"
+        raise ContentRequestFailed, "#{@description}, #{e.class.name}:#{e.message}"
       end
 
       def logger
@@ -113,7 +119,7 @@ module Services
         # content-disposition => inline; filename="Commission-WestBranch-0040.pdf"
         # x-request-id => f599bc98-4f8b-4e32-b296-9c8307ff4eaf
         real_filename = response['content-disposition'].scan(/filename=\"(.+)\"/).flatten.first
-        tmp_filename = './tmp/' + response['x-request-id'] + '.' + (real_filename.split('.').last || response['content-type'].split('/').last)
+        tmp_filename = './tmp/content/' + response['x-request-id'] + '.' + (real_filename.split('.').last || response['content-type'].split('/').last)
         IO.binwrite(tmp_filename, response.body)
         {
             success: true,

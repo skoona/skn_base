@@ -15,6 +15,12 @@ begin
   Bundler.require(:default, ENV['RACK_ENV'].to_sym) # Require all the gems for this environment
   SknSettings.load_config_basename!(ENV['RACK_ENV'] || 'development')
 
+  flist =  Dir['./tmp/content/*'] # remove prior downloads
+  unless flist.empty?
+    fcount = File.delete(*flist)
+    puts "TMP Folder Cleaner: Unlinked # #{fcount} files."
+  end
+
 rescue Bundler::BundlerError, StandardError => ex
   $stderr.puts ex.message
   if ex.is_a?(Bundler::BundlerError)
