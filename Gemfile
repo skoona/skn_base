@@ -3,9 +3,12 @@
 source "https://rubygems.org"
 
 # ruby "2.5.0"
-gem 'jruby-jars', '9.1.15.0'
-gem 'jruby-rack'
+platform :jruby do
+  gem 'jruby-jars', '9.1.15.0'
+  gem 'jruby-rack'
+end
 
+gem 'bundler', '~> 1.16'
 gem 'logging'
 
 # Web framework: Core
@@ -22,8 +25,8 @@ gem "roda-i18n"
 
 # Javascript Runtime Support
 gem 'execjs'
-gem "therubyracer", platform: [:mri, :ruby]
-# gem 'therubyrhino', platform: :jruby
+gem "therubyracer", platform: :ruby
+gem 'therubyrhino', platform: :jruby
 gem 'uglifier'
 
 gem 'sass'
@@ -53,9 +56,8 @@ gem 'mime-types'
 gem 'rake'
 
 # Persistence
-platform :mri do
-  gem 'pg'
-end
+gem 'pg', platform: :ruby
+
 
 gem 'rom'
 gem 'rom-sql'
@@ -69,7 +71,7 @@ gem 'warden'
 
 group :development do
   gem 'pry'
-  gem "racksh"
+  gem "racksh", require: false
 
   gem 'warbler', '>= 2.0', require: false
   gem 'yard'

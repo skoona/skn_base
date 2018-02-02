@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="JTR_ID" version="2.5"
+<web-app id="SKN_ID" version="2.5"
      xmlns="http://java.sun.com/xml/ns/j2ee"
      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" >
@@ -24,7 +24,7 @@
   </filter-mapping>
 
   <listener>
-    <listener-class><%= webxml.servlet_context_listener %></listener-class>
+    <listener-class>org.jruby.rack.rails.RailsServletContextListener</listener-class>
   </listener>
 
 <% if webxml.jndi then [webxml.jndi].flatten.each do |jndi| %>
@@ -36,4 +36,5 @@
     <res-sharing-scope>Shareable</res-sharing-scope>
   </resource-ref>
   <% end; end %>
+
 </web-app>

@@ -1,8 +1,13 @@
-#!/usr/bin/env ruby
-#
+# ##
 # File: ./config.ru
+#
+# encoding: UTF-8
+# rack.version: bundler
 
-require 'puma'
+$:.unshift(Dir.pwd)
+
+# require 'puma'
+
 require_relative "main/skn_base"
 
 app = case ENV['RACK_ENV']

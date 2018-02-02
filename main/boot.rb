@@ -2,19 +2,22 @@
 
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 
-%w[routes].each do |path_name|
-  codes = File.expand_path("../#{path_name}", __dir__)
-  $LOAD_PATH.unshift(codes) unless $LOAD_PATH.include?(codes)
-end
+# %w[routes].each do |path_name|
+#   codes = File.expand_path("../#{path_name}", __dir__)
+#   $LOAD_PATH.unshift(codes) unless $LOAD_PATH.include?(codes)
+# end
 
 begin
-  require 'bundler/setup' # Setup LoadPath for gems listed in the Gemfile.
+  require 'java'
+  require 'bundler'
+  # require 'bundler/setup' # Setup LoadPath for gems listed in the Gemfile.
   require_relative '../config/version'              # Skn::Version
   require "securerandom"                            # Augments User Security
 
-  Bundler.require(:default, ENV['RACK_ENV'].to_sym) # Require all the gems for this environment
+  # unless defined?($servlet_context)
+    Bundler.require #(:default, ENV['RACK_ENV'].to_sym) # Require all the gems for this environment
+  # end
 
-  require 'java'
   Dir['./lib/java/postgresql*.jar'].each do |jarfile|
     require File.expand_path(jarfile, File.dirname(".."))
   end
