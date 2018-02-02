@@ -11,7 +11,7 @@ For now I will keep notes and comments here, until I get to a workable baseline.
 
 
 ### Online Demo
-* [SknBase Live!](http://vserv.skoona.net:8585)
+* [SknBase Live!](http://vserv.skoona.net:4000)
 * [SknServices Live!](http://vserv.skoona.net:8080)
 
     *Demo Credentials*
