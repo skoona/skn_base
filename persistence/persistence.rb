@@ -2,6 +2,15 @@
 #
 
 require 'psych'  # force JRuby to load it's version of the standard library
+require "dry-types"
+require "dry-monads"
+
+unless defined?(JRuby)
+  require "pg"
+end
+
+require "rom"
+require "rom-sql"
 
 module Types
   include Dry::Types.module

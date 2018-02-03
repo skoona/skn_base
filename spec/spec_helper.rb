@@ -2,6 +2,7 @@ ENV['RACK_ENV'] = 'test'
 
 require 'simplecov'
 
+require "rack_session_access"
 require File.join(File.dirname(__FILE__), '..', 'main/skn_base')
 
 require 'rspec'

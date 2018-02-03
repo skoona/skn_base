@@ -2,25 +2,25 @@
 
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
 
-# %w[routes].each do |path_name|
-#   codes = File.expand_path("../#{path_name}", __dir__)
-#   $LOAD_PATH.unshift(codes) unless $LOAD_PATH.include?(codes)
-# end
-
+# ##
+# Setup Basic Configuration and Gem Loadpath
+#
 begin
   require 'java'
   require 'bundler'
-  # require 'bundler/setup' # Setup LoadPath for gems listed in the Gemfile.
+  require 'bundler/setup' # Setup LoadPath for gems listed in the Gemfile.
   require_relative '../config/version'              # Skn::Version
   require "securerandom"                            # Augments User Security
 
-  # unless defined?($servlet_context)
-    Bundler.require #(:default, ENV['RACK_ENV'].to_sym) # Require all the gems for this environment
-  # end
+  # Bundler.require #(:default, ENV['RACK_ENV'].to_sym) # Require all the gems for this environment
 
   Dir['./lib/java/postgresql*.jar'].each do |jarfile|
     require File.expand_path(jarfile, File.dirname(".."))
   end
+
+  require "concurrent"
+  require "skn_utils"
+  require "time_math"
 
   # Load application settings & JNDI Support
   require_relative 'mounted_paths'
@@ -44,7 +44,10 @@ rescue Bundler::BundlerError, StandardError => ex
   end
 end
 
-
+# ##
+# Setup Logger
+#
+require "logging"
 begin
   Logging.init(:debug, :info, :perf, :warn, :success, :error, :fatal)
   dpattern = Logging.layouts.pattern({ pattern: '%d %c:%-5l %m\n',
@@ -72,9 +75,24 @@ end
 
 
 begin
+  if defined?($servlet_context)
+    require "jruby-rack"
+  else
+    require "rack"
+  end
+  require 'rack/contrib'
+  require 'rack/protection'
+  require "warden"
+  require 'erb'
+  require 'tilt/pipeline'
+  require "roda"
+  require "r18n-core"
+  require "sass"
+
   require_relative '../persistence/persistence'
   require_relative '../strategy/strategy'
-  require_relative 'warden'
+  require_relative 'init_warden'
+
 
 rescue StandardError => ex
   $stderr.puts ex.message

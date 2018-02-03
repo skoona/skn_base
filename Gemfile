@@ -18,7 +18,7 @@ gem "roda"
 # Web framework: Html
 gem "tilt"
 gem "erubis"
-gem 'forme'
+# gem 'forme'
 gem 'roda-tags'
 gem "r18n-core"
 gem "roda-i18n"
@@ -57,8 +57,6 @@ gem 'rake'
 
 # Persistence
 gem 'pg', platform: :ruby
-
-
 gem 'rom'
 gem 'rom-sql'
 

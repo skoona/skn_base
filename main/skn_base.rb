@@ -90,7 +90,7 @@ module Skn
     plugin :symbol_views
     plugin :symbol_status
     plugin :content_for
-    plugin :forme
+    # plugin :forme
     plugin :tag_helpers        # includes :tag plugin, for HTML generation: https://github.com/kematzy/roda-tags/
     plugin :json
     plugin :i18n, :locale => ['en']

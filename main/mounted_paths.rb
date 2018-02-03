@@ -61,11 +61,11 @@ class << (MountedPaths = Object.new)
     real_key = key.to_sym unless key.kind_of? Symbol
 
     value = read_any_jndi_resource("#{APP_KEY}.#{real_key.to_s}")
-    value = read_any_jndi_resource(real_key) unless value.present?
+    value = read_any_jndi_resource(real_key) unless value
 
-    unless value.present?
+    unless value
       value = SknSettings.mountedPaths.platform[real_key]
-      value = eval("Settings.#{real_key.to_s}") rescue nil  unless value.present?
+      value = eval("Settings.#{real_key.to_s}") rescue nil  unless value
       debug_output "MountedPaths.#{__method__}() local configuration returns value=#{(real_key.to_s.include?("word") ? "[secured]" :  value.to_s)} for key=#{real_key.to_s}"
     end
 

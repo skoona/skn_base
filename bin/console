@@ -4,5 +4,6 @@
 
 
 require File.expand_path('../main/skn_base', __dir__)
+require "pry"
 
 Pry.start
