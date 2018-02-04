@@ -291,6 +291,9 @@ The PostgreSQL gem gave me trouble when brew updated to Version 10 of PostgreSQL
 $ bundle config build.pg --with-pg-config=/usr/local/Cellar/postgresql/10.1/bin/pg_config
 ```
 
+Ref: [This issue is causing warble to produce a warfile that cannot be started, manually changiung the sequel gem will resolve the problem](https://github.com/rom-rb/rom-sql/issues/240)
+File: sequel-5.5.0/lib/sequel/sql.rb 78 thru 98, remove #freeze method from #comparison_attrs
+
 
 ### Code Cache
 

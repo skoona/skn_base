@@ -20,7 +20,7 @@ Warbler::Config.new do |config|
   config.webxml.rack.env      = 'production'
   config.webxml.rackup.path   = 'WEB-INF/config.ru'
   config.public_html         += FileList["META-INF/context.xml","public/**/*"]
-  config.webxml.jndi          = 'jdbc/iseriesDataSourceRef'
+  config.webxml.jndi          = 'sknBaseDatasource'
   config.webxml.jruby.min.runtimes  = 1
   config.webxml.jruby.max.runtimes  = 1
   config.webxml.jruby.compat.version = "2.0"

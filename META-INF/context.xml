@@ -20,7 +20,7 @@
 
     <!-- Database jndi reference -->
     <ResourceLink
-            name="jdbc/sknBaseDatasource"
+            name="sknBaseDatasource"
             global="jdbc/sknBaseDB"
             type="javax.sql.DataSource" />
 

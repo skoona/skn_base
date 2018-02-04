@@ -24,6 +24,7 @@ begin
   # Load application settings & JNDI Support
   require_relative 'mounted_paths'
   runtime_config = MountedPaths.get_protected_resource('Packaging.configName')
+  ENV['RACK_ENV'] = runtime_config
   SknSettings.load_config_basename!(runtime_config)
 
   flist =  Dir['./tmp/content/*'] # remove prior downloads
@@ -59,12 +60,10 @@ begin
                                              :keep => 9,
                                              :layout => dpattern,
                                              :color_scheme => 'default' )
-  Logging.logger.root.level = (SknSettings.env.production? ? :info : :debug )
+  Logging.logger.root.level = (SknSettings.env.production? ? :debug : :debug )
   Logging.logger.root.appenders = (SknSettings.env.test? ? arolling : [astdout, arolling] )
 
   SknSettings.logger = Logging.logger['SKN']
-
-  # app.env[RACK_LOGGER] = SknSettings.logger
 
   SknSettings.logger.info "SknSettings Logger Setup Complete! loaded: #{SknSettings.env} DB-URL: #{SknSettings.postgresql.url}"
 rescue StandardError => e
