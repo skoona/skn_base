@@ -70,7 +70,6 @@ gem 'warden'
 group :development do
   gem 'pry'
   gem "racksh", require: false
-
   gem 'warbler', '>= 2.0', require: false
   gem 'yard'
   gem 'rdoc'

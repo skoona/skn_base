@@ -1,7 +1,5 @@
 # File: ./main/boot.rb
 
-ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../../Gemfile', __FILE__)
-
 # ##
 # Setup Basic Configuration and Gem Loadpath
 #
@@ -9,6 +7,7 @@ begin
   require 'java'
   require 'bundler'
   require 'bundler/setup' # Setup LoadPath for gems listed in the Gemfile.
+
   require_relative '../config/version'              # Skn::Version
   require "securerandom"                            # Augments User Security
 
@@ -75,11 +74,11 @@ end
 
 
 begin
-  if defined?($servlet_context)
-    require "jruby-rack"
-  else
-    require "rack"
-  end
+  # if defined?($servlet_context)
+  #   require "jruby-rack"
+  # else
+  #   require "rack"
+  # end
   require 'rack/contrib'
   require 'rack/protection'
   require "warden"

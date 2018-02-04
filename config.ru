@@ -2,7 +2,6 @@
 # File: ./config.ru
 #
 # encoding: UTF-8
-# rack.version: bundler
 
 $:.unshift(Dir.pwd)
 
