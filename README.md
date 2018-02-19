@@ -20,6 +20,10 @@ For now I will keep notes and comments here, until I get to a workable baseline.
 
 
 ## Progress
+
+#### Branch: JRuby-Master, JRuby-9.1.15.0 with Warble configuration to produce Tomcat Warfile
+#### Branch: master, Ruby-2.5.0
+
 Before engaging the advanced `Dry-RB` gems and other `Gems of Interest`.  I thought to code the basic app with minimal assistance from add-ins.  The overall structure of Roda is very flexible, so other than the normal scss/js struggle there were no surprises in the web-component portion; and more importantly, no imposition on business logic structure.
 
 User information is the only database requirement I have right now.  `Rom-DB` handled the task well even though I've not invested in creating a DB migration needed to create the database and table.  I'm using a PGSQL Dump backup of the Users table and Database from an existing demo application: `SknServices`.  As a result, `Rom-DB` is overkill for this task, `Sequel` would be the correct level technology, if I have no further needs for Database services.  But I have an interest in Rom-DB so it stays.

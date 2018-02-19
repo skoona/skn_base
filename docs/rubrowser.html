@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <title>Rubrowser</title>
+    <link media='all' rel='stylesheet'>
+    <style>html, body, .dependency_graph, .dependency_graph svg{
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    font: 10px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+circle {
+  fill: #fff;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+.circular {
+    stroke: #FF0000;
+}
+
+.fixed circle {
+  stroke-width: 3px;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+text.type{
+    font: 7px sans-serif;
+}
+
+.downlighted {
+    opacity: 0.1;
+}
+
+.type_ignored, .name_ignored{
+    display: none;
+}
+
+.highlighted, .name_highlighted, .type_highlighted{
+    fill: #008ef3;
+}
+
+.highlighted circle, .name_highlighted circle, .type_highlighted circle{
+    stroke: #008ef3;
+}
+
+.hide_namespace .namespace, .link.hide_relation{
+    display: none;
+}
+
+/* ============================ */
+/* Toolbox style */
+/* ============================ */
+
+.toolbox{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    max-height: 100%;
+    width: 200px;
+    background: white;
+    border-right: 1px solid #ddd;
+    overflow: auto;
+}
+
+.panel .title{
+    padding: 10px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: #eee;
+}
+
+.panel .title:hover{
+    background: #ddd;
+}
+
+.panel .content{
+    border-bottom: 1px solid #ddd;
+    padding: 5px;
+}
+
+.panel label{
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.panel textarea{
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: 100px;
+    padding: 0px;
+    border: 1px solid #ddd
+}
+
+.panel input[type=button],
+.panel input[type=range],
+.panel button{
+    width: 100%;
+    max-width: 100%;
+    display: block;
+}
+
+ul, ol{
+    list-style-position: inside;
+    white-space: nowrap;
+    margin: 0px;
+    padding-left: 0px;
+    max-width: 100%;
+    overflow: auto;
+}
+</style>
+  </head>
+  <body>
+    <div class='dependency_graph'>
+      <svg></svg>
+    </div>
+    <script src='https://unpkg.com/lodash@4.17.4/lodash.min.js' type='text/javascript'></script>
+    <script src='https://unpkg.com/d3@4.13.0/build/d3.min.js' type='text/javascript'></script>
+    <script src='https://unpkg.com/jquery@3.3.1/dist/jquery.min.js' type='text/javascript'></script>
+    <script type='text/javascript'>
+     var data = {"definitions":[{"type":"Class","namespace":"Skn::Version","circular":false,"file":"/Users/jscott/rCommunity/SknBase/config/version.rb","line":3,"lines":9},{"type":"Module","namespace":"Skn","circular":false,"file":"/Users/jscott/rCommunity/SknBase/config/version.rb","line":2,"lines":14},{"type":"Class","namespace":"Warden::SessionSerializer","circular":false,"file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","line":5,"lines":22},{"type":"Module","namespace":"Warden::Mixins::Common","circular":false,"file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","line":162,"lines":46},{"type":"Class","namespace":"Skn::SknBase","circular":false,"file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","line":7,"lines":135},{"type":"Module","namespace":"Skn","circular":false,"file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","line":6,"lines":137},{"type":"Class","namespace":"Relations::Users","circular":false,"file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","line":10,"lines":35},{"type":"Module","namespace":"Relations","circular":false,"file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","line":8,"lines":39},{"type":"Class","namespace":"Entity::User","circular":false,"file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","line":7,"lines":24},{"type":"Module","namespace":"Entity","circular":false,"file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","line":5,"lines":28},{"type":"Class","namespace":"Repositories::Users","circular":false,"file":"/Users/jscott/rCommunity/SknBase/persistence/repositories/users.rb","line":5,"lines":28},{"type":"Module","namespace":"Repositories","circular":false,"file":"/Users/jscott/rCommunity/SknBase/persistence/repositories/users.rb","line":3,"lines":32},{"type":"Module","namespace":"Types","circular":false,"file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","line":6,"lines":10},{"type":"Module","namespace":"Skn","circular":false,"file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","line":21,"lines":21},{"type":"Class","namespace":"Skn::SknBase","circular":false,"file":"/Users/jscott/rCommunity/SknBase/routes/profiles.rb","line":4,"lines":21},{"type":"Module","namespace":"Skn","circular":false,"file":"/Users/jscott/rCommunity/SknBase/routes/profiles.rb","line":3,"lines":23},{"type":"Class","namespace":"Skn::SknBase","circular":false,"file":"/Users/jscott/rCommunity/SknBase/routes/sessions.rb","line":4,"lines":37},{"type":"Module","namespace":"Skn","circular":false,"file":"/Users/jscott/rCommunity/SknBase/routes/sessions.rb","line":3,"lines":39},{"type":"Class","namespace":"UserProfile","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile.rb","line":6,"lines":48},{"type":"Module","namespace":"Authentication::CacheProvider::CacheClassMethods","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/cache_provider.rb","line":12,"lines":36},{"type":"Module","namespace":"Authentication::CacheProvider","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/cache_provider.rb","line":6,"lines":65},{"type":"Module","namespace":"Authentication","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/cache_provider.rb","line":5,"lines":67},{"type":"Class","namespace":"Authentication::UserProfileAuthenticator","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","line":7,"lines":99},{"type":"Module","namespace":"Authentication","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","line":6,"lines":101},{"type":"Class","namespace":"Authentication::ObjectStorageContainer","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/object_storage_container.rb","line":10,"lines":60},{"type":"Module","namespace":"Authentication","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/object_storage_container.rb","line":9,"lines":62},{"type":"Module","namespace":"Authentication::UserProfileKeyEncrypt::EncryptClassMethods","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_key_encrypt.rb","line":14,"lines":6},{"type":"Module","namespace":"Authentication::UserProfileKeyEncrypt","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_key_encrypt.rb","line":8,"lines":45},{"type":"Module","namespace":"Authentication","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_key_encrypt.rb","line":7,"lines":47},{"type":"Class","namespace":"Services::Content::Models::Resources","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/resources.rb","line":11,"lines":3},{"type":"Module","namespace":"Services::Content::Models","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/resources.rb","line":9,"lines":7},{"type":"Module","namespace":"Services::Content","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/resources.rb","line":8,"lines":9},{"type":"Module","namespace":"Services","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/resources.rb","line":7,"lines":11},{"type":"Class","namespace":"Services::Content::Models::Failure","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/failure.rb","line":16,"lines":3},{"type":"Module","namespace":"Services::Content::Models","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/failure.rb","line":14,"lines":7},{"type":"Module","namespace":"Services::Content","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/failure.rb","line":13,"lines":9},{"type":"Module","namespace":"Services","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/failure.rb","line":12,"lines":11},{"type":"Class","namespace":"Services::Content::Models::Content","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/content.rb","line":20,"lines":3},{"type":"Module","namespace":"Services::Content::Models","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/content.rb","line":18,"lines":7},{"type":"Module","namespace":"Services::Content","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/content.rb","line":17,"lines":9},{"type":"Module","namespace":"Services","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/content.rb","line":16,"lines":11},{"type":"Class","namespace":"MetaDataRequestFailed","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/content.rb","line":8,"lines":2},{"type":"Class","namespace":"ContentRequestFailed","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/content.rb","line":10,"lines":2},{"type":"Class","namespace":"CommandFailedValidation","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/content.rb","line":12,"lines":2},{"type":"Class","namespace":"Services::Content::Commands::RetrieveResourceContent","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_resource_content.rb","line":11,"lines":38},{"type":"Module","namespace":"Services::Content::Commands","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_resource_content.rb","line":9,"lines":42},{"type":"Module","namespace":"Services::Content","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_resource_content.rb","line":8,"lines":44},{"type":"Module","namespace":"Services","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_resource_content.rb","line":7,"lines":46},{"type":"Class","namespace":"Services::Content::Commands::RetrieveAvailableResources","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_available_resources.rb","line":12,"lines":31},{"type":"Module","namespace":"Services::Content::Commands","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_available_resources.rb","line":10,"lines":35},{"type":"Module","namespace":"Services::Content","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_available_resources.rb","line":9,"lines":37},{"type":"Module","namespace":"Services","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_available_resources.rb","line":8,"lines":39},{"type":"Class","namespace":"Services::Content::CommandHandler","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","line":20,"lines":116},{"type":"Module","namespace":"Services::Content","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","line":18,"lines":120},{"type":"Module","namespace":"Services","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","line":17,"lines":122},{"type":"Class","namespace":"Services::ServicesRegistry","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/services_registry.rb","line":11,"lines":29},{"type":"Module","namespace":"Services","circular":false,"file":"/Users/jscott/rCommunity/SknBase/strategy/services/services_registry.rb","line":10,"lines":31},{"type":"Class","namespace":"Skn::SknBase","circular":false,"file":"/Users/jscott/rCommunity/SknBase/views/helpers/warden_helpers.rb","line":4,"lines":68},{"type":"Module","namespace":"Skn","circular":false,"file":"/Users/jscott/rCommunity/SknBase/views/helpers/warden_helpers.rb","line":3,"lines":70},{"type":"Class","namespace":"Skn::SknBase","circular":false,"file":"/Users/jscott/rCommunity/SknBase/views/helpers/html_helpers.rb","line":4,"lines":131},{"type":"Module","namespace":"Skn","circular":false,"file":"/Users/jscott/rCommunity/SknBase/views/helpers/html_helpers.rb","line":3,"lines":133}],"relations":[{"type":"Base","namespace":"ENV","resolved_namespace":"ENV","caller":"","file":"/Users/jscott/rCommunity/SknBase/config.ru","circular":false,"line":8},{"type":"Base","namespace":"Skn::SknBase","resolved_namespace":"Skn::SknBase","caller":"","file":"/Users/jscott/rCommunity/SknBase/config.ru","circular":false,"line":10},{"type":"Base","namespace":"Skn::SknBase","resolved_namespace":"Skn::SknBase","caller":"","file":"/Users/jscott/rCommunity/SknBase/config.ru","circular":false,"line":12},{"type":"Base","namespace":"ENV","resolved_namespace":"ENV","caller":"","file":"/Users/jscott/rCommunity/SknBase/config/puma.rb","circular":false,"line":25},{"type":"Base","namespace":"ENV","resolved_namespace":"ENV","caller":"","file":"/Users/jscott/rCommunity/SknBase/config/puma.rb","circular":false,"line":28},{"type":"Base","namespace":"MAJOR","resolved_namespace":"MAJOR","caller":"Skn::Version","file":"/Users/jscott/rCommunity/SknBase/config/version.rb","circular":false,"line":9},{"type":"Base","namespace":"MINOR","resolved_namespace":"MINOR","caller":"Skn::Version","file":"/Users/jscott/rCommunity/SknBase/config/version.rb","circular":false,"line":9},{"type":"Base","namespace":"PATCH","resolved_namespace":"PATCH","caller":"Skn::Version","file":"/Users/jscott/rCommunity/SknBase/config/version.rb","circular":false,"line":9},{"type":"Base","namespace":"Version","resolved_namespace":"Skn::Version","caller":"Skn","file":"/Users/jscott/rCommunity/SknBase/config/version.rb","circular":false,"line":14},{"type":"Base","namespace":"Class","resolved_namespace":"Class","caller":"Warden::SessionSerializer","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":19},{"type":"Base","namespace":"String","resolved_namespace":"String","caller":"Warden::SessionSerializer","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":21},{"type":"Base","namespace":"Symbol","resolved_namespace":"Symbol","caller":"Warden::SessionSerializer","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":21},{"type":"Base","namespace":"Object","resolved_namespace":"Object","caller":"Warden::SessionSerializer","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":22},{"type":"Base","namespace":"Warden::Strategies","resolved_namespace":"Warden::Strategies","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":29},{"type":"Base","namespace":"Rack::Auth::Basic::Request","resolved_namespace":"Rack::Auth::Basic::Request","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":31},{"type":"Base","namespace":"UserProfile","resolved_namespace":"UserProfile","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":41},{"type":"Base","namespace":"Warden::Strategies","resolved_namespace":"Warden::Strategies","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":51},{"type":"Base","namespace":"UserProfile","resolved_namespace":"UserProfile","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":59},{"type":"Base","namespace":"Warden::Strategies","resolved_namespace":"Warden::Strategies","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":69},{"type":"Base","namespace":"UserProfile","resolved_namespace":"UserProfile","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":81},{"type":"Base","namespace":"Warden::Manager","resolved_namespace":"Warden::Manager","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":98},{"type":"Base","namespace":"Warden::Manager","resolved_namespace":"Warden::Manager","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":118},{"type":"Base","namespace":"Warden::Manager","resolved_namespace":"Warden::Manager","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":148},{"type":"Base","namespace":"Array","resolved_namespace":"Array","caller":"Warden::Mixins::Common","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":170},{"type":"Base","namespace":"String","resolved_namespace":"String","caller":"Warden::Mixins::Common","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":172},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"Warden::Mixins::Common","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":184},{"type":"Base","namespace":"TimeMath","resolved_namespace":"TimeMath","caller":"Warden::Mixins::Common","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":200},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"Warden::Mixins::Common","file":"/Users/jscott/rCommunity/SknBase/main/warden.rb","circular":false,"line":200},{"type":"Base","namespace":"ENV","resolved_namespace":"ENV","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":3},{"type":"Base","namespace":"File","resolved_namespace":"File","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":3},{"type":"Base","namespace":"File","resolved_namespace":"File","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":6},{"type":"Base","namespace":"Bundler","resolved_namespace":"Bundler","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":15},{"type":"Base","namespace":"ENV","resolved_namespace":"ENV","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":15},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":16},{"type":"Base","namespace":"ENV","resolved_namespace":"ENV","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":16},{"type":"Base","namespace":"Dir","resolved_namespace":"Dir","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":18},{"type":"Base","namespace":"File","resolved_namespace":"File","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":20},{"type":"Base","namespace":"Bundler::BundlerError","resolved_namespace":"Bundler::BundlerError","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":24},{"type":"Base","namespace":"StandardError","resolved_namespace":"StandardError","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":24},{"type":"Base","namespace":"Bundler::BundlerError","resolved_namespace":"Bundler::BundlerError","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":26},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":37},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":38},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":40},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":41},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":42},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":48},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":48},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":49},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":49},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":51},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":51},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":55},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":55},{"type":"Base","namespace":"StandardError","resolved_namespace":"StandardError","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":56},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":57},{"type":"Base","namespace":"Logger","resolved_namespace":"Logger","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":57},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":58},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":58},{"type":"Base","namespace":"StandardError","resolved_namespace":"StandardError","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/boot.rb","circular":false,"line":67},{"type":"Base","namespace":"Roda","resolved_namespace":"Roda","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":7},{"type":"Base","namespace":"Rack::CommonLogger","resolved_namespace":"Rack::CommonLogger","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":11},{"type":"Base","namespace":"Rack::Reloader","resolved_namespace":"Rack::Reloader","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":12},{"type":"Base","namespace":"Rack::Cookies","resolved_namespace":"Rack::Cookies","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":14},{"type":"Base","namespace":"Rack::Session::Cookie","resolved_namespace":"Rack::Session::Cookie","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":15},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":16},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":17},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":18},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":22},{"type":"Base","namespace":"RackSessionAccess::Middleware","resolved_namespace":"RackSessionAccess::Middleware","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":22},{"type":"Base","namespace":"Warden::Manager","resolved_namespace":"Warden::Manager","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":24},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":32},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":33},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":34},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":35},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":35},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":36},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":37},{"type":"Base","namespace":"Rack::MethodOverride","resolved_namespace":"Rack::MethodOverride","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":40},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":42},{"type":"Base","namespace":"Rack::Protection","resolved_namespace":"Rack::Protection","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":42},{"type":"Base","namespace":"Rack::ShowExceptions","resolved_namespace":"Rack::ShowExceptions","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":44},{"type":"Base","namespace":"Rack::NestedParams","resolved_namespace":"Rack::NestedParams","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":45},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":48},{"type":"Base","namespace":"Tilt","resolved_namespace":"Tilt","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":61},{"type":"Base","namespace":"File","resolved_namespace":"File","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":71},{"type":"Base","namespace":"File","resolved_namespace":"File","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":75},{"type":"Base","namespace":"Dir","resolved_namespace":"Dir","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":84},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":86},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":110},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":121},{"type":"Base","namespace":"Dir","resolved_namespace":"Dir","caller":"","file":"/Users/jscott/rCommunity/SknBase/main/skn_base.rb","circular":false,"line":145},{"type":"Base","namespace":"ROM::Relation","resolved_namespace":"ROM::Relation","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":10},{"type":"Base","namespace":"Types::Serial","resolved_namespace":"Types::Serial","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":13},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":14},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":15},{"type":"Base","namespace":"::Types::Email","resolved_namespace":"Types::Email","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":16},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":17},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":18},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":19},{"type":"Base","namespace":"Types::Strict::Time","resolved_namespace":"Types::Strict::Time","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":20},{"type":"Base","namespace":"::Types::SerializedArrayWrite","resolved_namespace":"Types::SerializedArrayWrite","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":21},{"type":"Base","namespace":"::Types::SerializedArrayRead","resolved_namespace":"Types::SerializedArrayRead","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":21},{"type":"Base","namespace":"::Types::SerializedArrayWrite","resolved_namespace":"Types::SerializedArrayWrite","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":22},{"type":"Base","namespace":"::Types::SerializedArrayRead","resolved_namespace":"Types::SerializedArrayRead","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":22},{"type":"Base","namespace":"Types::Strict::Bool","resolved_namespace":"Types::Strict::Bool","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":23},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":24},{"type":"Base","namespace":"Types::Strict::Time","resolved_namespace":"Types::Strict::Time","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":25},{"type":"Base","namespace":"Types::Strict::Time","resolved_namespace":"Types::Strict::Time","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":26},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":27},{"type":"Base","namespace":"::Types::SerializedArrayWrite","resolved_namespace":"Types::SerializedArrayWrite","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":28},{"type":"Base","namespace":"::Types::SerializedArrayRead","resolved_namespace":"Types::SerializedArrayRead","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":28},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":29},{"type":"Base","namespace":"::Types::SerializedArrayWrite","resolved_namespace":"Types::SerializedArrayWrite","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":30},{"type":"Base","namespace":"::Types::SerializedArrayRead","resolved_namespace":"Types::SerializedArrayRead","caller":"Relations::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/relations/users.rb","circular":false,"line":30},{"type":"Base","namespace":"ROM::Struct","resolved_namespace":"ROM::Struct","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":7},{"type":"Base","namespace":"Types::Strict::Int","resolved_namespace":"Types::Strict::Int","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":8},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":9},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":10},{"type":"Base","namespace":"::Types::Email","resolved_namespace":"Types::Email","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":11},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":12},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":13},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":14},{"type":"Base","namespace":"Types::Strict::Time","resolved_namespace":"Types::Strict::Time","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":15},{"type":"Base","namespace":"Types::Strict::Array","resolved_namespace":"Types::Strict::Array","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":16},{"type":"Base","namespace":"Types::Strict::Array","resolved_namespace":"Types::Strict::Array","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":17},{"type":"Base","namespace":"Types::Strict::Bool","resolved_namespace":"Types::Strict::Bool","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":18},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":19},{"type":"Base","namespace":"Types::Strict::Time","resolved_namespace":"Types::Strict::Time","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":20},{"type":"Base","namespace":"Types::Strict::Time","resolved_namespace":"Types::Strict::Time","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":21},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":22},{"type":"Base","namespace":"Types::Strict::Array","resolved_namespace":"Types::Strict::Array","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":23},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":24},{"type":"Base","namespace":"Types::Strict::Array","resolved_namespace":"Types::Strict::Array","caller":"Entity::User","file":"/Users/jscott/rCommunity/SknBase/persistence/entity/user.rb","circular":false,"line":25},{"type":"Base","namespace":"ROM::Repository","resolved_namespace":"ROM::Repository","caller":"Repositories::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/repositories/users.rb","circular":false,"line":5},{"type":"Base","namespace":"Entity","resolved_namespace":"Entity","caller":"Repositories::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/repositories/users.rb","circular":false,"line":6},{"type":"Base","namespace":"Entity::User","resolved_namespace":"Entity::User","caller":"Repositories::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/repositories/users.rb","circular":false,"line":9},{"type":"Base","namespace":"Entity::User","resolved_namespace":"Entity::User","caller":"Repositories::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/repositories/users.rb","circular":false,"line":13},{"type":"Base","namespace":"Entity::User","resolved_namespace":"Entity::User","caller":"Repositories::Users","file":"/Users/jscott/rCommunity/SknBase/persistence/repositories/users.rb","circular":false,"line":21},{"type":"Base","namespace":"Dry::Types","resolved_namespace":"Dry::Types","caller":"Types","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":7},{"type":"Base","namespace":"Dry::Types","resolved_namespace":"Dry::Types","caller":"Types","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":9},{"type":"Base","namespace":"String","resolved_namespace":"String","caller":"Types","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":11},{"type":"Base","namespace":"Types","resolved_namespace":"Types","caller":"Types","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":12},{"type":"Base","namespace":"Types","resolved_namespace":"Types","caller":"Types","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":12},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Types","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":12},{"type":"Base","namespace":"Psych","resolved_namespace":"Psych","caller":"Types","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":12},{"type":"Base","namespace":"Types","resolved_namespace":"Types","caller":"Types","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":13},{"type":"Base","namespace":"Types::Strict::String","resolved_namespace":"Types::Strict::String","caller":"Types","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":13},{"type":"Base","namespace":"Psych","resolved_namespace":"Psych","caller":"Types","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":13},{"type":"Base","namespace":"Psych","resolved_namespace":"Psych","caller":"Types","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":13},{"type":"Base","namespace":"ROM::Configuration","resolved_namespace":"ROM::Configuration","caller":"Skn","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":30},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":30},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":31},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":32},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"Skn","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":34},{"type":"Base","namespace":"Relations::Users","resolved_namespace":"Relations::Users","caller":"Skn","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":36},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":39},{"type":"Base","namespace":"ROM","resolved_namespace":"ROM","caller":"Skn","file":"/Users/jscott/rCommunity/SknBase/persistence/persistence.rb","circular":false,"line":39},{"type":"Base","namespace":"Authentication::UserProfileAuthenticator","resolved_namespace":"Authentication::UserProfileAuthenticator","caller":"UserProfile","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile.rb","circular":false,"line":6},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"UserProfile","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile.rb","circular":false,"line":13},{"type":"Base","namespace":"CacheClassMethods","resolved_namespace":"Authentication::CacheProvider::CacheClassMethods","caller":"Authentication::CacheProvider","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/cache_provider.rb","circular":false,"line":9},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"Authentication::CacheProvider::CacheClassMethods","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/cache_provider.rb","circular":false,"line":38},{"type":"Base","namespace":"::SknSettings","resolved_namespace":"SknSettings","caller":"Authentication::CacheProvider::CacheClassMethods","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/cache_provider.rb","circular":false,"line":38},{"type":"Base","namespace":"::Authentication::ObjectStorageContainer","resolved_namespace":"Authentication::ObjectStorageContainer","caller":"Authentication::CacheProvider::CacheClassMethods","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/cache_provider.rb","circular":false,"line":45},{"type":"Base","namespace":"::Authentication::ObjectStorageContainer","resolved_namespace":"Authentication::ObjectStorageContainer","caller":"Authentication::CacheProvider","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/cache_provider.rb","circular":false,"line":63},{"type":"Base","namespace":"::Authentication::ObjectStorageContainer","resolved_namespace":"Authentication::ObjectStorageContainer","caller":"Authentication::CacheProvider","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/cache_provider.rb","circular":false,"line":67},{"type":"Base","namespace":"CacheProvider","resolved_namespace":"Authentication::CacheProvider","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":9},{"type":"Base","namespace":"UserProfileKeyEncrypt","resolved_namespace":"Authentication::UserProfileKeyEncrypt","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":10},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":32},{"type":"Base","namespace":"Repositories::Users","resolved_namespace":"Repositories::Users","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":64},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":64},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":73},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":84},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":92},{"type":"Base","namespace":"::SknSettings","resolved_namespace":"SknSettings","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":92},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":99},{"type":"Base","namespace":"TimeMath","resolved_namespace":"TimeMath","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":100},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"Authentication::UserProfileAuthenticator","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_authenticator.rb","circular":false,"line":100},{"type":"Base","namespace":"Singleton","resolved_namespace":"Singleton","caller":"Authentication::ObjectStorageContainer","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/object_storage_container.rb","circular":false,"line":11},{"type":"Base","namespace":"Concurrent::Hash","resolved_namespace":"Concurrent::Hash","caller":"Authentication::ObjectStorageContainer","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/object_storage_container.rb","circular":false,"line":14},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Authentication::ObjectStorageContainer","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/object_storage_container.rb","circular":false,"line":15},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"Authentication::ObjectStorageContainer","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/object_storage_container.rb","circular":false,"line":47},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"Authentication::ObjectStorageContainer","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/object_storage_container.rb","circular":false,"line":52},{"type":"Base","namespace":"TimeMath","resolved_namespace":"TimeMath","caller":"Authentication::ObjectStorageContainer","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/object_storage_container.rb","circular":false,"line":59},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"Authentication::ObjectStorageContainer","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/object_storage_container.rb","circular":false,"line":59},{"type":"Base","namespace":"EncryptClassMethods","resolved_namespace":"Authentication::UserProfileKeyEncrypt::EncryptClassMethods","caller":"Authentication::UserProfileKeyEncrypt","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_key_encrypt.rb","circular":false,"line":11},{"type":"Base","namespace":"BCrypt::Password","resolved_namespace":"BCrypt::Password","caller":"Authentication::UserProfileKeyEncrypt::EncryptClassMethods","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_key_encrypt.rb","circular":false,"line":17},{"type":"Base","namespace":"SecureRandom","resolved_namespace":"SecureRandom","caller":"Authentication::UserProfileKeyEncrypt","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_key_encrypt.rb","circular":false,"line":40},{"type":"Base","namespace":"SecureRandom","resolved_namespace":"SecureRandom","caller":"Authentication::UserProfileKeyEncrypt","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_key_encrypt.rb","circular":false,"line":44},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Authentication::UserProfileKeyEncrypt","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_key_encrypt.rb","circular":false,"line":48},{"type":"Base","namespace":"BCrypt::Password","resolved_namespace":"BCrypt::Password","caller":"Authentication::UserProfileKeyEncrypt","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_key_encrypt.rb","circular":false,"line":49},{"type":"Base","namespace":"BCrypt::Engine::MIN_COST","resolved_namespace":"BCrypt::Engine::MIN_COST","caller":"Authentication::UserProfileKeyEncrypt","file":"/Users/jscott/rCommunity/SknBase/strategy/authentication/user_profile_key_encrypt.rb","circular":false,"line":49},{"type":"Base","namespace":"SknUtils::NestedResult","resolved_namespace":"SknUtils::NestedResult","caller":"Services::Content::Models::Resources","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/resources.rb","circular":false,"line":11},{"type":"Base","namespace":"SknUtils::NestedResult","resolved_namespace":"SknUtils::NestedResult","caller":"Services::Content::Models::Failure","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/failure.rb","circular":false,"line":16},{"type":"Base","namespace":"SknUtils::NestedResult","resolved_namespace":"SknUtils::NestedResult","caller":"Services::Content::Models::Content","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/models/content.rb","circular":false,"line":20},{"type":"Base","namespace":"StandardError","resolved_namespace":"StandardError","caller":"MetaDataRequestFailed","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/content.rb","circular":false,"line":8},{"type":"Base","namespace":"StandardError","resolved_namespace":"StandardError","caller":"ContentRequestFailed","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/content.rb","circular":false,"line":10},{"type":"Base","namespace":"StandardError","resolved_namespace":"StandardError","caller":"CommandFailedValidation","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/content.rb","circular":false,"line":12},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Services::Content::Commands::RetrieveResourceContent","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_resource_content.rb","circular":false,"line":21},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Services::Content::Commands::RetrieveResourceContent","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_resource_content.rb","circular":false,"line":22},{"type":"Base","namespace":"URI","resolved_namespace":"URI","caller":"Services::Content::Commands::RetrieveResourceContent","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_resource_content.rb","circular":false,"line":28},{"type":"Base","namespace":"CommandFailedValidation","resolved_namespace":"CommandFailedValidation","caller":"Services::Content::Commands::RetrieveResourceContent","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_resource_content.rb","circular":false,"line":32},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Services::Content::Commands::RetrieveAvailableResources","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_available_resources.rb","circular":false,"line":20},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Services::Content::Commands::RetrieveAvailableResources","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_available_resources.rb","circular":false,"line":21},{"type":"Base","namespace":"URI","resolved_namespace":"URI","caller":"Services::Content::Commands::RetrieveAvailableResources","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_available_resources.rb","circular":false,"line":22},{"type":"Base","namespace":"CommandFailedValidation","resolved_namespace":"CommandFailedValidation","caller":"Services::Content::Commands::RetrieveAvailableResources","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/commands/retrieve_available_resources.rb","circular":false,"line":26},{"type":"Base","namespace":"Authentication::CacheProvider","resolved_namespace":"Authentication::CacheProvider","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":21},{"type":"Base","namespace":"Models::Failure","resolved_namespace":"Services::Content::Models::Failure","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":29},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":30},{"type":"Base","namespace":"StandardError","resolved_namespace":"StandardError","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":33},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":34},{"type":"Base","namespace":"Models::Failure","resolved_namespace":"Services::Content::Models::Failure","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":36},{"type":"Base","namespace":"Time","resolved_namespace":"Time","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":42},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":43},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":44},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":45},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":46},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":47},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":48},{"type":"Base","namespace":"Services::Content::Commands::RetrieveAvailableResources","resolved_namespace":"Services::Content::Commands::RetrieveAvailableResources","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":50},{"type":"Base","namespace":"Services::Content::Commands::RetrieveResourceContent","resolved_namespace":"Services::Content::Commands::RetrieveResourceContent","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":51},{"type":"Base","namespace":"Object","resolved_namespace":"Object","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":63},{"type":"Base","namespace":"StandardError","resolved_namespace":"StandardError","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":64},{"type":"Base","namespace":"MetaDataRequestFailed","resolved_namespace":"MetaDataRequestFailed","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":66},{"type":"Base","namespace":"Object","resolved_namespace":"Object","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":72},{"type":"Base","namespace":"StandardError","resolved_namespace":"StandardError","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":73},{"type":"Base","namespace":"ContentRequestFailed","resolved_namespace":"ContentRequestFailed","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":75},{"type":"Base","namespace":"Logging","resolved_namespace":"Logging","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":79},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":79},{"type":"Base","namespace":"JSON","resolved_namespace":"JSON","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":83},{"type":"Base","namespace":"Net::HTTP::Get","resolved_namespace":"Net::HTTP::Get","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":91},{"type":"Base","namespace":"Net::HTTP","resolved_namespace":"Net::HTTP","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":97},{"type":"Base","namespace":"Net::HTTPClientError","resolved_namespace":"Net::HTTPClientError","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":103},{"type":"Base","namespace":"Net::HTTPServerError","resolved_namespace":"Net::HTTPServerError","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":103},{"type":"Base","namespace":"ContentRequestFailed","resolved_namespace":"ContentRequestFailed","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":104},{"type":"Base","namespace":"IO","resolved_namespace":"IO","caller":"Services::Content::CommandHandler","file":"/Users/jscott/rCommunity/SknBase/strategy/services/content/command_handler.rb","circular":false,"line":123},{"type":"Base","namespace":"ArgumentError","resolved_namespace":"ArgumentError","caller":"Services::ServicesRegistry","file":"/Users/jscott/rCommunity/SknBase/strategy/services/services_registry.rb","circular":false,"line":18},{"type":"Base","namespace":"Content::CommandHandler","resolved_namespace":"Services::Content::CommandHandler","caller":"Services::ServicesRegistry","file":"/Users/jscott/rCommunity/SknBase/strategy/services/services_registry.rb","circular":false,"line":23},{"type":"Base","namespace":"Content::Commands::RetrieveAvailableResources","resolved_namespace":"Services::Content::Commands::RetrieveAvailableResources","caller":"Services::ServicesRegistry","file":"/Users/jscott/rCommunity/SknBase/strategy/services/services_registry.rb","circular":false,"line":24},{"type":"Base","namespace":"Content::CommandHandler","resolved_namespace":"Services::Content::CommandHandler","caller":"Services::ServicesRegistry","file":"/Users/jscott/rCommunity/SknBase/strategy/services/services_registry.rb","circular":false,"line":30},{"type":"Base","namespace":"Content::Commands::RetrieveResourceContent","resolved_namespace":"Services::Content::Commands::RetrieveResourceContent","caller":"Services::ServicesRegistry","file":"/Users/jscott/rCommunity/SknBase/strategy/services/services_registry.rb","circular":false,"line":31},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/views/helpers/warden_helpers.rb","circular":false,"line":30},{"type":"Base","namespace":"SknSettings","resolved_namespace":"SknSettings","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/views/helpers/warden_helpers.rb","circular":false,"line":38},{"type":"Base","namespace":"Services::ServicesRegistry","resolved_namespace":"Services::ServicesRegistry","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/views/helpers/html_helpers.rb","circular":false,"line":7},{"type":"Base","namespace":"Rack::Utils","resolved_namespace":"Rack::Utils","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/views/helpers/html_helpers.rb","circular":false,"line":16},{"type":"Base","namespace":"IO","resolved_namespace":"IO","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/views/helpers/html_helpers.rb","circular":false,"line":29},{"type":"Base","namespace":"Array","resolved_namespace":"Array","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/views/helpers/html_helpers.rb","circular":false,"line":61},{"type":"Base","namespace":"Array","resolved_namespace":"Array","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/views/helpers/html_helpers.rb","circular":false,"line":114},{"type":"Base","namespace":"String","resolved_namespace":"String","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/views/helpers/html_helpers.rb","circular":false,"line":116},{"type":"Base","namespace":"Array","resolved_namespace":"Array","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/views/helpers/html_helpers.rb","circular":false,"line":124},{"type":"Base","namespace":"String","resolved_namespace":"String","caller":"Skn::SknBase","file":"/Users/jscott/rCommunity/SknBase/views/helpers/html_helpers.rb","circular":false,"line":126}]}
+    </script>
+    <script type='text/javascript'>var classForCircular = function(d) {
+  return d.circular ? 'circular' : '';
+};
+
+var svg = d3.select(".dependency_graph svg"),
+    $svg = $('.dependency_graph svg'),
+    width = $svg.width(),
+    height = $svg.height(),
+    drag = d3.drag()
+    .on("start", dragstarted)
+    .on("drag", dragged)
+    .on("end", dragended),
+    dup_definitions = data.definitions.map(function(d){ return {id: d.namespace, type: d.type, lines: d.lines, circular: d.circular }; }),
+    definitions = _(dup_definitions).groupBy('id').map(function(group) {
+      return {
+        id: group[0].id,
+        type: group[0].type,
+        lines: _(group).sumBy('lines'),
+        circular: group[0].circular
+      };
+    }).value(),
+    namespaces = definitions.map(function(d){ return d.id; }),
+    relations = data.relations.map(function(d){ return {source: d.caller, target: d.resolved_namespace, circular: d.circular}; }),
+    max_lines = _.maxBy(definitions, 'lines').lines,
+    max_circle_r = 50;
+
+relations = relations.filter(function(d){
+  return namespaces.indexOf(d.source) >= 0 && namespaces.indexOf(d.target) >= 0;
+});
+relations = _.uniqWith(relations, _.isEqual);
+
+var zoom = d3.zoom()
+    .on("zoom", function () {
+      container.attr("transform", d3.event.transform);
+    });
+
+svg.call(zoom)
+  .on("dblclick.zoom", null);
+
+var container = svg.append('g'),
+    simulation = d3.forceSimulation()
+    .force("link", d3.forceLink().id(function(d) { return d.id; }))
+    .force("charge", d3.forceManyBody())
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("forceCollide", d3.forceCollide(80));
+
+simulation
+  .nodes(definitions)
+  .on("tick", ticked);
+
+simulation.force("link")
+  .links(relations);
+
+var link = container.append("g")
+    .attr("class", "links")
+    .selectAll("path")
+    .data(relations)
+    .enter().append("path")
+    .attr("class", function(d) { return 'link ' + classForCircular(d); })
+    .attr("marker-end", function(d){ return "url(#" + d.target.id + ")"; }),
+    node = container.append("g")
+    .attr("class", "nodes")
+    .selectAll("g")
+    .data(definitions)
+    .enter().append("g")
+    .call(drag)
+    .on("dblclick", dblclick),
+    circle = node
+    .append("circle")
+    .attr("r", function(d) { return d.lines / max_lines * max_circle_r + 6; })
+    .attr("class", function (d) { return classForCircular(d) ; }),
+    type = node
+    .append("text")
+    .attr("class", "type")
+    .attr("x", "-0.4em")
+    .attr("y", "0.4em")
+    .text(function(d) { return d.type[0]; }),
+    text = node
+    .append("text")
+    .attr("class", "namespace")
+    .attr("x", function(d) { return d.lines / max_lines * max_circle_r + 8; })
+    .attr("y", ".31em")
+    .text(function(d) { return d.id; });
+
+container.append("defs").selectAll("marker")
+  .data(definitions)
+  .enter().append("marker")
+  .attr("id", function(d) { return d.id; })
+  .attr("viewBox", "0 -5 10 10")
+  .attr("refX", function(d){ return d.lines / max_lines * max_circle_r + 20; })
+  .attr("refY", 0)
+  .attr("markerWidth", 6)
+  .attr("markerHeight", 6)
+  .attr("orient", "auto")
+  .append("path")
+  .attr("d", "M0,-5L10,0L0,5");
+
+function ticked() {
+  link.attr("d", linkArc);
+  node.attr("transform", transform);
+}
+
+function linkArc(d) {
+  var dx = d.target.x - d.source.x,
+      dy = d.target.y - d.source.y,
+      dr =  0;
+  return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+}
+
+function dragstarted(d) {
+  if (!d3.event.active) simulation.alphaTarget(0.3).restart();
+  d3.select(this).classed("fixed", true);
+  d.fx = d.x;
+  d.fy = d.y;
+}
+
+function dragged(d) {
+  d.fx = d3.event.x;
+  d.fy = d3.event.y;
+}
+
+function dragended(d) {
+  if (!d3.event.active) simulation.alphaTarget(0);
+}
+
+function dblclick(d) {
+  d3.select(this).classed("fixed", false);
+  d.fx = null;
+  d.fy = null;
+}
+
+function transform(d) {
+  return "translate(" + d.x + "," + d.y + ")";
+}
+
+
+node.on('mouseover', function(d) {
+  var relatives = [];
+  link.classed('downlighted', function(l) {
+    if (d === l.source || d === l.target){
+      relatives.push(l.source);
+      relatives.push(l.target);
+      return false;
+    }else{
+      return true;
+    }
+  });
+  node.classed('downlighted', function(n) {
+    return !(n == d || relatives.indexOf(n) > -1);
+  });
+});
+
+node.on('mouseout', function() {
+  link.classed('downlighted', false);
+  node.classed('downlighted', false);
+});
+
+window.rubrowser = {
+  data: data,
+  definitions: definitions,
+  relations: relations,
+  simulation: simulation,
+  node: node,
+  link: link
+};
+</script>
+
+    
+      <div class="toolbox">
+  <div class="panel">
+    <div class="title"> Node Details </div>
+    <div class="content" id="information_panel">
+      Please click on any node.
+    </div>
+  </div>
+  <div class="panel">
+    <div class="title"> Search </div>
+    <div class="content">
+      <label>Namespace</label>
+      <textarea id="highlight_by_namespace"></textarea>
+      <label><input type="checkbox" id="highlight_modules"/> Modules</label>
+      <label><input type="checkbox" id="highlight_classes"/> Classes</label>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="title"> Ignore </div>
+    <div class="content">
+      <label>Namespace</label>
+      <textarea id="ignore_by_namespace"></textarea>
+      <label><input type="checkbox" id="ignore_modules"/> Modules</label>
+      <label><input type="checkbox" id="ignore_classes"/> Classes</label>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="title"> Display </div>
+    <div class="content">
+      <input type="button" id="pause_simulation" value="Pause animation"/>
+      <label>Force Collide</label>
+      <input id="force_collide" type="range" value="80" min="0" max="500"/>
+      <label><input type="checkbox" id="hide_namespaces"/> Hide namespaces</label>
+      <label><input type="checkbox" id="hide_relations"/> Hide relations</label>
+    </div>
+  </div>
+</div>
+
+      <script type='text/javascript'>$(document).on('click', '.panel .title', function(){
+  $(this).siblings().toggle();
+});
+
+// --------------------------------
+// Details Panel
+// --------------------------------
+rubrowser.node.on('click', function(d){
+  var namespace = d.id;
+  var lines = d.lines;
+  var dependents = rubrowser.relations.filter(function(i){ return i.target.id == namespace; });
+  var dependencies = rubrowser.relations.filter(function(i){ return i.source.id == namespace; });
+  var definitions = rubrowser.data.definitions.filter(function(i){ return i.namespace == namespace; });
+  var relations = rubrowser.data.relations.filter(function(i){ return i.resolved_namespace == namespace || i.caller == namespace; });
+
+  var content = $('<div>');
+  content.append('<label><strong>'+namespace+' ('+d.lines+' Lines)</strong></label>');
+
+  content.append('<strong>Defined in:</strong>');
+  var definitions_ol = $("<ol>");
+  for(var i=0; i<definitions.length; i++){
+    definitions_ol.append("<li>"+definitions[i].file+":"+definitions[i].line.toString()+"</li>");
+  }
+  content.append(definitions_ol);
+
+  if( dependents.length > 0 ){
+    content.append('<strong>Dependents:</strong>');
+    var dependents_ol = $("<ol>");
+    for(var i=0; i<dependents.length; i++){
+      dependents_ol.append("<li>"+dependents[i].source.id+"</li>");
+    }
+    content.append(dependents_ol);
+  }
+
+  if( dependencies.length > 0 ){
+    content.append('<strong>Dependencies:</strong>');
+    var dependencies_ol = $("<ol>");
+    for(var i=0; i<dependencies.length; i++){
+      dependencies_ol.append("<li>"+dependencies[i].target.id+"</li>");
+    }
+    content.append(dependencies_ol);
+  }
+
+  $('#information_panel').html(content);
+  return true;
+});
+
+
+// --------------------------------
+// Search Panel
+// --------------------------------
+$(document).on('change', '#highlight_by_namespace', function(){
+  var highlights_entries = $(this).val().trim();
+  var highlights = highlights_entries.split("\n");
+
+  rubrowser.node.classed('name_highlighted', function(d){
+    if(highlights_entries.length == 0){ return false; }
+    return highlights.filter(function(i){ return d.id.indexOf(i) > -1; }).length > 0;
+  });
+});
+
+$(document).on('change', '#highlight_modules, #highlight_classes', function(){
+  var modules_highlighted = $('#highlight_modules').is(':checked'),
+      classes_highlighted = $('#highlight_classes').is(':checked');
+
+  rubrowser.node.classed('type_highlighted', function(d){
+    return (d.type == 'Module' && modules_highlighted) || (d.type == 'Class' && classes_highlighted);
+  });
+});
+
+// --------------------------------
+// Ignore Panel
+// --------------------------------
+$(document).on('change', '#ignore_by_namespace', function(){
+  var ignores_entries = $(this).val().trim();
+  var ignores = ignores_entries.split("\n");
+
+  // filtering definitions
+  var filtered_definitions = rubrowser.definitions.filter(function(d){
+    if(ignores_entries.length == 0){ return true; }
+    return ignores.filter(function(i){ return d.id.indexOf(i) > -1; }).length == 0;
+  })
+
+  rubrowser.simulation
+    .nodes(filtered_definitions)
+
+  rubrowser.node.classed('name_ignored', function(d){
+    if(ignores_entries.length == 0){ return false; }
+    return ignores.filter(function(i){ return d.id.indexOf(i) > -1; }).length > 0;
+  });
+
+  // filtering relations
+  var filtered_relations = rubrowser.relations.filter(function(d){
+      if(ignores_entries.length == 0){ return true; }
+      return ignores.filter(function(i){ return d.source.id.indexOf(i) > -1 || d.target.id.indexOf(i) > -1; }).length == 0;
+  })
+
+  rubrowser.simulation
+    .force("link")
+    .links(filtered_relations);
+
+  rubrowser.link.classed('name_ignored', function(d){
+    if(ignores_entries.length == 0){ return false; }
+    return ignores.filter(function(i){ return d.source.id.indexOf(i) > -1 || d.target.id.indexOf(i) > -1; }).length > 0;
+  });
+});
+
+$(document).on('change', '#ignore_modules, #ignore_classes', function(){
+  var modules_ignored = $('#ignore_modules').is(':checked'),
+      classes_ignored = $('#ignore_classes').is(':checked');
+
+  rubrowser.node.classed('type_ignored', function(d){
+    return (d.type == 'Module' && modules_ignored) || (d.type == 'Class' && classes_ignored);
+  });
+  rubrowser.link.classed('type_ignored', function(d){
+    return ((d.source.type == 'Module' && modules_ignored) || (d.source.type == 'Class' && classes_ignored)) ||
+      ((d.target.type == 'Module' && modules_ignored) || (d.target.type == 'Class' && classes_ignored));
+  });
+});
+
+// --------------------------------
+// Display Panel
+// --------------------------------
+$(document).on('change', "#force_collide", function(){
+  var new_value = $(this).val();
+  rubrowser.simulation.force("forceCollide", d3.forceCollide(new_value));
+});
+
+$(document).on('change', "#hide_relations", function(){
+  var hide_relations = $('#hide_relations').is(':checked');
+  rubrowser.link.classed("hide_relation", hide_relations);
+});
+
+$(document).on('change', "#hide_namespaces", function(){
+  var hide_namespaces = $('#hide_namespaces').is(':checked');
+  rubrowser.node.classed("hide_namespace", hide_namespaces);
+});
+
+$(document).on('click', "#pause_simulation", function(){
+    rubrowser.simulation.stop();
+});
+</script>
+    
+  </body>
+</html>

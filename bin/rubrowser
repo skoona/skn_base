@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# File: ./bin/rubrowser
+# - Ref: https://github.com/emad-elsaid/rubrowser
+
+rubrowser -o docs/rubrowser.html config.ru config main persistence routes strategy views
