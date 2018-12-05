@@ -1,3 +1,5 @@
+# PLEASE SEE `SknWebApp`
+### This package is under construction
 # SknBase
 An exploration into [Dry-RB](http://dry-rb.org), [Rom-DB](http://Rom-DB.org), and [Roda](https://github.com/jeremyevans/roda) tooling for Ruby Web Applications.
 
