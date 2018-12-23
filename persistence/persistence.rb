@@ -18,14 +18,13 @@ require_relative 'entity/user'
 require_relative 'relations/users'
 require_relative 'repositories/users'
 
-module Skn
-
 # ## Initialize rom-rb
 #
 # rom-rb is built to be non-intrusive. When we initialize it here, all our
 # relations and commands are bundled into a single container that we can
 # inject into our app.
 # ##
+begin
 
   db_config = ROM::Configuration.new(:sql, SknSettings.postgresql.url,
                        user: SknSettings.postgresql.user,

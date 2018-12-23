@@ -177,13 +177,13 @@ end
     attribute :file_access_token, Types::Strict::String.optional
     attribute :created_at, Types::Strict::Time
     attribute :updated_at, Types::Strict::Time
-    attribute :person_authenticated_key, Types::Strict::String
+    attribute :person_authentication_key, Types::Strict::String
     attribute :assigned_roles, Types::Strict::Array.meta(desc: :yaml_array)
     attribute :remember_token_digest , Types::Strict::String.optional
     attribute :user_options, Types::Strict::Array.meta(desc: :yaml_array)
 
     def pak
-      person_authenticated_key
+      person_authentication_key
     end
   end
 
@@ -209,7 +209,7 @@ end
       attribute :file_access_token, Types::Strict::String.optional
       attribute :created_at, Types::Strict::Time
       attribute :updated_at, Types::Strict::Time
-      attribute :person_authenticated_key, Types::Strict::String
+      attribute :person_authentication_key, Types::Strict::String
       attribute :assigned_roles, ::Types::SerializedArrayWrite.meta(desc: :yaml_array), read: ::Types::SerializedArrayRead.meta(desc: :yaml_array)
       attribute :remember_token_digest , Types::Strict::String.optional
       attribute :user_options, ::Types::SerializedArrayWrite.meta(desc: :yaml_array), read: ::Types::SerializedArrayRead.meta(desc: :yaml_array)
@@ -251,7 +251,7 @@ end
     end
 
     def by_pak(pak)
-      find_by(person_authenticated_key: pak)
+      find_by(person_authentication_key: pak)
     end
 
     def [](id)

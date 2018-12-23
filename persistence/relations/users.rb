@@ -24,7 +24,7 @@ module Relations
       attribute :file_access_token, Types::Strict::String.optional
       attribute :created_at, Types::Strict::Time
       attribute :updated_at, Types::Strict::Time
-      attribute :person_authenticated_key, Types::Strict::String
+      attribute :person_authentication_key, Types::Strict::String.constrained(min_size: 32)
       attribute :assigned_roles, ::Types::SerializedArrayWrite.meta(desc: :yaml_array), read: ::Types::SerializedArrayRead.meta(desc: :yaml_array)
       attribute :remember_token_digest , Types::Strict::String.optional
       attribute :user_options, ::Types::SerializedArrayWrite.meta(desc: :yaml_array), read: ::Types::SerializedArrayRead.meta(desc: :yaml_array)

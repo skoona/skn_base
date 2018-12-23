@@ -1,8 +1,30 @@
+if $LOADED_FEATURES.grep(/spec\/spec_helper\.rb/).any?
+  begin
+    raise "foo"
+  rescue => e
+    puts <<-MSG
+  ===================================================
+  It looks like spec_helper.rb has been loaded
+  multiple times. Normalize the require to:
+
+    require "spec/spec_helper"
+
+  Things like File.join and File.expand_path will
+  cause it to be loaded multiple times.
+
+  Loaded this time from:
+
+    #{e.backtrace.join("\n    ")}
+  ===================================================
+    MSG
+  end
+end
+
 ENV['RACK_ENV'] = 'test'
 
 require 'simplecov'
 
-require File.join(File.dirname(__FILE__), '..', 'main/skn_base')
+require './main/skn_base'
 
 require 'rspec'
 require 'rack/test'
@@ -67,12 +89,3 @@ RSpec.configure do |config|
     Capybara.reset_sessions!
   end
 end
-
-# ##
-# Discover Warden in App Chain
-# ##
-# x = Skn::SknBase.app
-# x = x.instance_variable_get :@app while x.class.name != 'Warden::Manager'
-#
-
-# Dir[ "./spec/support/**/*.rb" ].each { |f| puts f ; require f }

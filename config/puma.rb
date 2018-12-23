@@ -26,6 +26,3 @@ port        ENV.fetch("RACK_PORT") { 8585 }
 
 # Specifies the `environment` that Puma will run in.
 environment ENV.fetch("RACK_ENV") { "development" }
-
-# Allow puma to be restarted by `rails restart` command.
-plugin :tmp_restart
